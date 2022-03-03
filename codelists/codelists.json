@@ -59,6 +59,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/learning-disabilities/2020-07-06/",
       "downloaded_at": "2022-03-03 17:47:34.583132Z",
       "sha": "ab5b5f60e8525af5898ec1066fc820501b8e5e29"
+    },
+    "opensafely-nhs-england-care-homes-residential-status.csv": {
+      "id": "opensafely/nhs-england-care-homes-residential-status/3712ef13",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
+      "downloaded_at": "2022-03-03 17:57:30.328752Z",
+      "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
     }
   }
 }

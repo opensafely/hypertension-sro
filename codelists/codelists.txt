@@ -8,3 +8,4 @@ nhsd-primary-care-domain-refsets/hyppcapu_cod/20200812
 nhsd-primary-care-domain-refsets/hypres_cod/20200812
 opensafely/ethnicity/2020-04-27
 opensafely/learning-disabilities/2020-07-06
+opensafely/nhs-england-care-homes-residential-status/3712ef13
