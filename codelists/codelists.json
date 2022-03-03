@@ -47,6 +47,18 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/hypres_cod/20200812/",
       "downloaded_at": "2022-03-02 12:26:41.735725Z",
       "sha": "8f94d85f3bb7977e96d742a6b0a48551e0f674a2"
+    },
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2022-03-03 17:47:34.280837Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "opensafely-learning-disabilities.csv": {
+      "id": "opensafely/learning-disabilities/2020-07-06",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/learning-disabilities/2020-07-06/",
+      "downloaded_at": "2022-03-03 17:47:34.583132Z",
+      "sha": "ab5b5f60e8525af5898ec1066fc820501b8e5e29"
     }
   }
 }

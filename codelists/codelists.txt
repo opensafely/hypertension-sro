@@ -6,3 +6,5 @@ nhsd-primary-care-domain-refsets/hypinvite_cod/20200812
 nhsd-primary-care-domain-refsets/hyppcadec_cod/20200812
 nhsd-primary-care-domain-refsets/hyppcapu_cod/20200812
 nhsd-primary-care-domain-refsets/hypres_cod/20200812
+opensafely/ethnicity/2020-04-27
+opensafely/learning-disabilities/2020-07-06
