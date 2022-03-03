@@ -1,5 +1,7 @@
 # Define common variables needed across indicators here
-# See https://docs.opensafely.org/study-def-tricks/#sharing-common-study-definition-variables
+# See https://docs.opensafely.org/study-def-tricks/
+
+from cohortextractor import patients
 
 hyp_variables = dict(
 
@@ -35,5 +37,4 @@ hyp_variables = dict(
   # Numerator
   # Rule 1
   # TODO
-
 )
