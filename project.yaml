@@ -5,8 +5,9 @@ expectations:
 
 actions:
 
+  # Extract cohort for indicator HYP001 by month 
   generate_study_population:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_hyp001 --index-date-range "2019-01-01 to 2022-01-01 by month" --output-dir=output
     outputs:
       highly_sensitive:
-        cohort: output/input.csv
+        cohort: output/input_hyp001_*.csv
