@@ -3,7 +3,7 @@
 
 from cohortextractor import patients
 
-hyp_variables = dict(
+hyp_ind_variables = dict(
 
   # Rules for indicators HYP003 and HYP007
   # The only differences between the indicators are:
