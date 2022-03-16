@@ -18,7 +18,6 @@ bpdec_codes = codelist_from_csv(
     column="code",
     )
 
-
 # Cluster name: HTMAX_COD
 # Description: Codes for maximal blood pressure (BP) therapy
 # SNOMED CT: ^999006651000230109
@@ -27,7 +26,6 @@ htmax_codes = codelist_from_csv(
     system="snomed",
     column="code",
     )
-
 
 # Cluster name: HYP_COD
 # Description: Hypertension diagnosis codes
@@ -38,7 +36,6 @@ hyp_codes = codelist_from_csv(
     column="code",
     )
 
-
 # Cluster name: HYPINVITE_COD
 # Description: Invite for hypertension care review codes
 # SNOMED CT: ^999012971000230108
@@ -48,7 +45,6 @@ hypinvite_codes = codelist_from_csv(
     column="code",
     )
 
-
 # Cluster name: HYPPCADEC_COD
 # Description: Codes indicating the patient has chosen not to receive hypertension quality indicator care
 # SNOMED CT: ^999013091000230102
@@ -57,7 +53,6 @@ hyppcadec_codes = codelist_from_csv(
     system="snomed",
     column="code",
     )
-
 
 # Cluster name: HYPPCAPU_COD
 # Description: Codes for hypertension quality indicator care unsuitable for patient
