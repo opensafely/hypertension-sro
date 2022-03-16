@@ -47,6 +47,24 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/hypres_cod/20200812/",
       "downloaded_at": "2022-03-02 12:26:41.735725Z",
       "sha": "8f94d85f3bb7977e96d742a6b0a48551e0f674a2"
+    },
+    "nhsd-primary-care-domain-refsets-ld_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ld_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
+      "downloaded_at": "2022-03-16 14:57:59.397360Z",
+      "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
+    },
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2022-03-03 17:47:34.280837Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "opensafely-nhs-england-care-homes-residential-status.csv": {
+      "id": "opensafely/nhs-england-care-homes-residential-status/3712ef13",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
+      "downloaded_at": "2022-03-03 17:57:30.328752Z",
+      "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
     }
   }
 }
