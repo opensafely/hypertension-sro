@@ -27,13 +27,13 @@ demographic_variables = dict(
   imd=patients.categorised_as(
       {
           "0": "DEFAULT",
-          "1": """index_of_multiple_deprivation >=1 AND 
+          "1": """index_of_multiple_deprivation>=1 AND
                   index_of_multiple_deprivation < 32844*1/5""",
-          "2": """index_of_multiple_deprivation >= 32844*1/5 AND 
+          "2": """index_of_multiple_deprivation >= 32844*1/5 AND
                   index_of_multiple_deprivation < 32844*2/5""",
-          "3": """index_of_multiple_deprivation >= 32844*2/5 AND 
+          "3": """index_of_multiple_deprivation >= 32844*2/5 AND
                   index_of_multiple_deprivation < 32844*3/5""",
-          "4": """index_of_multiple_deprivation >= 32844*3/5 AND 
+          "4": """index_of_multiple_deprivation >= 32844*3/5 AND
                   index_of_multiple_deprivation < 32844*4/5""",
           "5": """index_of_multiple_deprivation >= 32844*4/5 """,
       },
@@ -77,6 +77,7 @@ demographic_variables = dict(
           },
       },
   ),
+  
   # Ethnicity
   # NOTE: Code for ethnicity is in a seperate analysis file
 
