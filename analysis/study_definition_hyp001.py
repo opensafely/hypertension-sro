@@ -26,8 +26,8 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
 
-        (hyp = 1) AND
-        (hyp_res = 0)
+        hypertension AND
+        (NOT hypertension_resolved)
         """,
     ),
 
@@ -44,23 +44,31 @@ measures = [
 
     Measure(
         id="hyp001_code_rate",
-        numerator="hyp",
+        numerator="hypertension",
         denominator="population",
-        group_by=["hyp_code"],
+        group_by=["hypertension_code"],
         small_number_suppression=True
     ),
 
     Measure(
         id="hyp001_practice_rate",
-        numerator="hyp",
+        numerator="hypertension",
         denominator="population",
         group_by=["practice"],
         small_number_suppression=True
     ),
 
     Measure(
+        id="hyp001_age_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["age_band"],
+        small_number_suppression=True
+    ),
+
+    Measure(
         id="hyp001_sex_rate",
-        numerator="hyp",
+        numerator="hypertension",
         denominator="population",
         group_by=["sex"],
         small_number_suppression=True
@@ -68,7 +76,7 @@ measures = [
 
     Measure(
         id="hyp001_imd_rate",
-        numerator="hyp",
+        numerator="hypertension",
         denominator="population",
         group_by=["imd"],
         small_number_suppression=True
@@ -76,7 +84,7 @@ measures = [
 
     Measure(
         id="hyp001_region_rate",
-        numerator="hyp",
+        numerator="hypertension",
         denominator="population",
         group_by=["region"],
         small_number_suppression=True

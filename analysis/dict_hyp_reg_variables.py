@@ -19,17 +19,15 @@ hyp_reg_variables = dict(
      return_expectations={"incidence": 0.9},
      ),
 
-  hyp=patients.with_these_clinical_events(
-    between=["first_day_of_month(index_date) - 110 years",
-             "last_day_of_month(index_date)"],
+  hypertension=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
     codelist=hyp_codes,
     returning="binary_flag",
     ),
 
   # Also return hyp codes
-  hyp_code=patients.with_these_clinical_events(
-    between=["first_day_of_month(index_date) - 110 years",
-             "last_day_of_month(index_date)"],
+  hypertension_code=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
     codelist=hyp_codes,
     returning="code",
     return_expectations={"category": {
@@ -37,9 +35,8 @@ hyp_reg_variables = dict(
     ),
 
   # Hypertension resolved binary
-  hyp_res=patients.with_these_clinical_events(
-    between=["first_day_of_month(index_date) - 110 years",
-             "last_day_of_month(index_date)"],
+  hypertension_resolved=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
     codelist=hypres_codes,
     returning="binary_flag",
     ),
