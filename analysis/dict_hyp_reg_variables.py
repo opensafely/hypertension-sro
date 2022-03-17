@@ -1,40 +1,44 @@
 # Define common variables needed across indicators here
 # See https://docs.opensafely.org/study-def-tricks/
 
+import pandas as pd
+
 from cohortextractor import patients
+from codelists import hyp_codes, hypres_codes
+
+hyp_codes_df = pd.read_csv("codelists/nhsd-primary-care-domain-refsets-hyp_cod.csv")
+hyp_codes_unique = hyp_codes_df['code'].unique()
+
+# Hypertension register:
+# Patients with an unresolved diagnosis of hypertension
 
 hyp_reg_variables = dict(
 
-  # Rules for indicators HYP003 and HYP007
-  # The only differences between the indicators are:
-  # - Age (Denominator rule 1)
-  #   - HYP003: >79
-  #   - HYP007: <80
-  # - Values of last blood pressure (Denominator rules 2, 7)
-  #   - HYP003: SYS<= 140, DIA <= 90
-  #   - HYP007: SYS <= 150, DIA <= 90
+  registered=patients.registered_as_of(
+     "index_date",
+     return_expectations={"incidence": 0.9},
+     ),
 
-  # Denominator
-  # Rule 1
-  # TODO
-  # Rule 2
-  # TODO
-  # Rule 3
-  # TODO
-  # Rule 4
-  # TODO
-  # Rule 5
-  # TODO
-  # Rule 6
-  # TODO
-  # Rule 7
-  # TODO
-  # Rule 8
-  # TODO
-  # Rule 9
-  # TODO
+  hypertension=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
+    codelist=hyp_codes,
+    returning="binary_flag",
+    ),
 
-  # Numerator
-  # Rule 1
-  # TODO
-)
+  # Also return hyp codes
+  hypertension_code=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
+    codelist=hyp_codes,
+    returning="code",
+    return_expectations={"category": {
+      "ratios": {x: 1/len(hyp_codes_unique) for x in hyp_codes_unique}}, }
+    ),
+
+  # Hypertension resolved binary
+  hypertension_resolved=patients.with_these_clinical_events(
+    on_or_before="first_day_of_month(index_date)",
+    codelist=hypres_codes,
+    returning="binary_flag",
+    ),
+
+    )

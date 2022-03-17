@@ -5,6 +5,12 @@ from cohortextractor import patients
 
 demographic_variables = dict(
 
+  died=patients.died_from_any_cause(
+       on_or_before="index_date",
+       returning="binary_flag",
+       return_expectations={"incidence": 0.1}
+  ),
+
   # Age as of end of NHS financial year (March 31st)
   # NOTE: For QOF rules we need the age at the end of the financial year
   age=patients.age_as_of(
@@ -14,6 +20,36 @@ demographic_variables = dict(
           "int": {"distribution": "population_ages"},
       },
   ),
+
+  age_band=patients.categorised_as(
+        {
+            "missing": "DEFAULT",
+            "0-19": """ age >= 0 AND age < 20""",
+            "20-29": """ age >=  20 AND age < 30""",
+            "30-39": """ age >=  30 AND age < 40""",
+            "40-49": """ age >=  40 AND age < 50""",
+            "50-59": """ age >=  50 AND age < 60""",
+            "60-69": """ age >=  60 AND age < 70""",
+            "70-79": """ age >=  70 AND age < 80""",
+            "80+": """ age >=  80 AND age <= 120""",
+        },
+        return_expectations={
+            "rate": "universal",
+            "category": {
+                "ratios": {
+                    "missing": 0.005,
+                    "0-19": 0.125,
+                    "20-29": 0.125,
+                    "30-39": 0.125,
+                    "40-49": 0.125,
+                    "50-59": 0.125,
+                    "60-69": 0.125,
+                    "70-79": 0.125,
+                    "80+": 0.12,
+                }
+            },
+        },
+    ),
 
   # Sex
   sex=patients.sex(
@@ -27,13 +63,13 @@ demographic_variables = dict(
   imd=patients.categorised_as(
       {
           "0": "DEFAULT",
-          "1": """index_of_multiple_deprivation >=1 AND 
+          "1": """index_of_multiple_deprivation>=1 AND
                   index_of_multiple_deprivation < 32844*1/5""",
-          "2": """index_of_multiple_deprivation >= 32844*1/5 AND 
+          "2": """index_of_multiple_deprivation >= 32844*1/5 AND
                   index_of_multiple_deprivation < 32844*2/5""",
-          "3": """index_of_multiple_deprivation >= 32844*2/5 AND 
+          "3": """index_of_multiple_deprivation >= 32844*2/5 AND
                   index_of_multiple_deprivation < 32844*3/5""",
-          "4": """index_of_multiple_deprivation >= 32844*3/5 AND 
+          "4": """index_of_multiple_deprivation >= 32844*3/5 AND
                   index_of_multiple_deprivation < 32844*4/5""",
           "5": """index_of_multiple_deprivation >= 32844*4/5 """,
       },
@@ -77,6 +113,7 @@ demographic_variables = dict(
           },
       },
   ),
+  
   # Ethnicity
   # NOTE: Code for ethnicity is in a seperate analysis file
 
