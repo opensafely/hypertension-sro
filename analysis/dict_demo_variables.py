@@ -5,6 +5,12 @@ from cohortextractor import patients
 
 demographic_variables = dict(
 
+  died=patients.died_from_any_cause(
+       on_or_before="index_date",
+       returning="binary_flag",
+       return_expectations={"incidence": 0.1}
+  ),
+
   # Age as of end of NHS financial year (March 31st)
   # NOTE: For QOF rules we need the age at the end of the financial year
   age=patients.age_as_of(
