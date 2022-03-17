@@ -1,0 +1,36 @@
+---
+title: "Hypertension (HYP)"
+output:
+  html_document
+date: "`r format(Sys.time(), '%d %B %Y')`"
+author: Milan Wiedemann
+---
+
+
+
+```{r message=FALSE}
+library(arrow)
+library(here)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+```
+
+# HYP001
+
+## Check output for one month
+
+```{r}
+df_hyp001_2019_01_01 <- read_feather(here("output/input_hyp001_2019-01-01.feather"))
+df_hyp001_2019_01_01
+```
+
+## Open all feather output documents
+
+```{r}
+df_hyp001 <- open_dataset(here("output"),
+                          format = "feather")
+
+df_hyp001 %>%
+  collect()
+```
