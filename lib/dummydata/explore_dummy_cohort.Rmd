@@ -6,8 +6,6 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 author: Milan Wiedemann
 ---
 
-
-
 ```{r message=FALSE}
 library(arrow)
 library(here)
