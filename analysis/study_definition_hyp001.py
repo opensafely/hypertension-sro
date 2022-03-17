@@ -38,3 +38,48 @@ study = StudyDefinition(
     ** demographic_variables,
 
 )
+
+# Create default measures
+measures = [
+
+    Measure(
+        id="hyp001_code_rate",
+        numerator="hyp",
+        denominator="population",
+        group_by=["hyp_code"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp001_practice_rate",
+        numerator="hyp",
+        denominator="population",
+        group_by=["practice"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp001_sex_rate",
+        numerator="hyp",
+        denominator="population",
+        group_by=["sex"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp001_imd_rate",
+        numerator="hyp",
+        denominator="population",
+        group_by=["imd"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp001_region_rate",
+        numerator="hyp",
+        denominator="population",
+        group_by=["region"],
+        small_number_suppression=True
+    ),
+
+]
