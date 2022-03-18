@@ -1,4 +1,4 @@
-from cohortextractor import StudyDefinition, patients, codelist, codelist_from_csv, Measure  # NOQA
+from cohortextractor import StudyDefinition, patients, Measure
 
 import json
 import pandas as pd
@@ -6,7 +6,7 @@ import pandas as pd
 from config import start_date, end_date
 from codelists import hyp_codes, hypres_codes
 
-from dict_hyp_reg_variables import hyp_reg_variables
+from dict_hyp_variables import hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
