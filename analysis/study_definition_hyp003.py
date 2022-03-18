@@ -39,6 +39,13 @@ study = StudyDefinition(
 # Create default measures
 measures = [
     Measure(
+        id="hyp003_population_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    ),
+    Measure(
         id="hyp003_practice_rate",
         numerator="hypertension",
         denominator="population",
