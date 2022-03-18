@@ -45,8 +45,7 @@ hyp_reg_variables = dict(
     hypertension AND
     (NOT hypertension_resolved)
     """
-  )
-
+    ),
     )
 
 hyp_ind_variables = dict(
