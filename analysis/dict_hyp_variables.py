@@ -29,6 +29,9 @@ hyp_reg_variables = dict(
         on_or_before="first_day_of_month(index_date)",
         codelist=hypres_codes,
         returning="binary_flag",
+        find_last_match_in_period=True,
+        include_date_of_match=True,
+        date_format="YYYY-MM-DD",
     ),
     hyp001_indicator=patients.satisfying(
         """
