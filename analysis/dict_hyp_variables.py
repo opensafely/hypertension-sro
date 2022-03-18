@@ -9,13 +9,15 @@ from codelists import hyp_codes, hypres_codes
 hyp_codes_df = pd.read_csv("codelists/nhsd-primary-care-domain-refsets-hyp_cod.csv")
 hyp_codes_unique = hyp_codes_df["code"].unique()
 
-# Hypertension register:
+# Define dictionary of variables needed for hypertension register:
 # Patients with an unresolved diagnosis of hypertension
 hyp_reg_variables = dict(
+
     registered=patients.registered_as_of(
         "index_date",
         return_expectations={"incidence": 0.9},
     ),
+    # Define variables for hypertension (binary) and associated date
     hypertension=patients.with_these_clinical_events(
         on_or_before="last_day_of_month(index_date)",
         codelist=hyp_codes,
@@ -24,7 +26,7 @@ hyp_reg_variables = dict(
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
-    # Hypertension resolved binary
+    # Define variables for resolved hypertension (binary) and associated date
     hypertension_resolved=patients.with_these_clinical_events(
         on_or_before="last_day_of_month(index_date)",
         codelist=hypres_codes,
@@ -33,6 +35,7 @@ hyp_reg_variables = dict(
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
+    # Define hypertension register
     hypertension_register=patients.satisfying(
         """
         # Select patients from the specified population who have a diagnosis
