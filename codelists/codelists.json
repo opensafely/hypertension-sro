@@ -65,6 +65,18 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13/",
       "downloaded_at": "2022-03-03 17:57:30.328752Z",
       "sha": "357b2af4841e574f7d43bfeff143b39cdfed6997"
+    },
+    "opensafely-systolic-blood-pressure-qof.csv": {
+      "id": "opensafely/systolic-blood-pressure-qof/3572b5fb",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/systolic-blood-pressure-qof/3572b5fb/",
+      "downloaded_at": "2022-03-18 11:55:33.409538Z",
+      "sha": "f2bc461e351499f4e5573a6f94e760b99979491e"
+    },
+    "user-milanwiedemann-diastolic-blood-pressure-qof.csv": {
+      "id": "user/milanwiedemann/diastolic-blood-pressure-qof/697e3433",
+      "url": "https://codelists.opensafely.org/codelist/user/milanwiedemann/diastolic-blood-pressure-qof/697e3433/",
+      "downloaded_at": "2022-03-18 11:55:33.719943Z",
+      "sha": "19b8b5a7ecdf9f11da301750bc1d76c72228839d"
     }
   }
 }
