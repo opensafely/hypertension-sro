@@ -9,4 +9,5 @@ nhsd-primary-care-domain-refsets/hypres_cod/20200812
 nhsd-primary-care-domain-refsets/ld_cod/20210127
 opensafely/ethnicity/2020-04-27
 opensafely/nhs-england-care-homes-residential-status/3712ef13
-opensafely/systolic-blood-pressure-qof
+opensafely/systolic-blood-pressure-qof/3572b5fb
+user/milanwiedemann/diastolic-blood-pressure-qof/697e3433
