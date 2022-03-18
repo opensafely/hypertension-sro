@@ -7,6 +7,8 @@ from config import start_date, end_date
 from codelists import hyp_codes, hypres_codes
 
 from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
+from dict_hyp_variables import hyp_reg_variables
+
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
@@ -20,18 +22,6 @@ study = StudyDefinition(
     },
 
     population=patients.satisfying(
-        """
-        # Define general population parameters
-        registered AND
-        (NOT died) AND
-        (sex = 'F' OR sex = 'M') AND
-
-        hypertension AND
-        (NOT hypertension_resolved)
-        """,
-    ),
-
-    hyp001_population=patients.satisfying(
         """
         # Define general population parameters
         registered AND
