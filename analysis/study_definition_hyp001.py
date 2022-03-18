@@ -23,8 +23,8 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
 
-        hypertension AND
-        (NOT hypertension_resolved)
+        (hypertension AND (NOT hypertension_resolved)) OR
+        (hypertension_resolved_date <= hypertension_date)
         """,
     ),
     # Include hypertension variables
