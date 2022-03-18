@@ -1,21 +1,106 @@
-from cohortextractor import StudyDefinition, patients, codelist, codelist_from_csv  # NOQA
-from dict_hyp_variables import hyp_variables
+from cohortextractor import StudyDefinition, patients, Measure
+
+import json
+import pandas as pd
+
+from config import start_date, end_date
+from codelists import hyp_codes, hypres_codes
+
+from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
+
+    index_date=start_date,
+
     default_expectations={
-        "date": {"earliest": "1900-01-01", "latest": "today"},
+        "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
         "incidence": 0.5,
     },
-    population=patients.registered_with_one_practice_between(
-        "2019-02-01", "2020-02-01"
+
+    population=patients.satisfying(
+        """
+        # Define general population parameters
+        registered AND
+        (NOT died) AND
+        (sex = 'F' OR sex = 'M') AND
+
+        hypertension AND
+        (NOT hypertension_resolved)
+        """,
+    ),
+
+    hyp001_population=patients.satisfying(
+        """
+        # Define general population parameters
+        registered AND
+        (NOT died) AND
+        (sex = 'F' OR sex = 'M') AND
+
+        hypertension AND
+        (NOT hypertension_resolved)
+        """,
     ),
 
     # Include hypertension variables
-    ** hyp_variables
+    ** hyp_ind_variables,
+    ** hyp_reg_variables,
 
     # Include demographic variables
     ** demographic_variables
 
 )
+
+# Create default measures
+measures = [
+
+    Measure(
+        id="hyp003_code_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["hypertension_code"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp003_practice_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["practice"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp003_age_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["age_band"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp003_sex_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["sex"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp003_imd_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["imd"],
+        small_number_suppression=True
+    ),
+
+    Measure(
+        id="hyp003_region_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["region"],
+        small_number_suppression=True
+    ),
+
+]
