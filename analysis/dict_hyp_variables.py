@@ -24,15 +24,6 @@ hyp_reg_variables = dict(
     returning="binary_flag",
     ),
 
-  # Also return hyp codes
-  hypertension_code=patients.with_these_clinical_events(
-    on_or_before="first_day_of_month(index_date)",
-    codelist=hyp_codes,
-    returning="code",
-    return_expectations={"category": {
-      "ratios": {x: 1/len(hyp_codes_unique) for x in hyp_codes_unique}}, }
-    ),
-
   # Hypertension resolved binary
   hypertension_resolved=patients.with_these_clinical_events(
     on_or_before="first_day_of_month(index_date)",
