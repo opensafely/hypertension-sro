@@ -39,3 +39,14 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/input_hyp003_*.feather
+
+  #  Generate measures for indicator HYP003 by month
+  generate_measures_hyp003:
+     run: >
+       cohortextractor:latest generate_measures 
+       --study-definition study_definition_hyp003 
+       --output-dir=output
+     needs: [generate_study_population_hyp003]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/measure_hyp003_*_rate.csv  
