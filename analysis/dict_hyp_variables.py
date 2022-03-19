@@ -7,9 +7,9 @@ from cohortextractor import patients
 from codelists import hyp_codes, hypres_codes
 
 hyp_codes_df = pd.read_csv("codelists/nhsd-primary-care-domain-refsets-hyp_cod.csv")
-hyp_codes_unique = hyp_codes_df['code'].unique()
+hyp_codes_unique = hyp_codes_df["code"].unique()
 
-# Hypertension register:
+# Define dictionary of variables needed for hypertension register:
 # Patients with an unresolved diagnosis of hypertension
 hyp_reg_variables = dict(
     registered=patients.registered_as_of(
@@ -39,14 +39,16 @@ hyp_reg_variables = dict(
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
-
-  hyp001_indicator=patients.satisfying(
-    """
-    hypertension AND
-    (NOT hypertension_resolved)
-    """
+    # Define hypertension register
+    hypertension_register=patients.satisfying(
+        """
+        # Select patients from the specified population who have a diagnosis
+        # of hypertension which has not been subsequently resolved.
+        (hypertension AND (NOT hypertension_resolved)) OR
+        (hypertension_resolved_date <= hypertension_date)
+        """
     ),
-    )
+)
 
 hyp_ind_variables = dict(
     # Rules for indicators HYP003 and HYP007
