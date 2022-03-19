@@ -32,11 +32,65 @@ study = StudyDefinition(
         (NOT hypertension_resolved)
         """,
     ),
-
-    # Include hypertension variables
-    ** hyp_ind_variables,
-    ** hyp_reg_variables,
-
+    hyp_denominator_r1=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r2=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r3=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r4=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r5=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r6=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r7=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r8=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator_r9=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_denominator=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    hyp_numerator_r1=patients.satisfying(
+        """
+        # TODO
+        """
+    ),
+    # Include hypertension variables for denominator and numerator rules
+    **hyp_ind_variables,
+    # Include hypertension variables for register
+    **hyp_reg_variables,
     # Include demographic variables
     ** demographic_variables
 
