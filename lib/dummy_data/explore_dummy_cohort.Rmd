@@ -23,12 +23,3 @@ df_hyp001_2019_01_01 <- read_feather(here("output/input_hyp001_2019-01-01.feathe
 df_hyp001_2019_01_01
 ```
 
-## Open all feather output documents
-
-```{r}
-df_hyp001 <- open_dataset(here("output"),
-                          format = "feather")
-
-df_hyp001 %>%
-  collect()
-```
