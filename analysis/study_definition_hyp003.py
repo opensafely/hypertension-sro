@@ -26,6 +26,7 @@ study = StudyDefinition(
         hypertension_register
         """,
     ),
+    # Define composite denominator
     hyp003_denominator=patients.satisfying(
         """
         hyp003_denominator_r1
@@ -76,6 +77,7 @@ study = StudyDefinition(
         #     """
         # ),
     ),
+    # Define composite numerator
     hyp003_numerator=patients.satisfying(
         """
         hyp003_numerator_r1
