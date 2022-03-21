@@ -1,0 +1,13 @@
+    # The date of ht_max needs to be available in the study definition as it
+    # needs to be compared with another date
+    ht_max_date=patients.date_of(
+        "ht_max",
+        date_format="YYYY-MM-DD"
+        ),
+    # Specify who received tx in the last 12m
+    ht_max_12m=patients.with_these_clinical_events(
+        on_or_after="ht_max_date",
+        codelist=ht_max_codes,
+        returning="binary_flag",
+        find_last_match_in_period=True,
+    ),
