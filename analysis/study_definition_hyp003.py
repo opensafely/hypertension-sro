@@ -7,8 +7,6 @@ from config import start_date, end_date
 from codelists import hyp_codes, hyp_res_codes
 
 from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
-from dict_hyp_variables import hyp_reg_variables
-
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
@@ -29,67 +27,67 @@ study = StudyDefinition(
         (NOT hypertension_resolved)
         """,
     ),
-    hyp_denominator_r1=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r2=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r3=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r4=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r5=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r6=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r7=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r8=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator_r9=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_denominator=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
-    hyp_numerator_r1=patients.satisfying(
-        """
-        # TODO
-        """
-    ),
+    # hyp_denominator_r1=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r2=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r3=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r4=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r5=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r6=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r7=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r8=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator_r9=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_denominator=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
+    # hyp_numerator_r1=patients.satisfying(
+    #     """
+    #     # TODO
+    #     """
+    # ),
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
     # Include hypertension variables for register
     **hyp_reg_variables,
     # Include demographic variables
-    **demographic_variables
+    **demographic_variables,
 )
 
 # Create default measures
