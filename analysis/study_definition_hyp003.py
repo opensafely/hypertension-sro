@@ -48,37 +48,65 @@ study = StudyDefinition(
         (NOT hyp003_denominator_r8) AND
         (NOT hyp003_denominator_r9)
         """,
+        # Reject patients from the specified population who are aged greater
+        # than 79 years old.
         hyp003_denominator_r1=patients.satisfying(
             """
             age > 79
             """
         ),
+        # Select patients passed to this rule who meet all of the criteria
+        # below:
+        # - Systolic blood pressure value was 140 mmHg or less.
+        # - Diastolic blood pressure value was 90 mmHg or less.
+        # Most recent blood pressure recording was in the 12 months leading up
+        # to and including the payment period end date.
         hyp003_denominator_r2=patients.satisfying(
             """
             bp_sys_val_12m <= 140 AND
             bp_dia_val_12m <= 90
             """
         ),
+        # Reject patients passed to this rule who are receiving maximal blood
+        # pressure therapy in the 12 months leading up to and including the
+        # payment period end date.
         hyp003_denominator_r3=patients.satisfying(
             """
             ht_max_12m
             """
         ),
+        # Reject patients passed to this rule for whom hypertension quality
+        # indicator care was unsuitable in the 12 months leading up to and
+        # including the payment period end date.
         hyp003_denominator_r4=patients.satisfying(
             """
             hyp_pca_pu_12m
             """
         ),
+        # Reject patients passed to this rule who chose not to have their
+        # blood pressure recorded in the 12 months leading up to and including
+        # the payment period end date.
         hyp003_denominator_r5=patients.satisfying(
             """
             bp_dec_12m
             """
         ),
+        # Reject patients passed to this rule who chose not to receive
+        # hypertension quality indicator care in the 12 months leading up to
+        # and including the payment period end date.
         hyp003_denominator_r6=patients.satisfying(
             """
             hyp_pca_dec_12m
             """
         ),
+        # Reject patients passed to this rule who meet either of the criteria
+        # below: Latest blood pressure reading in the 12 months leading up to
+        # and including the payment period end date was above target levels
+        # (systolic value of over 140 mmHg and/or a diastolic value of over 90
+        # mmHg), and was followed by two invitations for hypertension
+        # monitoring. Received two invitations for hypertension monitoring and
+        # had no blood pressure recordings during the 12 months leading up to
+        # and including the achievement date.
         hyp003_denominator_r7=patients.satisfying(
             """
             bp_sys_val_12m <= 140 AND
@@ -86,11 +114,17 @@ study = StudyDefinition(
             hyp_invite_1_date > bp_sys_val_12m_date
             """
         ),
+        # Reject patients passed to this rule whose earliest hypertension
+        # diagnosis was in the 9 months leading up to and including the
+        # payment period end date.
         hyp003_denominator_r8=patients.satisfying(
             """
             hypertension_9m
             """
         ),
+        # Reject patients passed to this rule who were recently registered at
+        # the practice (patient registered in the 9 month period leading up to
+        # and including the payment period end date).
         hyp003_denominator_r9=patients.satisfying(
             """
             registered_9m
