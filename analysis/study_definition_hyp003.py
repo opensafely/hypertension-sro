@@ -23,65 +23,74 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
 
-        hypertension AND
-        (NOT hypertension_resolved)
+        hypertension_register
         """,
     ),
-    # hyp_denominator_r1=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r2=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r3=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r4=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r5=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r6=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r7=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r8=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator_r9=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_denominator=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
-    # hyp_numerator_r1=patients.satisfying(
-    #     """
-    #     # TODO
-    #     """
-    # ),
+    hyp003_denominator=patients.satisfying(
+        """
+        hyp003_denominator_r1
+        """,
+        hyp003_denominator_r1=patients.satisfying(
+            """
+            age > 79
+            """
+        ),
+        # hyp003_denominator_r2=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r3=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r4=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r5=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r6=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r7=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r8=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+        # hyp003_denominator_r9=patients.satisfying(
+        #     """
+        #     # TODO
+        #     """
+        # ),
+    ),
+    hyp003_numerator=patients.satisfying(
+        """
+        hyp003_numerator_r1
+        """,
+        hyp003_numerator_r1=patients.satisfying(
+            """
+            bp_sys_val <= 140
+            AND
+            bp_dia_val <= 90
+            # AND
+            # BP_DAT > (PPED - 12 months)
+            """
+        ),
+
+    ),
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
     # Include hypertension variables for register

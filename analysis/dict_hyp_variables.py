@@ -104,7 +104,7 @@ hyp_ind_variables = dict(
         date_format="YYYY-MM-DD",
         return_expectations={
             "incidence": 0.8,
-            "float": {"distribution": "normal", "mean": 110, "stddev": 20},
+            "float": {"distribution": "normal", "mean": 70, "stddev": 20},
             "date": {"earliest": "index_date", "latest": "index_date + 1 year"},
             "rate": "uniform",
         },
