@@ -186,7 +186,10 @@ hyp_ind_variables = dict(
     # including the achievement date.
     # TODO: Note that the between argument should start with the 'start_date'
     hyp_invite_1=patients.with_these_clinical_events(
-        between=["index_date", "last_day_of_month(index_date)"],
+        between=[
+            "index_date",
+            "last_day_of_month(index_date)"
+            ],
         codelist=hyp_invite_codes,
         returning="binary_flag",
         find_last_match_in_period=True,
@@ -201,6 +204,7 @@ hyp_ind_variables = dict(
     # review recorded at least 7 days after the first invitation and up to
     # and including the achievement date.
     # TODO: Not sure if this is needed for us, need to check
+    #
     # Variable for denominator rule 8
     hypertension_9m=patients.with_these_clinical_events(
         between=[
