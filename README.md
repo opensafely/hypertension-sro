@@ -12,12 +12,13 @@ This project aim to use OpenSAFELY to quantify the extent to which any of the re
 ## Repository structure
 
 * Variables that are shared across study definitions are specified in dictionaries:
-  * **Demographic variables**: [analysis/dict_demo_variables.py](aanalysis/dict_demo_variables.py)
+  * **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
   * **Hypertension register and indicators**: [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
 * The hypertension register (HYP_001) and each indicator (HYP_003, HYP_007) are specified in individual study definitions.
   * **HYP_001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
   * **HYP_003**: [analysis/study_definition_hyp002.py](analysis/study_definition_hyp002.py)
   * **HYP_007**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
+* Commonly used dates are defined in [analysis/config.py](analysis/config.py)
 
 # About the OpenSAFELY framework
 
