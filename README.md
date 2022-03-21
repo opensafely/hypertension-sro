@@ -14,7 +14,7 @@ This project aim to use OpenSAFELY to quantify the extent to which any of the re
 * Variables that are shared across study definitions are specified in dictionaries:
   * **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
   * **Hypertension register and indicators**: [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
-* The hypertension register (HYP_001) and each indicator (HYP_003, HYP_007) are specified in individual study definitions.
+* The hypertension register (HYP_001) and each indicator (HYP_003, HYP_007) are specified in individual study definitions. Each denominator and numerator rule is defined in its own `patients.satisfying()` function and summarised in a composite variable.
   * **HYP_001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
   * **HYP_003**: [analysis/study_definition_hyp002.py](analysis/study_definition_hyp002.py)
   * **HYP_007**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
