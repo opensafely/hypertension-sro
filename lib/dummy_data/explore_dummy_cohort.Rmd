@@ -23,3 +23,12 @@ df_hyp001_2019_01_01 <- read_feather(here("output/input_hyp001_2019-01-01.feathe
 df_hyp001_2019_01_01
 ```
 
+# HYP003
+
+## Check output for one month
+
+```{r}
+df_hyp003_2019_01_01 <- read_feather(here("output/input_hyp003_2019-01-01.feather"))
+df_hyp003_2019_01_01
+```
+
