@@ -4,18 +4,24 @@ import json
 import pandas as pd
 
 from config import start_date, end_date
-from codelists import hyp_codes, hyp_res_codes
-
 from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
+    # Include hypertension variables for denominator and numerator rules
+    **hyp_ind_variables,
+    # Include hypertension variables for register
+    **hyp_reg_variables,
+    # Include demographic variables
+    **demographic_variables,
+    # Set index date to start date
     index_date=start_date,
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
         "incidence": 0.5,
     },
+    # Define general study population
     population=patients.satisfying(
         """
         # Define general population parameters
@@ -27,55 +33,69 @@ study = StudyDefinition(
         """,
     ),
     # Define composite denominator
+    # Note that the individual rules (suffix: _r*) are specified as described
+    # in the rules and the action (reject / select) is defined in the composite
+    # denominator.
     hyp003_denominator=patients.satisfying(
         """
-        hyp003_denominator_r1
+        (NOT hyp003_denominator_r1) AND
+        hyp003_denominator_r2 AND
+        (NOT hyp003_denominator_r3) AND
+        (NOT hyp003_denominator_r4) AND
+        (NOT hyp003_denominator_r5) AND
+        (NOT hyp003_denominator_r6) AND
+        (NOT hyp003_denominator_r7) AND
+        (NOT hyp003_denominator_r8) AND
+        (NOT hyp003_denominator_r9)
         """,
         hyp003_denominator_r1=patients.satisfying(
             """
             age > 79
             """
         ),
-        # hyp003_denominator_r2=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r3=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r4=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r5=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r6=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r7=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r8=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
-        # hyp003_denominator_r9=patients.satisfying(
-        #     """
-        #     # TODO
-        #     """
-        # ),
+        hyp003_denominator_r2=patients.satisfying(
+            """
+            bp_sys_val_12m <= 140 AND
+            bp_dia_val_12m <= 90
+            """
+        ),
+        hyp003_denominator_r3=patients.satisfying(
+            """
+            ht_max_12m
+            """
+        ),
+        hyp003_denominator_r4=patients.satisfying(
+            """
+            hyp_pca_pu_12m
+            """
+        ),
+        hyp003_denominator_r5=patients.satisfying(
+            """
+            bp_dec_12m
+            """
+        ),
+        hyp003_denominator_r6=patients.satisfying(
+            """
+            hyp_pca_dec_12m
+            """
+        ),
+        hyp003_denominator_r7=patients.satisfying(
+            """
+            bp_sys_val_12m <= 140 AND
+            bp_dia_val_12m <= 90 AND
+            hyp_invite_1_date > bp_sys_val_12m_date
+            """
+        ),
+        hyp003_denominator_r8=patients.satisfying(
+            """
+            hypertension_9m
+            """
+        ),
+        hyp003_denominator_r9=patients.satisfying(
+            """
+            registered_9m
+            """
+        ),
     ),
     # Define composite numerator
     hyp003_numerator=patients.satisfying(
@@ -84,21 +104,11 @@ study = StudyDefinition(
         """,
         hyp003_numerator_r1=patients.satisfying(
             """
-            bp_sys_val <= 140
-            AND
-            bp_dia_val <= 90
-            # AND
-            # BP_DAT > (PPED - 12 months)
+            bp_sys_val_12m <= 140 AND
+            bp_dia_val_12m <= 90
             """
         ),
-
     ),
-    # Include hypertension variables for denominator and numerator rules
-    **hyp_ind_variables,
-    # Include hypertension variables for register
-    **hyp_reg_variables,
-    # Include demographic variables
-    **demographic_variables,
 )
 
 # Create default measures
