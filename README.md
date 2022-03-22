@@ -37,8 +37,19 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
   Each denominator and numerator rule is defined in its own `patients.satisfying()` function (e.g., `hyp003_denominator_r1`) and summarised in a composite variable (e.g., `hyp003_denominator`).
   * **HYP001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
   * **HYP003**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
-  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py)
+  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py) (Waiting for code review of HYP001 and HYP001 before finishing)
 * Commonly used dates are defined in [analysis/config.py](analysis/config.py)
+
+### Actions
+
+All actions are defined in the [project.yaml](project.yaml).
+
+* Each indicator has the following actions:
+  * `generate_study_population_hyp***`: Extract study population
+  * `generate_measures_hyp***`: Generate measures using the `Measure()` framework
+* TODO ADD PLOTS
+* TODO ADD TABLES
+* TODO ADD REPORT
 
 # About the OpenSAFELY framework
 
