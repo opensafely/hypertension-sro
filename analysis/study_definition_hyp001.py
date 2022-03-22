@@ -23,10 +23,7 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
 
-        # Select patients from the specified population who have a diagnosis
-        # of hypertension which has not been subsequently resolved.
-        (hypertension AND (NOT hypertension_resolved)) OR
-        (hypertension_resolved_date <= hypertension_date)
+        hypertension_register
         """,
     ),
     # Include hypertension variables
