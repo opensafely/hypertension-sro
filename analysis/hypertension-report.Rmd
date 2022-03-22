@@ -1,0 +1,64 @@
+---
+title: "Hypertension SRO Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Set Rmd options ----
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load packages ----
+library(ggplot2)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(here)
+library(knitr)
+library(readr)
+library(fs)
+library(purrr)
+library(stringr)
+```
+
+# 
+```{r load-data}
+# Get file names and path ----
+dir_hyp_001_measures <- fs::dir_ls(path = "output/",
+                                   glob = "*hyp001*.csv$")
+
+# Load files ----
+df_hyp_001_measures <- dir_hyp_001_measures %>%
+  map(read_csv) %>%
+  map_dfr(pivot_longer,
+          cols = 1,
+          names_to = "group",
+          values_to = "category",
+          values_transform = list(category = as.character))
+
+# Get file names and path ----
+dir_hyp_003_measures <- fs::dir_ls(path = "output/",
+                                   glob = "*hyp003*.csv$")
+                                   
+# Load files ----
+df_hyp_003_measures <- dir_hyp_003_measures %>%
+  map(read_csv) %>%
+  map_dfr(pivot_longer,
+          cols = 1,
+          names_to = "group",
+          values_to = "category",
+          values_transform = list(category = as.character))
+
+# Get file names and path ----
+dir_hyp_007_measures <- fs::dir_ls(path = "output/",
+                                   glob = "*hyp007*.csv$")
+
+# Load files ----
+df_hyp_007_measures <- dir_hyp_007_measures %>%
+  map(read_csv) %>%
+  map_dfr(pivot_longer,
+          cols = 1,
+          names_to = "group",
+          values_to = "category",
+          values_transform = list(category = as.character))
+```
+
