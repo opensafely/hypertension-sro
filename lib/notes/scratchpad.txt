@@ -46,12 +46,3 @@ ht_max_12m=patients.with_these_clinical_events(
 # Note that the time frame for each measure gets specified in the
 # variables get defined using the 'between' argument and added as a suffix
 # to the variable names.
-
-
-# The only differences between the indicators are:
-# - Age (Denominator rule 1)
-#   - HYP003: >79
-#   - HYP007: <80
-# - Values of last blood pressure (Denominator rules 2, 7)
-#   - HYP003: SYS <= 140, DIA <= 90
-#   - HYP007: SYS <= 150, DIA <= 90
