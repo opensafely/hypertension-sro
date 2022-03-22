@@ -170,7 +170,7 @@ measures = [
     ),
     Measure(
         id="hyp003_sex_rate",
-        numerator="hypertension",
+        numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=["sex"],
         small_number_suppression=True,
