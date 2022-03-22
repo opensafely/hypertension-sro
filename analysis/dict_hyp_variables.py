@@ -94,10 +94,8 @@ hyp_ind_variables = dict(
     # BP_DAT: Date of the most recent blood
     # pressure reading with a systolic and diastolic value, up to and
     # including the achievement date.
-    bp_sys_val_12m_date=patients.date_of(
-        "bp_sys_val_12m",
-        date_format="YYYY-MM-DD"
-    ),
+    # Variable extracted above: bp_sys_val_12m_date_measured
+
     # BPDIA_VAL: The diastolic blood pressure values associated
     # with each date in the BPSYS_DAT array.
     bp_dia_val_12m=patients.mean_recorded_value(
@@ -119,10 +117,8 @@ hyp_ind_variables = dict(
     # BP_DAT: Date of the most recent blood
     # pressure reading with a systolic and diastolic value, up to and
     # including the achievement date.
-    bp_dia_val_12m_date=patients.date_of(
-        "bp_dia_val_12m",
-        date_format="YYYY-MM-DD"
-    ),
+    # Variable extracted above: bp_dia_val_12m_date_measured
+
     # PPED: Payment Period End Date. The last day of each period
     # for which payments are made for the Quality Service.
     # Note that this date gets defined in 'analysis/config.py'.
@@ -196,10 +192,7 @@ hyp_ind_variables = dict(
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
-    hyp_invite_1_date=patients.date_of(
-        "hyp_invite_1",
-        date_format="YYYY-MM-DD"
-        ),
+
     # HYPINVITE2_DAT: Date of the earliest invite for a hypertension care
     # review recorded at least 7 days after the first invitation and up to
     # and including the achievement date.

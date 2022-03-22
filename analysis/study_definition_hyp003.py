@@ -111,7 +111,9 @@ study = StudyDefinition(
             """
             bp_sys_val_12m <= 140 AND
             bp_dia_val_12m <= 90 AND
-            hyp_invite_1_date > bp_sys_val_12m_date
+
+            (hyp_invite_1_date > bp_sys_val_12m_date_measured OR
+            hyp_invite_1_date > bp_dia_val_12m_date_measured)
             """
         ),
         # Reject patients passed to this rule whose earliest hypertension
