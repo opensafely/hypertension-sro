@@ -187,7 +187,7 @@ hyp_ind_variables = dict(
     # TODO: to come up with a better approach
     hyp_invite_1=patients.with_these_clinical_events(
         between=[
-            "last_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)"
             ],
         codelist=hyp_invite_codes,
