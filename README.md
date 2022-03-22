@@ -23,21 +23,22 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 
 ### Codelists
 
-* All codelists used in this project are available in the [codelists](codelists) folder
+* All codelists used in this project are available in the [codelists](codelists) folder.
 
 ### Variable dictionaries
 
-* Variables that are shared across study definitions are specified in dictionaries:
-  * **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
-  * **Hypertension register and indicators**: [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
-
+Variables that are shared across QOF indicators (mapped to individual study definitions) are specified in dictionaries:
+* **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
+* **Variables to define hypertension (*i*) register and (*ii*) indicators**: [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
+  * Variable names are following this  structure: `<name_of_codelist>_<time_frame>`
+  * Where dates are needed we make use of the `include_date_*` arguments  
 ### Study definitions
 
 * The hypertension register (HYP_REG / HYP001) and each indicator (HYP003, HYP007) are specified in individual study definitions. 
-  Each denominator and numerator rule is defined in its own `patients.satisfying()` function (e.g., `hyp003_denominator_r1`) and summarised in a composite variable (e.g., `hyp003_denominator`).
+  Each denominator and numerator rule is defined by composing variables from the dictionaries in their own `patients.satisfying()` function (e.g., `hyp003_denominator_r1`) and summarised in a composite variable (e.g., `hyp003_denominator`).
   * **HYP001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
   * **HYP003**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
-  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py) (Waiting for code review of HYP001 and HYP001 before finishing)
+  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py) (Waiting for code review of HYP001 and HYP003 before finishing)
 * Commonly used dates are defined in [analysis/config.py](analysis/config.py)
 
 ### Actions
