@@ -180,10 +180,14 @@ hyp_ind_variables = dict(
     # HYPINVITE1_DAT: Date of the earliest invitation for a hypertension care
     # review on or after the quality service start date and up to and
     # including the achievement date.
+    # Note that the hyp_invite_1_date variable gets defined here
+    #
     # TODO: Note that the between argument should start with the 'start_date'
+    # TODO: The current implementation looks back 12 months but we might need
+    # TODO: to come up with a better approach
     hyp_invite_1=patients.with_these_clinical_events(
         between=[
-            "index_date",
+            "last_day_of_month(index_date) - 12 months",
             "last_day_of_month(index_date)"
             ],
         codelist=hyp_invite_codes,
