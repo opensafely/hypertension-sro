@@ -1,0 +1,48 @@
+OLD CODE AND NEW IDEAS
+
+# The date of ht_max needs to be available in the study definition as it
+# needs to be compared with another date
+ht_max_date=patients.date_of(
+    "ht_max",
+    date_format="YYYY-MM-DD"
+    ),
+# Specify who received tx in the last 12m
+ht_max_12m=patients.with_these_clinical_events(
+    on_or_after="ht_max_date",
+    codelist=ht_max_codes,
+    returning="binary_flag",
+    find_last_match_in_period=True,
+),
+# BPDIA_VAL: The diastolic blood pressure values associated
+# with each date in the BPSYS_DAT array.
+# bp_dia_val_9m=patients.mean_recorded_value(
+#     bp_dia_codes,
+#     on_most_recent_day_of_measurement=True,
+#     include_measurement_date=True,
+#     between=["first_day_of_month(index_date) - 9 months",
+#              "last_day_of_month(index_date)"],
+#     date_format="YYYY-MM-DD",
+#     return_expectations={
+#         "incidence": 0.8,
+#         "float": {"distribution": "normal", "mean": 70, "stddev": 20},
+#         "date": {"earliest": "index_date", "latest": "index_date + 1 year"},
+#         "rate": "uniform",
+#     },
+# ),
+# bp_sys_val_9m=patients.mean_recorded_value(
+#     bp_sys_codes,
+#     on_most_recent_day_of_measurement=True,
+#     include_measurement_date=True,
+#     between=["first_day_of_month(index_date) - 9 months",
+#              "last_day_of_month(index_date)"],
+#     date_format="YYYY-MM-DD",
+#     return_expectations={
+#         "incidence": 0.8,
+#         "float": {"distribution": "normal", "mean": 110, "stddev": 20},
+#         "date": {"earliest": "index_date", "latest": "index_date + 1 year"},
+#         "rate": "uniform",
+#     },
+# ),
+# Note that the time frame for each measure gets specified in the
+# variables get defined using the 'between' argument and added as a suffix
+# to the variable names.
