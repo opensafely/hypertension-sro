@@ -58,7 +58,7 @@ Dashboards presenting the annual targets of all QOF indicators published by NHSD
 Using OpenSAFELY-TPP, covering 40% of England's population, we have evaluated the QOF Hypertension register (Indicator: HYP001) between 2019-09-01 and 2022-03-31.
 The codelist used can be found here at [OpenSAFELY Codelists](https://codelists.opensafely.org/).
 
-The **study population** for the register was defined following the business rules the (v46) as shown above.
+The **study population** for the register was defined following the business rules the (v46).
 For each month within the study period, we have calculated the percentage of registered patients with a diagnosis of hypertension which has not been subsequently resolved.
 All analytical code and output is available for inspection at the [OpenSAFELY GitHub repository](https://github.com/opensafely/hypertension-sro).
 
@@ -71,6 +71,19 @@ All analytical code and output is available for inspection at the [OpenSAFELY Gi
 df_measures_hyp001 %>%
     dplyr::filter(group == "population") %>% 
     plot_qof_indicator(legend = "none")
+
+```
+
+## HYP001 by sex
+
+```{r fig.width=8, fig.height=4}
+
+df_measures_hyp001 %>%
+  dplyr::filter(group == "sex") %>% 
+  dplyr::mutate(category = factor(category,
+                                  levels = c("F", "M"),
+                                  labels = c("Female", "Male"))) %>% 
+  plot_qof_indicator()
 
 ```
 
@@ -90,11 +103,11 @@ df_measures_hyp001 %>%
 ```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
-  dplyr::filter(group == "imd") %>% 
-  dplyr::filter(category != "missing") %>% 
+  dplyr::filter(group == "imd") %>%
   dplyr::mutate(category = factor(category,
                                   levels = c(1:5),
                                   labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
+  dplyr::filter(!is.na(category)) %>% 
   plot_qof_indicator()
 ```
 
@@ -104,18 +117,6 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
-  dplyr::filter(category != "missing") %>% 
-  plot_qof_indicator()
-
-```
-
-## HYP001 by sex
-
-```{r fig.width=8, fig.height=4}
-
-df_measures_hyp001 %>%
-  dplyr::filter(group == "sex") %>% 
-  dplyr::filter(category != "missing") %>% 
   plot_qof_indicator()
 
 ```
