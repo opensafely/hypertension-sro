@@ -92,8 +92,10 @@ df_measures_hyp001 %>%
 df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>% 
   dplyr::filter(category != "missing") %>% 
+  dplyr::mutate(category = factor(category,
+                                  levels = c(1:5),
+                                  labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
   plot_qof_indicator()
-
 ```
 
 ## HYP001 by region
