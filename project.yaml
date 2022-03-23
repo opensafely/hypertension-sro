@@ -34,7 +34,7 @@ actions:
     needs: [generate_measures_hyp001]
     outputs:
       moderately_sensitive:
-        measure_csv: output/measures/measures_hyp001.csv
+        measure_csv: output/measures_hyp001.csv
 
   # Extract cohort for indicator HYP003 by month 
   generate_study_population_hyp003:
@@ -82,9 +82,10 @@ actions:
        moderately_sensitive:
          measure_csv: output/measure_hyp007_*_rate.csv
 
-  generate_rmd_report:
+# Generate R Markdown Report
+  generate_rmd:
     run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", output_dir = "output")'
     needs: [generate_measures_hyp001]
     outputs:
       moderately_sensitive:
-        report: output/markdown_report.html
+        report: output/hypertension-sro-report.html

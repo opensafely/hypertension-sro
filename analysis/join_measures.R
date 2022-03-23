@@ -16,7 +16,7 @@ dir_hyp_001_measures <- fs::dir_ls(path = "output/",
 # Split dir paths because file structure differes
 ## Grouped measures
 dir_hyp_001_measures_groups <- dir_hyp_001_measures[!stringr::str_detect(dir_hyp_001_measures, "population")]
-## Population measure 
+## Population measure
 dir_hyp_001_measures_pop <- dir_hyp_001_measures[stringr::str_detect(dir_hyp_001_measures, "population")]
 
 # Load files ----
@@ -42,8 +42,8 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
 
 # Write hyp001 csv file
 ## First create subdirectory
-fs::dir_create(here::here("output", "measures"))
+# fs::dir_create(here::here("output", "measures"))
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
-                 here::here("output", "measures", "measures_hyp001.csv"))
+                 here::here("output", "measures_hyp001.csv"))
