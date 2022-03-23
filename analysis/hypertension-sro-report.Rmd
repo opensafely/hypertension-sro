@@ -32,10 +32,10 @@ df_measures_hyp001 <- readr::read_csv(here::here("output", "measures_hyp001.csv"
 ```{r fig.width=9, fig.height=4}
 
 df_measures_hyp001 %>%
-    dplyr::filter(category == "population") %>%
+    dplyr::filter(group == "population") %>%
     ggplot2::ggplot(ggplot2::aes(x = date,
                                  y = value,
-                                 colour = category)) +
+                                 colour = group)) +
     ggplot2::geom_line(size = 1,
                        alpha = 0.3) +
     ggplot2::geom_point(size = 2) +
@@ -50,4 +50,30 @@ df_measures_hyp001 %>%
     ggplot2::theme(text = ggplot2::element_text(size = 16),
                    legend.position = "none") +
     ggplot2::scale_color_viridis_d()
+```
+
+
+
+```{r fig.width=9, fig.height=4}
+
+df_measures_hyp001 %>%
+    dplyr::filter(group != "population") %>%
+    dplyr::filter(group != "practice") %>%
+    ggplot2::ggplot(ggplot2::aes(x = date,
+                                 y = value,
+                                 colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    ggplot2::scale_y_continuous(labels = scales::percent,
+                                limits = c(0, 1)) +
+    ggplot2::labs(x = NULL,
+                  y = "Prevalence",
+                  colour = NULL,
+                  title = "Hypertension Register (HYP001)") +
+    ggplot2::theme(text = ggplot2::element_text(size = 16)) +
+    ggplot2::scale_color_viridis_d() +
+    ggplot2::facet_wrap(~group)
 ```
