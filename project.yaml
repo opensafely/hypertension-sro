@@ -26,8 +26,16 @@ actions:
      needs: [generate_study_population_hyp001]
      outputs:
        moderately_sensitive:
-         measure_csv: output/measure_hyp001_*_rate.csv   
- 
+         measure_csv: output/measure_hyp001_*_rate.csv
+  
+  # Join all measure files for each indicator
+  join_measures:
+    run: r:latest analysis/join_measures.R
+    needs: [generate_measures_hyp001]
+    outputs:
+      moderately_sensitive:
+        measure_csv: output/measures_hyp001.csv
+
   # Extract cohort for indicator HYP003 by month 
   generate_study_population_hyp003:
     run: > 
@@ -50,3 +58,34 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/measure_hyp003_*_rate.csv  
+
+  # Extract cohort for indicator HYP007 by month 
+  generate_study_population_hyp007:
+    run: > 
+      cohortextractor:latest generate_cohort 
+      --study-definition study_definition_hyp007 
+      --index-date-range "2019-01-01 to 2022-01-01 by month" 
+      --output-dir=output  
+      --output-format=feather
+    outputs:
+      highly_sensitive:
+        cohort: output/input_hyp007_*.feather
+
+  #  Generate measures for indicator HYP007 by month
+  generate_measures_hyp007:
+     run: >
+       cohortextractor:latest generate_measures 
+       --study-definition study_definition_hyp007 
+       --output-dir=output
+     needs: [generate_study_population_hyp007]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/measure_hyp007_*_rate.csv
+
+# Generate R Markdown Report
+  generate_rmd:
+    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", knit_root_dir = "/workspace", output_dir = "output")'
+    needs: [join_measures]
+    outputs:
+      moderately_sensitive:
+        report: output/hypertension-sro-report.html
