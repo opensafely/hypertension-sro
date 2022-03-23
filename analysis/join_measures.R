@@ -42,8 +42,8 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
 
 # Write hyp001 csv file
 ## First create subdirectory
-fs::dir_create(here::here("output/measures"))
+fs::dir_create(here::here("output", "measures"))
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
-                 here::here("output/measures/measures_hyp001.csv"))
+                 here::here("output", "measures", "measures_hyp001.csv"))
