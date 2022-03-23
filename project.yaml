@@ -81,3 +81,10 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/measure_hyp007_*_rate.csv
+
+  generate_rmd_report:
+    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", output_dir = "output")'
+    needs: [generate_measures_hyp001]
+    outputs:
+      moderately_sensitive:
+        report: output/markdown_report.html
