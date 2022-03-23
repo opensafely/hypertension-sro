@@ -1,3 +1,7 @@
+# This scrip loads all measure files and joins them together
+# Note that the ungrouped measure (population) and grouped measures
+# differ in the number of their variables
+
 # Load packages ----
 library(ggplot2)
 library(magrittr)
