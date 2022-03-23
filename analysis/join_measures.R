@@ -40,6 +40,10 @@ df_hyp_001_measures_pop <- readr::read_csv(dir_hyp_001_measures_pop) %>%
 df_hyp_001_measures <- df_hyp_001_measures_groups %>%
   dplyr::bind_rows(df_hyp_001_measures_pop)
 
-# Write csv
+# Write hyp001 csv file
+## First create subdirectory
+fs::dir_create(here::here("output/measures"))
+
+## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
                  here::here("output/measures/measures_hyp001.csv"))
