@@ -84,8 +84,8 @@ actions:
 
 # Generate R Markdown Report
   generate_rmd:
-    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", output_dir = "output")'
-    needs: [generate_measures_hyp001]
+    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", knit_root_dir = "/workspace", output_dir = "output")'
+    needs: [join_measures]
     outputs:
       moderately_sensitive:
         report: output/hypertension-sro-report.html
