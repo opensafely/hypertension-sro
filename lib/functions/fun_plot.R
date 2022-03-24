@@ -37,9 +37,9 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_
   }
 
   if (show_label) {
-    plot <- ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, ""),
+    plot <- plot + ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, "")),
                             show.legend = FALSE,
-                            segment.color = NA))
+                            segment.color = NA)
   }
 
   # if (plotly) {

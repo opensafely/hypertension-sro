@@ -25,7 +25,7 @@ library(fs)
 library(purrr)
 library(stringr)
 library(gt)
-
+library(ggrepel)
 # Load plotting function
 source(here::here("lib", "functions", "fun_plot.R"))
 ```
@@ -124,7 +124,7 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
-  plot_qof_indicator(plotly = FALSE)
+  plot_qof_indicator(plotly = FALSE, show_label = TRUE)
 
 ```
 
