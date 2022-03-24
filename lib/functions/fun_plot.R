@@ -10,7 +10,7 @@
 #' @param legend String, legend position, "none" to remove legend
 #'
 #' @return ggplot2 object
-plot_qof_indicator <- function(df, title = NULL, legend_position = "top", plotly = FALSE) {
+plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_scale_limits = FALSE, plotly = FALSE) {
   
   # Create plot with legend
   plot <- df %>% 
@@ -22,8 +22,7 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", plotly
     ggplot2::geom_point(size = 2) +
     ggplot2::scale_x_date(date_breaks = "4 month",
                           date_labels = "%b %y") +
-    ggplot2::scale_y_continuous(labels = scales::percent,
-                                limits = c(0, 1)) +
+    ggplot2::scale_y_continuous(labels = scales::percent) +
     ggplot2::labs(x = NULL,
                   y = "Prevalence",
                   colour = NULL,
@@ -32,16 +31,20 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", plotly
     ggplot2::scale_color_viridis_d() +
     ggplot2::theme(legend.position = legend_position) 
 
-  if (plotly) {
-    # Convert ggplot2 to plotly
-    plot <- plotly::ggplotly(plot,
-                             tooltip = "text") %>%
-            plotly::config(displayModeBar = FALSE) %>% 
-  plotly::layout(legend = list(orientation = "h"))
-
+  if  (set_y_scale_limits) {
+    plot <-  plot + ggplot2::scale_y_continuous(labels = scales::percent,
+                                                limits = c(0, 1))
   }
-  
-  
+
+  # if (plotly) {
+  #   # Convert ggplot2 to plotly
+  #   plot <- plotly::ggplotly(plot,
+  #                            tooltip = "text") %>%
+  #           plotly::config(displayModeBar = FALSE) %>% 
+  # plotly::layout(legend = list(orientation = "h"))
+
+  # }
+
   # Return plot
   return(plot)
 }

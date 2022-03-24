@@ -7,7 +7,6 @@ output:
     toc_float: true
     number_sections: true
     code_folding: hide
-
 ---
 
 ```{r setup, include=FALSE}
@@ -76,7 +75,8 @@ All analytical code and output is available for inspection at the [OpenSAFELY Gi
 
 df_measures_hyp001 %>%
     dplyr::filter(group == "population") %>% 
-    plot_qof_indicator(legend = "none", plotly = TRUE)
+    plot_qof_indicator(legend = "none", plotly = FALSE, 
+                       set_y_scale_limits = TRUE)
 
 ```
 
@@ -89,7 +89,7 @@ df_measures_hyp001 %>%
   dplyr::mutate(category = factor(category,
                                   levels = c("F", "M"),
                                   labels = c("Female", "Male"))) %>% 
-  plot_qof_indicator(plotly = TRUE)
+  plot_qof_indicator(plotly = FALSE)
 
 ```
 
@@ -100,7 +100,7 @@ df_measures_hyp001 %>%
 df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>% 
   dplyr::filter(category != "missing") %>% 
-  plot_qof_indicator(plotly = TRUE)
+  plot_qof_indicator(plotly = FALSE)
 
 ```
 
@@ -113,8 +113,9 @@ df_measures_hyp001 %>%
   dplyr::mutate(category = factor(category,
                                   levels = c(1:5),
                                   labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
+  # Remove missing IMD, previously coded as 0
   dplyr::filter(!is.na(category)) %>% 
-  plot_qof_indicator(plotly = TRUE)
+  plot_qof_indicator(plotly = FALSE)
 ```
 
 ## HYP001 by region
@@ -123,7 +124,7 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
-  plot_qof_indicator(plotly = TRUE)
+  plot_qof_indicator(plotly = FALSE)
 
 ```
 
