@@ -27,6 +27,7 @@ library(purrr)
 library(stringr)
 library(gt)
 
+# Load plotting function
 source(here::here("lib", "functions", "fun_plot.R"))
 ```
 
