@@ -10,7 +10,7 @@
 #' @param legend String, legend position, "none" to remove legend
 #'
 #' @return ggplot2 object
-plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_scale_limits = FALSE, plotly = FALSE) {
+plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_scale_limits = FALSE, plotly = FALSE, show_label = FALSE) {
   
   # Create plot with legend
   plot <- df %>% 
@@ -34,6 +34,12 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_
   if  (set_y_scale_limits) {
     plot <-  plot + ggplot2::scale_y_continuous(labels = scales::percent,
                                                 limits = c(0, 1))
+  }
+
+  if (show_label) {
+    plot <- ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, ""),
+                            show.legend = FALSE,
+                            segment.color = NA))
   }
 
   # if (plotly) {
