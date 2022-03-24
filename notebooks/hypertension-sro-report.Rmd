@@ -72,41 +72,41 @@ All analytical code and output is available for inspection at the [OpenSAFELY Gi
 
 ## HYP001
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, warnings=FALSE}
 
 df_measures_hyp001 %>%
     dplyr::filter(group == "population") %>% 
-    plot_qof_indicator(legend = "none")
+    plot_qof_indicator(legend = "none", plotly = TRUE)
 
 ```
 
 ## HYP001 by sex
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, warnings=FALSE}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>% 
   dplyr::mutate(category = factor(category,
                                   levels = c("F", "M"),
                                   labels = c("Female", "Male"))) %>% 
-  plot_qof_indicator()
+  plot_qof_indicator(plotly = TRUE)
 
 ```
 
 ## HYP001 by age band
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, warnings=FALSE}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>% 
   dplyr::filter(category != "missing") %>% 
-  plot_qof_indicator(legend = "top")
+  plot_qof_indicator(plotly = TRUE)
 
 ```
 
 ## HYP001 by IMD
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, warnings=FALSE}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
@@ -114,16 +114,16 @@ df_measures_hyp001 %>%
                                   levels = c(1:5),
                                   labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
   dplyr::filter(!is.na(category)) %>% 
-  plot_qof_indicator()
+  plot_qof_indicator(plotly = TRUE)
 ```
 
 ## HYP001 by region
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, warnings=FALSE}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
-  plot_qof_indicator()
+  plot_qof_indicator(plotly = TRUE)
 
 ```
 

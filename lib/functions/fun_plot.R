@@ -10,7 +10,7 @@
 #' @param legend String, legend position, "none" to remove legend
 #'
 #' @return ggplot2 object
-plot_qof_indicator <- function(df, title = NULL, legend_position = "top") {
+plot_qof_indicator <- function(df, title = NULL, legend_position = "top", plotly = FALSE) {
   
   # Create plot with legend
   plot <- df %>% 
@@ -31,6 +31,15 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top") {
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
     ggplot2::scale_color_viridis_d() +
     ggplot2::theme(legend.position = legend_position) 
+
+  if (plotly) {
+    # Convert ggplot2 to plotly
+    plot <- plotly::ggplotly(plot,
+                             tooltip = "text") %>%
+            plotly::config(displayModeBar = FALSE) %>% 
+  plotly::layout(legend = list(orientation = "h"))
+
+  }
   
   
   # Return plot
