@@ -50,8 +50,13 @@ Research suggests that delays in the management of high blood pressure are assoc
 # Business rules
 
 The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below.
+
+> "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
+
 More details about the rules can be found [here](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release).
 Dashboards presenting the annual targets of all QOF indicators published by NHSD are available [here](https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/quality-outcomes-framework-qof).
+
+
 
 # Methods
 
