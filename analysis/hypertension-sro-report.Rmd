@@ -11,7 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 # Set Rmd options ----
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
 # Load packages ----
 library(ggplot2)
@@ -71,7 +71,7 @@ All analytical code and output is available for inspection at the [OpenSAFELY Gi
 
 ## HYP001
 
-```{r fig.width=8, fig.height=4, warnings=FALSE}
+```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
     dplyr::filter(group == "population") %>% 
@@ -82,7 +82,7 @@ df_measures_hyp001 %>%
 
 ## HYP001 by sex
 
-```{r fig.width=8, fig.height=4, warnings=FALSE}
+```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>% 
@@ -95,7 +95,7 @@ df_measures_hyp001 %>%
 
 ## HYP001 by age band
 
-```{r fig.width=8, fig.height=4, warnings=FALSE}
+```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>% 
@@ -106,7 +106,7 @@ df_measures_hyp001 %>%
 
 ## HYP001 by IMD
 
-```{r fig.width=8, fig.height=4, warnings=FALSE}
+```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
@@ -120,7 +120,7 @@ df_measures_hyp001 %>%
 
 ## HYP001 by region
 
-```{r fig.width=8, fig.height=4, warnings=FALSE}
+```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
