@@ -5,6 +5,15 @@ expectations:
 
 actions:
 
+  generate_study_population_ethnicity:
+    run: > 
+      cohortextractor:latest generate_cohort 
+      --study-definition study_definition_ethnicity 
+      --output-dir=output
+    outputs:
+      highly_sensitive:
+        cohort: output/input_ethnicity.csv
+
   # Extract cohort for indicator HYP001 by month 
   generate_study_population_hyp001:
     run: > 
