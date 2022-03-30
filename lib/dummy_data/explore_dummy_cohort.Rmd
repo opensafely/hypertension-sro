@@ -35,11 +35,18 @@ df_hyp003_2019_01_01 <- read_feather(here("output/input_hyp003_2019-01-01.feathe
 
 ### Check variable names
 ```{r}
-df_hyp003_2019_01_01 %>%
+df_hyp001_2019_01_01 %>%
   names()
 ```
 
 ### Check dummy data
 ```{r}
 df_hyp003_2019_01_01
+```
+
+### Check ethnicity
+
+```{r}
+df_ethnicity <- read_feather(here("output/input_ethnicity.feather"))
+df_ethnicity
 ```
