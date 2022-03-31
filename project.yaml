@@ -107,9 +107,9 @@ actions:
         measure_csv: output/measures/measures_hyp001.csv
 
 # Generate notebooks
-  generate_rmd:
-    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", knit_root_dir = "/workspace", output_dir = "output")'
+  generate_hyp_report:
+    run: r:latest -e 'rmarkdown::render("analysis/hypertension-sro-report.Rmd", knit_root_dir = "/workspace", output_dir = "output/notebooks")'
     needs: [join_measures]
     outputs:
       moderately_sensitive:
-        report: output/hypertension-sro-report.html
+        report: output/notebooks/hypertension-sro-report.html
