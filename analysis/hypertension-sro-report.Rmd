@@ -98,6 +98,8 @@ df_measures_hyp001 %>%
 
 ```
 
+
+
 ### HYP001 by sex
 
 ```{r fig.width=8, fig.height=4}
@@ -112,6 +114,21 @@ df_measures_hyp001 %>%
 
 ```
 
+```{r fig.width=8, fig.height=2}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "sex") %>%
+    dplyr::filter(category != "missing") %>%
+    tidyr::uncount(hypertension) %>%
+    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
+    ggplot2::geom_histogram() +
+    ggplot2::scale_x_date(date_labels = "%b %y") +
+    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    scale_fill_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::labs(x = NULL, y = "Count")
+```
+
 ### HYP001 by age band
 
 ```{r fig.width=8, fig.height=4}
@@ -121,6 +138,21 @@ df_measures_hyp001 %>%
   dplyr::filter(category != "missing") %>% 
   plot_qof_indicator(plotly = FALSE)
 
+```
+
+```{r fig.width=8, fig.height=8}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "age_band") %>%
+    dplyr::filter(category != "missing") %>%
+    tidyr::uncount(hypertension) %>%
+    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
+    ggplot2::geom_histogram() +
+    ggplot2::scale_x_date(date_labels = "%b %y") +
+    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::scale_fill_viridis_d() +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::labs(x = NULL, y = "Count")
 ```
 
 ### HYP001 by IMD
@@ -137,6 +169,25 @@ df_measures_hyp001 %>%
   plot_qof_indicator(plotly = FALSE)
 ```
 
+
+```{r fig.width=8, fig.height=6}
+df_measures_hyp001 %>%
+  dplyr::filter(group == "imd") %>%
+  dplyr::mutate(category = factor(category,
+                                  levels = c(1:5),
+                                  labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
+    dplyr::filter(!is.na(category)) %>% 
+    tidyr::uncount(hypertension) %>%
+    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
+    ggplot2::geom_histogram() +
+    ggplot2::scale_x_date(date_labels = "%b %y") +
+    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::scale_fill_viridis_d() +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::labs(x = NULL, y = "Count")
+```
+
 ### HYP001 by region
 
 ```{r fig.width=8, fig.height=4}
@@ -148,6 +199,19 @@ df_measures_hyp001 %>%
 
 ```
 
+```{r fig.width=8, fig.height=10}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "region") %>% 
+    tidyr::uncount(hypertension) %>%
+    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
+    ggplot2::geom_histogram() +
+    ggplot2::scale_x_date(date_labels = "%b %y") +
+    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    scale_fill_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::labs(x = NULL, y = "Count")
+```
 
 ### HYP001 by ethnicity
 
