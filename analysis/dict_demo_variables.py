@@ -12,7 +12,7 @@ demographic_variables = dict(
     # Age as of end of NHS financial year (March 31st)
     # NOTE: For QOF rules we need the age at the end of the financial year
     age=patients.age_as_of(
-        "last_day_of_nhs_financial_year(index_date) + 1 day",
+        "last_day_of_month(index_date) + 1 day",
         return_expectations={
             "rate": "universal",
             "int": {"distribution": "population_ages"},
