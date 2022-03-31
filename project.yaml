@@ -104,7 +104,7 @@ actions:
     needs: [generate_measures_hyp001]
     outputs:
       moderately_sensitive:
-        measure_csv: output/measures_hyp001.csv
+        measure_csv: output/measures/measures_hyp001.csv
 
 # Generate notebooks
   generate_rmd:
