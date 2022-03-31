@@ -27,11 +27,18 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 
 ### Variable dictionaries
 
-Variables that are shared across QOF indicators (mapped to individual study definitions) are specified in dictionaries:
+Variables that are shared across QOF indicators (mapped to individual study definitions) are specified in dictionaries (see [OpenSAFELY programming tricks](https://docs.opensafely.org/study-def-tricks/#sharing-common-study-definition-variables)):
 * **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
-* **Variables to define hypertension (*i*) register and (*ii*) indicators**: [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
+* Variables to define hypertension **register** (`hyp_reg_variables`) and **indicators** (`hyp_ind_variables`): [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
   * Variable names are following this  structure: `<name_of_codelist>_<time_frame>`
-  * Where dates are needed we make use of the `include_date_*` arguments  
+    > For example, denominator rule 3 for indicators HYP003 and HYP007 would be implemented like this:
+
+    | Rule | Rule description or comments |
+    | ---- | ---------------------------- |
+    | If `HTMAX_DAT` > (`PPED` – 12 months) | Reject patients passed to this rule who are receiving maximal blood pressure therapy in the 12 months leading up to and including the payment period end date. Pass all remaining patients to the next rule. |
+
+
+  * Where dates are needed we make use of the `include_date_*` argument. This includes the dates associated with each event to the data (see [OpenSAFELY variable reference](https://docs.opensafely.org/study-def-variables/)).
 ### Study definitions
 
 * The hypertension register (HYP_REG / HYP001) and each indicator (HYP003, HYP007) are specified in individual study definitions. 
