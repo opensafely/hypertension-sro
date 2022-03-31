@@ -34,20 +34,19 @@ source(here::here("lib", "functions", "fun_plot.R"))
 # Get file names and path ----
 df_measures_hyp001 <- readr::read_csv(here::here("output", "measures", "measures_hyp001.csv"))
 ```
+# Introduction
 
-# What it is 
+## What it is 
 
 The [Quality and Outcomes Framework (QOF)](https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/quality-outcomes-framework-qof) outlines three indicator that focus on hypertension (HYP001, HYP003, and HYP007). 
 We aim to use OpenSAFELY to quantify the extent to which the hypertension register (HYP001) was disrupted during the pandemic.
 
-# Why it matters
+## Why it matters
 
 General practice has been disrupted by the pandemic in many clinical areas (e.g., [Curtis et al., 2021](https://bjgp.org/content/72/714/e63); [Williamson et al., 2020](https://www.nature.com/articles/s41586-020-2521-4)). 
 We aim to assess the impact of the pandemic on the routine management of blood pressure. 
 High blood pressure is one of the leading risk factors for several diseases (e.g., cardiovascular disease, stroke) worldwide. 
 Research suggests that delays in the management of high blood pressure are associated with worse clinical outcomes, for example acute cardiovascular events, or death ([Xu et al., 2015](https://www.bmj.com/content/350/bmj.h158)).
-
-
 
 # Methods
 
@@ -69,7 +68,11 @@ Dashboards presenting the annual targets of all QOF indicators published by NHSD
 
 # Results
 
+Note that the scaling of the y-axis is different for the total population (0 to 100%) and outputs by subgroup (scaling differs across grouping variables to highlight differences between groups).
+
 ## HYP001
+
+### HYP001 total population
 
 ```{r fig.width=8, fig.height=4}
 
@@ -80,7 +83,7 @@ df_measures_hyp001 %>%
 
 ```
 
-## HYP001 by sex
+### HYP001 by sex
 
 ```{r fig.width=8, fig.height=4}
 
@@ -94,7 +97,7 @@ df_measures_hyp001 %>%
 
 ```
 
-## HYP001 by age band
+### HYP001 by age band
 
 ```{r fig.width=8, fig.height=4}
 
@@ -105,7 +108,7 @@ df_measures_hyp001 %>%
 
 ```
 
-## HYP001 by IMD
+### HYP001 by IMD
 
 ```{r fig.width=8, fig.height=4}
 
@@ -119,7 +122,7 @@ df_measures_hyp001 %>%
   plot_qof_indicator(plotly = FALSE)
 ```
 
-## HYP001 by region
+### HYP001 by region
 
 ```{r fig.width=8, fig.height=4}
 
@@ -129,6 +132,10 @@ df_measures_hyp001 %>%
   scale_colour_brewer(palette = "Set1")
 
 ```
+
+# Discussion
+
+- TODO: ADD GENERAL DISCUSSION.
 
 # References 
 
