@@ -153,6 +153,14 @@ df_measures_hyp001 %>%
 
 - TODO
 
+### HYP001 by learning disability
+
+- TODO
+
+### HYP001 by NHS care home status
+
+- TODO
+
 ## HYP003
 
 - TODO
