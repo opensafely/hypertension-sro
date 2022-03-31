@@ -1,6 +1,6 @@
 ---
-title: "Hypertension QOF Register"
-subtitle: "Indicator HYP001"
+title: "QOF - Hypertension"
+subtitle: "Indicators: HYP001 (Register)"
 output:
   html_document:
     toc: true
