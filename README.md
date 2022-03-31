@@ -60,11 +60,11 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 ### Study definitions
 
 * The hypertension register (HYP_REG / HYP001) and indicators (HYP003, HYP007) are specified in individual study definitions. 
-  Within each study definition, we can compose variables from the dictionaries using the `patients.satisfying()` function to 
+  Within each study definition, we can compose variables from the dictionaries using the `patients.satisfying()` function to:
   1. Create a variable for each numerator and denominator rule (e.g., [`hyp003_denominator_r1`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L51-L57)), where variables for each rule number are named following this structure: `<indicator>_<numerator/denominator>_<rule_number>`.
   3. These rule variables can then again be composed to create the numerator and denominator variables (e.g., [`hyp003_denominator`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L39-L50)).
 
-  Examples can be found
+  Examples can be found here:
     * **HYP001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
     * **HYP003**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
     * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py)
