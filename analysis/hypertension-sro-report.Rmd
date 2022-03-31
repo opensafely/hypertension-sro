@@ -11,7 +11,7 @@ output:
 
 ```{r setup, include=FALSE}
 # Set Rmd options ----
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 
 # Load packages ----
 library(ggplot2)
@@ -32,7 +32,7 @@ source(here::here("lib", "functions", "fun_plot.R"))
 
 ```{r load-data, include=FALSE}
 # Get file names and path ----
-df_measures_hyp001 <- readr::read_csv(here::here("output", "measures_hyp001.csv"))
+df_measures_hyp001 <- readr::read_csv(here::here("output", "measures", "measures_hyp001.csv"))
 ```
 
 # What it is 
@@ -47,15 +47,6 @@ We aim to assess the impact of the pandemic on the routine management of blood p
 High blood pressure is one of the leading risk factors for several diseases (e.g., cardiovascular disease, stroke) worldwide. 
 Research suggests that delays in the management of high blood pressure are associated with worse clinical outcomes, for example acute cardiovascular events, or death ([Xu et al., 2015](https://www.bmj.com/content/350/bmj.h158)).
 
-# Business rules
-
-The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below.
-
-> "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
-
-More details about the rules can be found [here](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release).
-Dashboards presenting the annual targets of all QOF indicators published by NHSD are available [here](https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/quality-outcomes-framework-qof).
-
 
 
 # Methods
@@ -66,6 +57,15 @@ The codelist used can be found here at [OpenSAFELY Codelists](https://codelists.
 The **study population** for the register was defined following the business rules the (v46).
 For each month within the study period, we have calculated the percentage of registered patients with a diagnosis of hypertension which has not been subsequently resolved.
 All analytical code and output is available for inspection at the [OpenSAFELY GitHub repository](https://github.com/opensafely/hypertension-sro).
+
+## Business rules
+
+The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below.
+
+> "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
+
+More details about the rules can be found [here](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release).
+Dashboards presenting the annual targets of all QOF indicators published by NHSD are available [here](https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/quality-outcomes-framework-qof).
 
 # Results
 
@@ -124,7 +124,8 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>% 
-  plot_qof_indicator(plotly = FALSE, show_label = TRUE)
+  plot_qof_indicator(plotly = FALSE, show_label = FALSE) +
+  scale_colour_brewer(palette = "Set1")
 
 ```
 
