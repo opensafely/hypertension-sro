@@ -30,23 +30,42 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 Variables that are shared across QOF indicators (mapped to individual study definitions) are specified in dictionaries (see [OpenSAFELY programming tricks](https://docs.opensafely.org/study-def-tricks/#sharing-common-study-definition-variables)):
 * **Demographic variables**: [analysis/dict_demo_variables.py](analysis/dict_demo_variables.py)
 * Variables to define hypertension **register** (`hyp_reg_variables`) and **indicators** (`hyp_ind_variables`): [analysis/dict_hyp_variables.py](analysis/dict_hyp_variables.py)
-  * Variable names are following this  structure: `<name_of_codelist>_<time_frame>`
-    > For example, denominator rule 3 for indicators HYP003 and HYP007 would be implemented like this:
+  * Variable names are following this  structure: `<name_of_codelist>_<time_frame>`.
+    For example, consider the following description of denominator rule 3 for indicators HYP003 and HYP007:
 
     | Rule | Rule description or comments |
     | ---- | ---------------------------- |
     | If `HTMAX_DAT` > (`PPED` – 12 months) | Reject patients passed to this rule who are receiving maximal blood pressure therapy in the 12 months leading up to and including the payment period end date. Pass all remaining patients to the next rule. |
 
+    This rule could be implemented like shown below, where the codelist *ht_max_codes* is defined in [analysis/codelists.py](analysis/codelists.py).
+    
+    ```
+    ht_max_12m=patients.with_these_clinical_events(
+        between=[
+            "first_day_of_month(index_date) - 11 months",
+            "last_day_of_month(index_date)",
+        ],
+        codelist=ht_max_codes,
+        returning="binary_flag",
+        find_last_match_in_period=True,
+        include_date_of_match=True,
+        date_format="YYYY-MM-DD",
+    ),
+    ```
 
-  * Where dates are needed we make use of the `include_date_*` argument. This includes the dates associated with each event to the data (see [OpenSAFELY variable reference](https://docs.opensafely.org/study-def-variables/)).
+    Almost all denominator and numerator rules can be broken down into individual variables that follow this strucutre: (1) a clinical codelist and a (2) timeframe.
+
+  * Where dates are needed we make use of the `include_date_*` argument. 
+  This includes the date associated with each event to the data (see [OpenSAFELY variable reference](https://docs.opensafely.org/study-def-variables/)).
+  * The variables defined in these dictionaries can then be loaded as needed in individual study defintions using `** name_of_variable_dictionary,` (see [here](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L11-L16)).
 ### Study definitions
 
-* The hypertension register (HYP_REG / HYP001) and each indicator (HYP003, HYP007) are specified in individual study definitions. 
-  Each denominator and numerator rule is defined by composing variables from the dictionaries in their own `patients.satisfying()` function (e.g., `hyp003_denominator_r1`) and summarised in a composite variable (e.g., `hyp003_denominator`).
+* The hypertension register (HYP_REG / HYP001) and indicators (HYP003, HYP007) are specified in individual study definitions. 
+  Each denominator and numerator rule is defined by composing variables from the dictionaries in their own `patients.satisfying()` function (e.g., [`hyp003_denominator_r1`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L51-L57)) and summarised in a composite variable (e.g., [`hyp003_denominator`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L39-L50)).
   * **HYP001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
   * **HYP003**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
-  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py) (Waiting for code review of HYP001 and HYP003 before finishing)
-* Commonly used dates are defined in [analysis/config.py](analysis/config.py)
+  * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py)
+* Commonly used dates (e.g., '*Payment Period Start Date*') are defined in [analysis/config.py](analysis/config.py)
 
 ### Actions
 
@@ -54,10 +73,7 @@ All actions are defined in the [project.yaml](project.yaml).
 
 * Each indicator has the following actions:
   * `generate_study_population_hyp***`: Extract study population
-  * `generate_measures_hyp***`: Generate measures using the `Measure()` framework
-* TODO ADD PLOTS
-* TODO ADD TABLES
-* TODO ADD REPORT
+  * `generate_measures_hyp***`: Generate measures using the `Measure()` framework (see [OpenSAFELY documentation](https://docs.opensafely.org/measures/))
 
 # About the OpenSAFELY framework
 
