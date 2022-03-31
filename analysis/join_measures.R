@@ -14,7 +14,7 @@ library(purrr)
 library(stringr)
 
 # Get file names and path ----
-dir_hyp_001_measures <- fs::dir_ls(path = "output/",
+dir_hyp_001_measures <- fs::dir_ls(path = "output/indicators",
                                    glob = "*hyp001*.csv$")
 
 # Split dir paths because file structure differes
@@ -36,7 +36,7 @@ df_hyp_001_measures_groups <- dir_hyp_001_measures_groups %>%
 
 # Load population measure ---
 # Add variables that are missing compared to grouped measures
-df_hyp_001_measures_pop <- readr::read_csv(dir_hyp_001_measures_pop) %>%
+df_hyp_001_measures_pop <- readr::read_csv(here::here(dir_hyp_001_measures_pop)) %>%
   dplyr::mutate(group = "population",
                 category = "population")
 
@@ -45,9 +45,9 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
   dplyr::bind_rows(df_hyp_001_measures_pop)
 
 # Write hyp001 csv file
-## First create subdirectory
-# fs::dir_create(here::here("output", "measures"))
+## First create subdirectory (if it doesn't exist)
+fs::dir_create(here::here("output", "measures"))
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
-                 here::here("output", "measures_hyp001.csv"))
+                 here::here("output", "measures", "measures_hyp001.csv"))
