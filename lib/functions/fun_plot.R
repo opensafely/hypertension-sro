@@ -10,8 +10,8 @@
 #' @param legend String, legend position, "none" to remove legend
 #'
 #' @return ggplot2 object
-plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_scale_limits = FALSE, plotly = FALSE, show_label = FALSE) {
-  
+plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_scale_limits = FALSE, vline_nhs_fy = TRUE, plotly = FALSE, show_label = FALSE) {
+
   # Create plot with legend
   plot <- df %>% 
     ggplot2::ggplot(ggplot2::aes(x = date,
@@ -29,10 +29,22 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_
                   title = title) +
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
     ggplot2::scale_color_viridis_d() +
-    ggplot2::theme(legend.position = legend_position) 
+    ggplot2::theme(legend.position = legend_position)
 
-  if  (set_y_scale_limits) {
-    plot <-  plot + ggplot2::scale_y_continuous(labels = scales::percent,
+  if (vline_nhs_fy) {
+    # Extract all Aprils
+    list_nhs_financial_years <- unique(df$date[lubridate::month(df$date) == 4])
+
+    plot <- plot + 
+      ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+  }
+
+  if (set_y_scale_limits) {
+    plot <- plot + 
+      ggplot2::scale_y_continuous(labels = scales::percent,
                                                 limits = c(0, 1))
   }
 
