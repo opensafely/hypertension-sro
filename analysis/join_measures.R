@@ -36,7 +36,7 @@ df_hyp_001_measures_groups <- dir_hyp_001_measures_groups %>%
 
 # Load population measure ---
 # Add variables that are missing compared to grouped measures
-df_hyp_001_measures_pop <- readr::read_csv(dir_hyp_001_measures_pop) %>%
+df_hyp_001_measures_pop <- readr::read_csv(here::here(dir_hyp_001_measures_pop)) %>%
   dplyr::mutate(group = "population",
                 category = "population")
 
