@@ -3,7 +3,7 @@
 The study in this repository aims to
 (1) implement the QOF Hypertension rules in OpenSAFELY and
 (2) provide resources and coding guidelines that help with the implementation of further QOF studies.
-New QOF studies should follow the general structure of this repository where possible, see ['Repository structure'](#repository-structure) section below.
+New QOF studies should start by using the [OpenSAFELY research template](https://github.com/opensafely/research-template) and follow the general structure of this repository where possible, see ['Repository structure'](#repository-structure) section below.
 ## Overview
  
 General practice has been disrupted by the pandemic in many clinical areas (e.g., Curtis et al., [2021](https://bjgp.org/content/72/714/e63); Williams et al., [2020](https://www.thelancet.com/journals/lanpub/article/PIIS2468-2667(20)30201-2/fulltext)). 
