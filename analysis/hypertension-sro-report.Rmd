@@ -38,6 +38,8 @@ fs::dir_create(here::here("output", "notebooks"))
 ```{r load-data, include=FALSE}
 # Get file names and path ----
 df_measures_hyp001 <- readr::read_csv(here::here("output", "measures", "measures_hyp001.csv"))
+list_nhs_financial_years <- unique(df_measures_hyp001$date[lubridate::month(df_measures_hyp001$date) == 4])
+
 ```
 # Introduction
 
@@ -98,7 +100,27 @@ df_measures_hyp001 %>%
 
 ```
 
-
+```{r fig.width=8, fig.height=4}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "population") %>% 
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count") +
+    ggplot2::scale_colour_viridis_d() +
+    geom_segment(aes(xend=date, yend=0), size = 2, alpha = 0.5) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+```
 
 ### HYP001 by sex
 
@@ -114,19 +136,28 @@ df_measures_hyp001 %>%
 
 ```
 
-```{r fig.width=8, fig.height=2}
+```{r fig.width=8, fig.height=4}
 df_measures_hyp001 %>%
     dplyr::filter(group == "sex") %>%
-    dplyr::filter(category != "missing") %>%
-    tidyr::uncount(hypertension) %>%
-    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
-    ggplot2::geom_histogram() +
-    ggplot2::scale_x_date(date_labels = "%b %y") +
-    ggplot2::facet_wrap(~category, ncol = 2) +
+  dplyr::mutate(category = factor(category,
+                                  levels = c("F", "M"),
+                                  labels = c("Female", "Male"))) %>% 
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
-    scale_fill_brewer(palette = "Dark2") +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::labs(x = NULL, y = "Count")
+    ggplot2::scale_colour_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
 ```
 
 ### HYP001 by age band
@@ -140,19 +171,27 @@ df_measures_hyp001 %>%
 
 ```
 
-```{r fig.width=8, fig.height=8}
+```{r fig.width=8, fig.height=4}
 df_measures_hyp001 %>%
     dplyr::filter(group == "age_band") %>%
     dplyr::filter(category != "missing") %>%
-    tidyr::uncount(hypertension) %>%
-    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
-    ggplot2::geom_histogram() +
-    ggplot2::scale_x_date(date_labels = "%b %y") +
-    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
-    ggplot2::scale_fill_viridis_d() +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::labs(x = NULL, y = "Count")
+    ggplot2::scale_colour_viridis_d() +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+
 ```
 
 ### HYP001 by IMD
@@ -170,22 +209,29 @@ df_measures_hyp001 %>%
 ```
 
 
-```{r fig.width=8, fig.height=6}
+```{r fig.width=8, fig.height=4}
 df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
   dplyr::mutate(category = factor(category,
                                   levels = c(1:5),
                                   labels = c('1 - Most deprived', '2', '3', '4', '5 - Least deprived'))) %>% 
     dplyr::filter(!is.na(category)) %>% 
-    tidyr::uncount(hypertension) %>%
-    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
-    ggplot2::geom_histogram() +
-    ggplot2::scale_x_date(date_labels = "%b %y") +
-    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
-    ggplot2::scale_fill_viridis_d() +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::labs(x = NULL, y = "Count")
+    ggplot2::scale_colour_viridis_d() +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
 ```
 
 ### HYP001 by region
@@ -199,18 +245,25 @@ df_measures_hyp001 %>%
 
 ```
 
-```{r fig.width=8, fig.height=10}
+```{r fig.width=8, fig.height=4}
 df_measures_hyp001 %>%
     dplyr::filter(group == "region") %>% 
-    tidyr::uncount(hypertension) %>%
-    ggplot2::ggplot(ggplot2::aes(date, fill = category)) +
-    ggplot2::geom_histogram() +
-    ggplot2::scale_x_date(date_labels = "%b %y") +
-    ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
     ggplot2::theme(text = ggplot2::element_text(size = 14)) +
-    scale_fill_brewer(palette = "Dark2") +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::labs(x = NULL, y = "Count")
+    ggplot2::scale_colour_brewer(palette = "Set1") +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
 ```
 
 ### HYP001 by ethnicity

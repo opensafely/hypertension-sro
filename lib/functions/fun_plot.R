@@ -45,13 +45,13 @@ plot_qof_indicator <- function(df, title = NULL, legend_position = "top", set_y_
   if (set_y_scale_limits) {
     plot <- plot + 
       ggplot2::scale_y_continuous(labels = scales::percent,
-                                                limits = c(0, 1))
+                                  limits = c(0, 1))
   }
 
   if (show_label) {
     plot <- plot + ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, "")),
-                            show.legend = FALSE,
-                            segment.color = NA)
+                                             show.legend = FALSE,
+                                             segment.color = NA)
   }
 
   # if (plotly) {
