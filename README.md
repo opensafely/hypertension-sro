@@ -1,5 +1,9 @@
 # Hypertension Service Restoration Observatory (SRO)
 
+The study in this repository aims to
+(1) implement the QOF Hypertension rules in OpenSAFELY and
+(2) provide resources and coding guidelines that help with the implementation of further QOF studies.
+New QOF studies should start by using the [OpenSAFELY research template](https://github.com/opensafely/research-template) and follow the general structure of this repository where possible, see ['Repository structure'](#repository-structure) section below.
 ## Overview
  
 General practice has been disrupted by the pandemic in many clinical areas (e.g., Curtis et al., [2021](https://bjgp.org/content/72/714/e63); Williams et al., [2020](https://www.thelancet.com/journals/lanpub/article/PIIS2468-2667(20)30201-2/fulltext)). 
@@ -7,11 +11,10 @@ This project aims to assess the impact of the pandemic on the routine management
 High blood pressure is one of the leading risk factors for several diseases (e.g., cardiovascular disease, stroke) worldwide. 
 Research suggests that delays in the management of high blood pressure are associated with worse clinical outcomes, for example acute cardiovascular events, or death (Xu et al., [2015](https://www.bmj.com/content/350/bmj.h158)). 
 
+## QOF Hypertension business rules
+
 [The Quality and Outcomes Framework (QOF)](https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/quality-outcomes-framework-qof) outlines several indicators that focus hypertension (HYP) targets. 
 This project aims to use OpenSAFELY to quantify the extent to which any of the relevant Hypertension QOF indicators ([v46](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release)) were disrupted during the pandemic but wont link our results to clinical outcomes.
-
----
-
 A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-collections/quality-and-outcomes-framework-qof/quality-and-outcome-framework-qof-business-rules/qof-business-rules-v46.0-2021-2022-baseline-release)) register and each indicator is shown below:
 
 * **HYP_REG**: Hypertension register: Patients with an unresolved diagnosis of hypertension.
@@ -60,11 +63,11 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 ### Study definitions
 
 * The hypertension register (HYP_REG / HYP001) and indicators (HYP003, HYP007) are specified in individual study definitions. 
-  Within each study definition, we can compose variables from the dictionaries using the `patients.satisfying()` function to 
+  Within each study definition, we can compose variables from the dictionaries using the `patients.satisfying()` function to:
   1. Create a variable for each numerator and denominator rule (e.g., [`hyp003_denominator_r1`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L51-L57)), where variables for each rule number are named following this structure: `<indicator>_<numerator/denominator>_<rule_number>`.
   3. These rule variables can then again be composed to create the numerator and denominator variables (e.g., [`hyp003_denominator`](https://github.com/opensafely/hypertension-sro/blob/e9339db54c140afdcd0c84ab0a72c99f1777b79b/analysis/study_definition_hyp003.py#L39-L50)).
 
-  Examples can be found
+  Examples can be found here:
     * **HYP001**: [analysis/study_definition_hyp001.py](analysis/study_definition_hyp001.py)
     * **HYP003**: [analysis/study_definition_hyp003.py](analysis/study_definition_hyp003.py)
     * **HYP007**: [analysis/study_definition_hyp007.py](analysis/study_definition_hyp007.py)
