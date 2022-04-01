@@ -80,7 +80,7 @@ hyp_ind_variables = dict(
         on_most_recent_day_of_measurement=True,
         include_measurement_date=True,
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         date_format="YYYY-MM-DD",
@@ -103,7 +103,7 @@ hyp_ind_variables = dict(
         on_most_recent_day_of_measurement=True,
         include_measurement_date=True,
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         date_format="YYYY-MM-DD",
@@ -127,7 +127,7 @@ hyp_ind_variables = dict(
     # therapy code recorded up to and including the achievement date.
     ht_max_12m=patients.with_these_clinical_events(
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         codelist=ht_max_codes,
@@ -141,7 +141,7 @@ hyp_ind_variables = dict(
     # including the achievement date.
     hyp_pca_pu_12m=patients.with_these_clinical_events(
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         codelist=hyp_pca_pu_codes,
@@ -154,7 +154,7 @@ hyp_ind_variables = dict(
     # not to have blood pressure procedure.
     bp_dec_12m=patients.with_these_clinical_events(
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         codelist=bp_dec_codes,
@@ -168,7 +168,7 @@ hyp_ind_variables = dict(
     # the achievement date.
     hyp_pca_dec_12m=patients.with_these_clinical_events(
         between=[
-            "first_day_of_month(index_date) - 12 months",
+            "first_day_of_month(index_date) - 11 months",
             "last_day_of_month(index_date)",
         ],
         codelist=hyp_pca_dec_codes,
