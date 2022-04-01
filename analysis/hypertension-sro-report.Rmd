@@ -115,6 +115,7 @@ df_measures_hyp001 %>%
     ggplot2::expand_limits(y = 0) +
     ggplot2::labs(x = NULL, y = "Count") +
     ggplot2::scale_colour_viridis_d() +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
     geom_segment(aes(xend=date, yend=0), size = 2, alpha = 0.5) +
     ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
                           linetype = "dotted",
@@ -154,6 +155,7 @@ df_measures_hyp001 %>%
     ggplot2::theme(legend.position = "top") +
     ggplot2::expand_limits(y = 0) +
     ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
                           linetype = "dotted",
                           colour = "orange",
@@ -187,6 +189,7 @@ df_measures_hyp001 %>%
     ggplot2::theme(legend.position = "top") +
     ggplot2::expand_limits(y = 0) +
     ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
                           linetype = "dotted",
                           colour = "orange",
@@ -228,6 +231,7 @@ df_measures_hyp001 %>%
     ggplot2::theme(legend.position = "top") +
     ggplot2::expand_limits(y = 0) +
     ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
                           linetype = "dotted",
                           colour = "orange",
@@ -260,6 +264,7 @@ df_measures_hyp001 %>%
     ggplot2::theme(legend.position = "top") +
     ggplot2::expand_limits(y = 0) +
     ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
                           linetype = "dotted",
                           colour = "orange",
