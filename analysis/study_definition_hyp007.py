@@ -28,6 +28,7 @@ study = StudyDefinition(
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
+        (age != 'missing') AND
 
         hypertension_register
         """,
@@ -53,6 +54,7 @@ study = StudyDefinition(
         hyp007_denominator_r1=patients.satisfying(
             """
             age < 80
+            (age != 'missing')
             """
         ),
         # Select patients passed to this rule who meet all of the criteria

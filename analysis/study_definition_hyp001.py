@@ -22,6 +22,7 @@ study = StudyDefinition(
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
+        (age != 'missing') AND
 
         hypertension_register
         """,
