@@ -39,6 +39,8 @@ study = StudyDefinition(
     # denominator.
     hyp003_denominator=patients.satisfying(
         """
+        hypertension_register AND
+
         (NOT hyp003_denominator_r1) AND
         hyp003_denominator_r2 AND
         (NOT hyp003_denominator_r3) AND
@@ -53,8 +55,7 @@ study = StudyDefinition(
         # than 79 years old.
         hyp003_denominator_r1=patients.satisfying(
             """
-            age > 79 AND
-            (age != 'missing')
+            age > 79
             """
         ),
         # Select patients passed to this rule who meet all of the criteria
@@ -138,6 +139,8 @@ study = StudyDefinition(
     # Define composite numerator
     hyp003_numerator=patients.satisfying(
         """
+        hypertension_register AND
+
         hyp003_numerator_r1
         """,
         hyp003_numerator_r1=patients.satisfying(
