@@ -83,6 +83,10 @@ The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined bel
 
 - TODO
 
+## Codelists
+
+- TODO
+
 # Results
 
 Note that the scaling of the y-axis is different for the total population (0 to 100%) and outputs by subgroup (scaling differs across grouping variables to highlight differences between groups).
