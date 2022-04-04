@@ -55,11 +55,11 @@ actions:
 
   join_ethnicity:
     run: >
-      cohort-joiner:v0.0.9
-        --lhs output/indicators/input_hyp001_*.feather
+      cohort-joiner:v0.0.12 
+        --lhs output/indicators/input_hyp*.feather
         --rhs output/indicators/input_ethnicity.feather
         --output-dir output/indicators/joined
-    needs: [generate_study_population_ethnicity, generate_study_population_hyp001]
+    needs: [generate_study_population_ethnicity, generate_study_population_hyp001, generate_study_population_hyp003, generate_study_population_hyp007]
     outputs:
       highly_sensitive:
         cohort: output/indicators/joined/input_hyp*.feather
