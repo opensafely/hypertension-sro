@@ -39,17 +39,20 @@ study = StudyDefinition(
     # denominator.
     hyp003_denominator=patients.satisfying(
         """
-        hypertension_register AND
-
         (NOT hyp003_denominator_r1) AND
-        hyp003_denominator_r2 AND
-        (NOT hyp003_denominator_r3) AND
-        (NOT hyp003_denominator_r4) AND
-        (NOT hyp003_denominator_r5) AND
-        (NOT hyp003_denominator_r6) AND
-        (NOT hyp003_denominator_r7) AND
-        (NOT hyp003_denominator_r8) AND
-        (NOT hyp003_denominator_r9)
+
+            (hyp003_denominator_r2 OR
+
+            (
+                (NOT hyp003_denominator_r3) AND
+                (NOT hyp003_denominator_r4) AND
+                (NOT hyp003_denominator_r5) AND
+                (NOT hyp003_denominator_r6) AND
+                (NOT hyp003_denominator_r7) AND
+                (NOT hyp003_denominator_r8) AND
+                (NOT hyp003_denominator_r9)
+            )
+        )
         """,
         # Reject patients from the specified population who are aged greater
         # than 79 years old.
@@ -139,16 +142,9 @@ study = StudyDefinition(
     # Define composite numerator
     hyp003_numerator=patients.satisfying(
         """
-        hypertension_register AND
-
-        hyp003_numerator_r1
+        hyp003_denmominator AND
+        hyp003_denominator_r2
         """,
-        hyp003_numerator_r1=patients.satisfying(
-            """
-            bp_sys_val_12m <= 140 AND
-            bp_dia_val_12m <= 90
-            """
-        ),
     ),
 )
 
