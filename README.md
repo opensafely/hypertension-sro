@@ -1,4 +1,4 @@
-# Hypertension Service Restoration Observatory (SRO)
+# Hypertension (HYP) indicators in the Quality and Outcomes Framework (QOF)
 
 The study in this repository aims to
 (1) implement the QOF Hypertension rules in OpenSAFELY and
@@ -22,7 +22,16 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 * **HYP003**: The percentage of patients **aged 79 years or under**, with hypertension, in whom the last blood pressure reading (measured in the preceding 12 months) is **140/90 mmHg or less**.
 * **HYP007**: The percentage of patients **aged 80 years or over**, with hypertension, in whom the last blood pressure reading (measured in the preceding 12 months) is **150/90 mmHg or less**.
 
-## Repository structure
+## Repository structure 
+
+To implement QOF indicators 
+
+1. Add all codelists specified in the QOF busieness rules to [codelists/codelists.txt](codelists/codelists.txt). 
+   The codelists can be found on OpenCodelists under [NHSD Primary Care Domain Refsets](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/).
+2. Define the variables specified in the business rules in shared variable dictionaries or individyal study definitions
+3. TODO WRITE STUDY DEFINITION (see [here](#study-definitions))
+4. TODO SPECIFY MEASURES (see [here](#measures))
+5. TODO CREATE PLOTS GENERATE NOTEBOOK
 
 ### Codelists
 
@@ -74,6 +83,16 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 
 * Commonly used dates (e.g., '*Payment Period Start Date*') are defined in [analysis/config.py](analysis/config.py)
 
+### Measures
+
+- TODO
+
+
+### Summarise results
+
+- TODO PLOTS
+- TODO TABLES
+- TODO NOTEBOOK (Rmd, Jupyter)
 ### Actions
 
 All actions are defined in the [project.yaml](project.yaml).
