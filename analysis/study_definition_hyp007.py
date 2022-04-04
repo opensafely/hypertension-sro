@@ -142,7 +142,7 @@ study = StudyDefinition(
     # Define composite numerator
     hyp007_numerator=patients.satisfying(
         """
-        hyp007_denmominator AND
+        hyp007_denominator AND
         hyp007_denominator_r2
         """,
     ),
