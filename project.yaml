@@ -71,7 +71,7 @@ actions:
        cohortextractor:latest generate_measures 
        --study-definition study_definition_hyp001 
        --output-dir=output/indicators
-     needs: [generate_study_population_hyp001]
+     needs: [generate_study_population_hyp001, join_ethnicity]
      outputs:
        moderately_sensitive:
          measure_csv: output/indicators/measure_hyp001_*_rate.csv
@@ -82,7 +82,7 @@ actions:
        cohortextractor:latest generate_measures 
        --study-definition study_definition_hyp003 
        --output-dir=output/indicators
-     needs: [generate_study_population_hyp003]
+     needs: [generate_study_population_hyp003, join_ethnicity]
      outputs:
        moderately_sensitive:
          measure_csv: output/indicators/measure_hyp003_*_rate.csv
@@ -93,7 +93,7 @@ actions:
        cohortextractor:latest generate_measures 
        --study-definition study_definition_hyp007 
        --output-dir=output/indicators
-     needs: [generate_study_population_hyp007]
+     needs: [generate_study_population_hyp007, join_ethnicity]
      outputs:
        moderately_sensitive:
          measure_csv: output/indicators/measure_hyp007_*_rate.csv
