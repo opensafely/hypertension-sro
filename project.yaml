@@ -53,16 +53,16 @@ actions:
       highly_sensitive:
         cohort: output/indicators/input_hyp007_*.feather
 
-  # join_ethnicity:
-  #   run: >
-  #     cohort-joiner:v0.0.9
-  #       --lhs output/indicators/input_hyp001_*.feather
-  #       --rhs output/indicators/input_ethnicity.feather
-  #       --output-dir output/indicators/joined
-  #   needs: [generate_study_population_ethnicity, generate_study_population_hyp001]
-  #   outputs:
-  #     highly_sensitive:
-  #       cohort: output/indicators/joined/input_hyp*.csv
+  join_ethnicity:
+    run: >
+      cohort-joiner:v0.0.9
+        --lhs output/indicators/input_hyp001_*.feather
+        --rhs output/indicators/input_ethnicity.feather
+        --output-dir output/indicators/joined
+    needs: [generate_study_population_ethnicity, generate_study_population_hyp001]
+    outputs:
+      highly_sensitive:
+        cohort: output/indicators/joined/input_hyp*.feather
 
   # Measures
   # Generate measures for indicator HYP001 by month
