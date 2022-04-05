@@ -192,11 +192,11 @@ measures = [
         group_by=["region"],
         small_number_suppression=True,
     ),
-    # Measure(
-    #     id="hyp007_ethnicity_rate",
-    #     numerator="hyp007_numerator",
-    #     denominator="hyp007_denominator",
-    #     group_by=["ethnicity"],
-    #     small_number_suppression=True,
-    # ),
+    Measure(
+        id="hyp007_ethnicity_rate",
+        numerator="hyp007_numerator",
+        denominator="hyp007_denominator",
+        group_by=["ethnicity"],
+        small_number_suppression=True,
+    ),
 ]
