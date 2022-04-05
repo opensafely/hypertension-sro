@@ -77,11 +77,11 @@ measures = [
         group_by=["region"],
         small_number_suppression=True,
     ),
-    Measure(
-        id="hyp001_ethnicity_rate",
-        numerator="hypertension",
-        denominator="population",
-        group_by=["ethnicity"],
-        small_number_suppression=True,
-    ),
+    # Measure(
+    #     id="hyp001_ethnicity_rate",
+    #     numerator="hypertension",
+    #     denominator="population",
+    #     group_by=["ethnicity"],
+    #     small_number_suppression=True,
+    # ),
 ]
