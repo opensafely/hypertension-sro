@@ -39,17 +39,20 @@ study = StudyDefinition(
     # denominator.
     hyp007_denominator=patients.satisfying(
         """
-        hypertension_register AND
-
         (NOT hyp007_denominator_r1) AND
-        hyp007_denominator_r2 AND
-        (NOT hyp007_denominator_r3) AND
-        (NOT hyp007_denominator_r4) AND
-        (NOT hyp007_denominator_r5) AND
-        (NOT hyp007_denominator_r6) AND
-        (NOT hyp007_denominator_r7) AND
-        (NOT hyp007_denominator_r8) AND
-        (NOT hyp007_denominator_r9)
+
+            (hyp007_denominator_r2 OR
+
+            (
+                (NOT hyp007_denominator_r3) AND
+                (NOT hyp007_denominator_r4) AND
+                (NOT hyp007_denominator_r5) AND
+                (NOT hyp007_denominator_r6) AND
+                (NOT hyp007_denominator_r7) AND
+                (NOT hyp007_denominator_r8) AND
+                (NOT hyp007_denominator_r9)
+            )
+        )
         """,
         # Reject patients from the specified population who are aged greater
         # than 79 years old.
@@ -137,18 +140,17 @@ study = StudyDefinition(
         ),
     ),
     # Define composite numerator
+    # Select patients from the denominator who meet all of the criteria below:
+    # - Systolic blood pressure value was 140 mmHg or less.
+    # - Diastolic blood pressure value was 90 mmHg or less.
+    # Most recent blood pressure recording was in the 12 months up to and
+    # including the payment period end date.
+    # Reject the remaining patients.
     hyp007_numerator=patients.satisfying(
         """
-        hypertension_register AND
-
-        hyp007_numerator_r1
+        hyp007_denominator AND
+        hyp007_denominator_r2
         """,
-        hyp007_numerator_r1=patients.satisfying(
-            """
-            bp_sys_val_12m <= 150 AND
-            bp_dia_val_12m <= 90
-            """
-        ),
     ),
 )
 
@@ -194,6 +196,13 @@ measures = [
         numerator="hyp007_numerator",
         denominator="hyp007_denominator",
         group_by=["region"],
+        small_number_suppression=True,
+    ),
+    Measure(
+        id="hyp007_ethnicity_rate",
+        numerator="hyp007_numerator",
+        denominator="hyp007_denominator",
+        group_by=["ethnicity"],
         small_number_suppression=True,
     ),
 ]

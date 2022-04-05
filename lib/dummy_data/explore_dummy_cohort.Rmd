@@ -19,8 +19,13 @@ library(magrittr)
 ## Check output for one month
 
 ```{r}
-df_hyp001_2019_01_01 <- read_feather(here("output/input_hyp001_2019-01-01.feather"))
-df_hyp001_2019_01_01
+df_hyp001_2019_01_01 <- read_feather(here("output/indicators/input_hyp001_2019-01-01.feather"))
+df_hyp001_2019_01_01 %>% names()
+```
+
+```{r}
+df_hyp001_eth_2019_01_01 <- read_feather(here("output/indicators/joined/input_hyp001_2019-01-01.feather"))
+df_hyp001_eth_2019_01_01 %>% names()
 ```
 
 # HYP003
@@ -47,6 +52,6 @@ df_hyp003_2019_01_01
 ### Check ethnicity
 
 ```{r}
-df_ethnicity <- read_feather(here("output/input_ethnicity.feather"))
+df_ethnicity <- read_feather(here("output/indicators/input_ethnicity.feather"))
 df_ethnicity
 ```

@@ -1,4 +1,4 @@
-# Hypertension Service Restoration Observatory (SRO)
+# Hypertension (HYP) indicators in the Quality and Outcomes Framework (QOF)
 
 The study in this repository aims to
 (1) implement the QOF Hypertension rules in OpenSAFELY and
@@ -22,7 +22,16 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 * **HYP003**: The percentage of patients **aged 79 years or under**, with hypertension, in whom the last blood pressure reading (measured in the preceding 12 months) is **140/90 mmHg or less**.
 * **HYP007**: The percentage of patients **aged 80 years or over**, with hypertension, in whom the last blood pressure reading (measured in the preceding 12 months) is **150/90 mmHg or less**.
 
-## Repository structure
+## Repository structure 
+
+The following list outlines the the general steps for implementing QOF in OpenSAFELY:
+
+1. Add all codelists specified in the QOF busieness rules to [codelists/codelists.txt](codelists/codelists.txt). 
+   The codelists can be found on OpenCodelists under [NHSD Primary Care Domain Refsets](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/).
+2. Define the variables specified in the business rules in shared variable dictionaries or individyal study definitions
+3. Implement QOF numerator and denominator rules in study definition (see [here](#study-definitions))
+4. Specify measures (e.g., total achievement and breakdowns) for each indicator (see [here](#measures))
+5. TODO summarise results in a notebook
 
 ### Codelists
 
