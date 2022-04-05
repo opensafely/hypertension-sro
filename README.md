@@ -24,14 +24,14 @@ A short description of the QOF Hypertension ([v46](https://digital.nhs.uk/data-a
 
 ## Repository structure 
 
-To implement QOF indicators 
+The following list outlines the the general steps for implementing QOF in OpenSAFELY:
 
 1. Add all codelists specified in the QOF busieness rules to [codelists/codelists.txt](codelists/codelists.txt). 
    The codelists can be found on OpenCodelists under [NHSD Primary Care Domain Refsets](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/).
 2. Define the variables specified in the business rules in shared variable dictionaries or individyal study definitions
-3. TODO WRITE STUDY DEFINITION (see [here](#study-definitions))
-4. TODO SPECIFY MEASURES (see [here](#measures))
-5. TODO CREATE PLOTS GENERATE NOTEBOOK
+3. Implement QOF numerator and denominator rules in study definition (see [here](#study-definitions))
+4. Specify measures (e.g., total achievement and breakdowns) for each indicator (see [here](#measures))
+5. TODO summarise results in a notebook
 
 ### Codelists
 
@@ -83,16 +83,6 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 
 * Commonly used dates (e.g., '*Payment Period Start Date*') are defined in [analysis/config.py](analysis/config.py)
 
-### Measures
-
-- TODO
-
-
-### Summarise results
-
-- TODO PLOTS
-- TODO TABLES
-- TODO NOTEBOOK (Rmd, Jupyter)
 ### Actions
 
 All actions are defined in the [project.yaml](project.yaml).

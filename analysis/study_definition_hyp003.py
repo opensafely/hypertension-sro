@@ -140,6 +140,12 @@ study = StudyDefinition(
         ),
     ),
     # Define composite numerator
+    # Select patients from the denominator who meet all of the criteria below:
+    # - Systolic blood pressure value was 140 mmHg or less.
+    # - Diastolic blood pressure value was 90 mmHg or less.
+    # Most recent blood pressure recording was in the 12 months up to and
+    # including the payment period end date.
+    # Reject the remaining patients.
     hyp003_numerator=patients.satisfying(
         """
         hyp003_denominator AND
