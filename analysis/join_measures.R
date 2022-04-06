@@ -14,7 +14,7 @@ library(purrr)
 library(stringr)
 
 # Get file names and path ----
-dir_hyp_001_measures <- fs::dir_ls(path = "output/indicators",
+dir_hyp_001_measures <- fs::dir_ls(path = "output/indicators/joined",
                                    glob = "*hyp001*.csv$")
 
 # Split dir paths because file structure differes
