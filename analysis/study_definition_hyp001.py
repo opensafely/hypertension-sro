@@ -84,4 +84,18 @@ measures = [
         group_by=["ethnicity"],
         small_number_suppression=True,
     ),
+    Measure(
+        id="hyp001_learning_disability_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["learning_disability"],
+        small_number_suppression=True,
+    ),
+    Measure(
+        id="hyp001_care_home_rate",
+        numerator="hypertension",
+        denominator="population",
+        group_by=["care_home"],
+        small_number_suppression=True,
+    ),
 ]
