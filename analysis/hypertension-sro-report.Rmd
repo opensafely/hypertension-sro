@@ -75,14 +75,6 @@ The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined bel
 
 > "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
 
-### HYP003
-
-- TODO
-
-### HYP007
-
-- TODO
-
 ## Codelists
 
 - TODO
@@ -93,7 +85,7 @@ Note that the scaling of the y-axis is different for the total population (0 to 
 
 ## HYP001 (Register)
 
-### HYP001 total population
+### Total population
 
 ```{r fig.width=8, fig.height=4}
 
@@ -127,7 +119,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### HYP001 by sex
+### Breakdown by sex
 
 ```{r fig.width=8, fig.height=4}
 
@@ -166,7 +158,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### HYP001 by age band
+### Breakdown by age band
 
 ```{r fig.width=8, fig.height=4}
 
@@ -201,7 +193,7 @@ df_measures_hyp001 %>%
 
 ```
 
-### HYP001 by IMD
+### Breakdown by IMD
 
 ```{r fig.width=8, fig.height=4}
 
@@ -242,7 +234,41 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### HYP001 by region
+### Breakdown by ethnicity
+
+```{r fig.width=8, fig.height=4}
+
+df_measures_hyp001 %>%
+  dplyr::filter(group == "ethnicity") %>% 
+  plot_qof_indicator(plotly = FALSE) +
+  scale_colour_brewer(palette = "Dark2")
+
+```
+
+```{r fig.width=8, fig.height=4}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "ethnicity") %>% 
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::scale_colour_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+```
+
+
+### Breakdown by region
 
 ```{r fig.width=8, fig.height=4}
 
@@ -275,25 +301,89 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### HYP001 by ethnicity
 
-- TODO
+### Breakdown by learning disability
 
-### HYP001 by learning disability
 
-- TODO
+```{r fig.width=8, fig.height=4}
 
-### HYP001 by NHS care home status
+df_measures_hyp001 %>%
+  dplyr::filter(group == "learning_disability") %>% 
+  dplyr::mutate(category = factor(category,
+                                  levels = c(TRUE, FALSE),
+                                  labels = c("Record of learning disability", 
+                                             "No record of learning disability"))) %>% 
+  plot_qof_indicator(plotly = FALSE) +
+  scale_colour_brewer(palette = "Dark2")
 
-- TODO
+```
 
-## HYP003
+```{r fig.width=8, fig.height=4}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "learning_disability") %>%
+  dplyr::mutate(category = factor(category,
+                                  levels = c(TRUE, FALSE),
+                                  labels = c("Record of learning disability", 
+                                             "No record of learning disability"))) %>% 
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::scale_colour_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+```
 
-- TODO
+### Breakdown by NHS care home status
 
-## HYP007
+```{r fig.width=8, fig.height=4}
 
-- TODO
+df_measures_hyp001 %>%
+  dplyr::filter(group == "care_home") %>% 
+  dplyr::mutate(category = factor(category,
+                                  levels = c(TRUE, FALSE),
+                                    labels = c("Record of positive care home status", 
+                                               "No record of positive care home status"))) %>% 
+  plot_qof_indicator(plotly = FALSE) +
+  scale_colour_brewer(palette = "Dark2")
+
+```
+
+```{r fig.width=8, fig.height=4}
+df_measures_hyp001 %>%
+    dplyr::filter(group == "care_home") %>%
+    dplyr::mutate(category = factor(category,
+                                    levels = c(TRUE, FALSE),
+                                    labels = c("Record of positive care home status", 
+                                               "No record of positive care home status"))) %>% 
+    ggplot2::ggplot(ggplot2::aes(date, hypertension, colour = category)) +
+    ggplot2::geom_line(size = 1,
+                       alpha = 0.3) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::scale_x_date(date_breaks = "4 month",
+                          date_labels = "%b %y") +
+    # ggplot2::facet_wrap(~category, ncol = 2) +
+    ggplot2::theme(text = ggplot2::element_text(size = 14)) +
+    ggplot2::scale_colour_brewer(palette = "Dark2") +
+    ggplot2::theme(legend.position = "top") +
+    ggplot2::expand_limits(y = 0) +
+    ggplot2::labs(x = NULL, y = "Count", colour = NULL) +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::geom_vline(xintercept = lubridate::as_date(list_nhs_financial_years),
+                          linetype = "dotted",
+                          colour = "orange",
+                          size = 1)
+```
 
 # Discussion
 
