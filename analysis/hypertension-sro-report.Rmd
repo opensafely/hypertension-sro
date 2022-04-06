@@ -119,7 +119,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### Breakdown by sex
+### Sex
 
 ```{r fig.width=8, fig.height=4}
 
@@ -158,7 +158,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### Breakdown by age band
+### Age band
 
 ```{r fig.width=8, fig.height=4}
 
@@ -193,7 +193,7 @@ df_measures_hyp001 %>%
 
 ```
 
-### Breakdown by IMD
+### IMD
 
 ```{r fig.width=8, fig.height=4}
 
@@ -234,7 +234,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### Breakdown by ethnicity
+### Ethnicity
 
 ```{r fig.width=8, fig.height=4}
 
@@ -268,7 +268,7 @@ df_measures_hyp001 %>%
 ```
 
 
-### Breakdown by region
+### Region
 
 ```{r fig.width=8, fig.height=4}
 
@@ -302,7 +302,7 @@ df_measures_hyp001 %>%
 ```
 
 
-### Breakdown by learning disability
+### Learning disability
 
 
 ```{r fig.width=8, fig.height=4}
@@ -344,7 +344,7 @@ df_measures_hyp001 %>%
                           size = 1)
 ```
 
-### Breakdown by NHS care home status
+### Care home status
 
 ```{r fig.width=8, fig.height=4}
 
