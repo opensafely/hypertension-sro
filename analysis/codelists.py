@@ -96,13 +96,13 @@ ethnicity6_codes = codelist_from_csv(
     category_column="Grouping_6",
 )
 
-ld_codes = codelist_from_csv(
+learning_disability_codes = codelist_from_csv(
     "codelists/nhsd-primary-care-domain-refsets-ld_cod.csv",
     system="snomed",
     column="code",
 )
 
-carehome_codes = codelist_from_csv(
+nhse_care_homes_codes = codelist_from_csv(
     "codelists/opensafely-nhs-england-care-homes-residential-status.csv",
     system="snomed",
     column="code",

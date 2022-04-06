@@ -22,12 +22,12 @@ study = StudyDefinition(
         registered
         """,
         has_died=patients.died_from_any_cause(
-            on_or_before="index_date",
+            on_or_before="last_day_of_month(index_date)",
             returning="binary_flag",
         ),
         registered=patients.satisfying(
             "registered_at_start",
-            registered_at_start=patients.registered_as_of("index_date"),
+            registered_at_start=patients.registered_as_of("last_day_of_month(index_date)"),
         ),
     ),
     ethnicity=patients.categorised_as(

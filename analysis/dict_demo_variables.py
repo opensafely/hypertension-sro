@@ -2,10 +2,11 @@
 # See https://docs.opensafely.org/study-def-tricks/
 
 from cohortextractor import patients
+from codelists import nhse_care_homes_codes, learning_disability_codes
 
 demographic_variables = dict(
     died=patients.died_from_any_cause(
-        on_or_before="index_date",
+        on_or_before="last_day_of_month(index_date)",
         returning="binary_flag",
         return_expectations={"incidence": 0.1},
     ),
@@ -69,7 +70,7 @@ demographic_variables = dict(
             "5": """index_of_multiple_deprivation >= 32844*4/5 """,
         },
         index_of_multiple_deprivation=patients.address_as_of(
-            "index_date",
+            "last_day_of_month(index_date)",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
         ),
@@ -89,7 +90,7 @@ demographic_variables = dict(
     ),
     # Region
     region=patients.registered_practice_as_of(
-        "index_date",
+        "last_day_of_month(index_date)",
         returning="nuts1_region_name",
         return_expectations={
             "rate": "universal",
@@ -108,15 +109,28 @@ demographic_variables = dict(
             },
         },
     ),
-    # Ethnicity
-    # NOTE: Code for ethnicity is in a seperate analysis file
     # Practice
     practice=patients.registered_practice_as_of(
-        "index_date",
+        "last_day_of_month(index_date)",
         returning="pseudo_id",
         return_expectations={
             "int": {"distribution": "normal", "mean": 25, "stddev": 5},
             "incidence": 0.5,
+            },
+            ),
+    learning_disability=patients.with_these_clinical_events(
+        learning_disability_codes,
+        on_or_before="last_day_of_month(index_date)",
+        returning="binary_flag",
+        return_expectations={
+            "incidence": 0.01,
         },
     ),
+    care_home_status=patients.with_these_clinical_events(
+        nhse_care_homes_codes,
+        returning="binary_flag",
+        on_or_before="last_day_of_month(index_date)",
+        return_expectations={"incidence": 0.2},
+    ),
+
 )

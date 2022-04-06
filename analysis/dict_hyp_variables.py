@@ -25,7 +25,7 @@ hyp_codes_unique = hyp_codes_df["code"].unique()
 # Patients with an unresolved diagnosis of hypertension
 hyp_reg_variables = dict(
     registered=patients.registered_as_of(
-        "index_date",
+        "last_day_of_month(index_date)",
         return_expectations={"incidence": 0.9},
     ),
     # Define variables for hypertension (binary) and associated date
