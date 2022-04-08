@@ -1,4 +1,7 @@
-# This scrip loads all measure files and joins them together
+# This scrip loads all measure files and 
+# (1) joins them together
+# (2) rounds counts to the nearest 10
+
 # Note that the ungrouped measure (population) and grouped measures
 # differ in the number of their variables
 
@@ -18,8 +21,10 @@ dir_hyp_001_measures <- fs::dir_ls(path = "output/indicators/joined",
                                    glob = "*hyp001*.csv$")
 
 # Split dir paths because file structure differes
-## Grouped measures
+## Grouped measures (excluding practice)
 dir_hyp_001_measures_groups <- dir_hyp_001_measures[!stringr::str_detect(dir_hyp_001_measures, "population")]
+dir_hyp_001_measures_groups <- dir_hyp_001_measures_groups[!stringr::str_detect(dir_hyp_001_measures_groups, "practice")]
+
 ## Population measure
 dir_hyp_001_measures_pop <- dir_hyp_001_measures[stringr::str_detect(dir_hyp_001_measures, "population")]
 
@@ -47,6 +52,10 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
 # Write hyp001 csv file
 ## First create subdirectory (if it doesn't exist)
 fs::dir_create(here::here("output", "measures"))
+
+# Round counts to the nearest 10
+df_hyp_001_measures <- df_hyp_001_measures %>% 
+   dplyr::mutate(dplyr::across(c("hypertension", "population"), round, -1))
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
