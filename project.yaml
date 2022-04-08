@@ -108,8 +108,8 @@ actions:
 
 # Generate notebooks
   generate_hyp_report:
-    run: r:latest -e 'rmarkdown::render("output/notebooks/hypertension-sro-report.Rmd", knit_root_dir = "/workspace", output_dir = "output/notebooks")'
+    run: r:latest -e 'rmarkdown::render("notebooks/qof-hypertension.Rmd", knit_root_dir = "/workspace", output_dir = "notebooks")'
     needs: [join_measures]
     outputs:
       moderately_sensitive:
-        report: output/notebooks/hypertension-sro-report.html
+        report: notebooks/qof-hypertension.html
