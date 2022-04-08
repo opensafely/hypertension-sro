@@ -75,27 +75,38 @@ Dashboards presenting the annual targets of all QOF indicators published by NHSD
 
 ### HYP001 (Register)
 
-The rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below:
+The description and rules for the Hypertension Register (HYP001, Version: 46.0) are outlined below:
 
 > "Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved."
 
+| Rule number | Rule | Action if true | Action if false | Rule description or comments |
+| :---------- | :--- | :------------- | :-------------- | :--------------------------- |
+| 1 | If `HYPLAT_DAT` ≠ Null AND If `HYPRES_DAT` = Null | Select | Reject | Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved. Reject the remaining patients. |
+
+
+
 ## Codelists
 
-### NHSD Primary Care Domain Refsets 
+### Hypertension Refsets 
 
 | Cluster name | Description | SNOMED CT |
 |:---|:---|:---|
-| [BP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bp_cod/20200812/) | Blood pressure (BP) recording codes | ^999012731000230108 |
-| [BPDEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bpdec_cod/20200812/) | Codes indicating the patient has chosen not to have blood pressure procedure | ^999012611000230106 |
+| [BP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bp_cod/) | Blood pressure (BP) recording codes | ^999012731000230108 | 
+| [BPDEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/bpdec_cod/) | Codes indicating the patient has chosen not to have blood pressure procedure | ^999012611000230106 | 
+| [HTMAX_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/htmax_cod/) | Codes for maximal blood pressure (BP) therapy | ^999006651000230109 | 
+| [HYP_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyp_cod/) | Hypertension diagnosis codes | ^999006611000230105 | 
+| [HYPINVITE_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hypinvite_cod/) | Invite for hypertension care review codes | ^999012971000230108 | 
+| [HYPPCADEC_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyppcadec_cod/) | Codes indicating the patient has chosen not to receive hypertension quality indicator care | ^999013091000230102 | 
+| [HYPPCAPU_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hyppcapu_cod/) | Codes for hypertension quality indicator care unsuitable for patient | ^999013211000230104 | 
+| [HYPRES_COD](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/hypres_cod/) | Hypertension resolved codes | ^999006531000230101 | 
 
-
-### Codelists used for breakdowns
+### Breakdowns
 
 | Codelist name | Description | Coding system |
 |:---|:---|:---|
 | [Ethnicity](https://www.opencodelists.org/codelist/opensafely/ethnicity/2020-04-27) | A list of ethnicity codes in use in UK general practice including aggregate grouping at two levels (6 and 16). | CTV3 |
 | [NHS England Care Homes residential status](https://www.opencodelists.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13) | This codelists supports analysis of records of people who may reside in a nursing or care home. | SNOMED CT |
-| [Learning disabilities](https://www.opencodelists.org/codelist/opensafely/learning-disabilities/2020-07-06) | The following codes are used to indicate learning disability. | CTV3 |
+| [Learning disability (LD) codes](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/) | The following codes are used to check for a record of learning disability. | SNOMED CT |
 
 
 # Results
