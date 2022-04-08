@@ -61,7 +61,7 @@ This report describes the prevalence of people who have a diagnosis of hypertens
 
 # Methods
 
-Using OpenSAFELY-TPP, covering 40% of England's population, we have evaluated the QOF Hypertension indicators (HYP001, HYP003, HYP007) between 2019-09-01 and 2022-03-31.
+Using OpenSAFELY-TPP, covering 40% of England's population, we have evaluated the QOF Hypertension register (HYP001) between 2019-09-01 and 2022-03-31.
 The codelist used can be found here at [OpenSAFELY Codelists](https://codelists.opensafely.org/).
 
 The **study population** for the register was defined following the business rules the (v46).
@@ -82,8 +82,6 @@ The description and rules for the Hypertension Register (HYP001, Version: 46.0) 
 | Rule number | Rule | Action if true | Action if false | Rule description or comments |
 | :---------- | :--- | :------------- | :-------------- | :--------------------------- |
 | 1 | If `HYPLAT_DAT` ≠ Null AND If `HYPRES_DAT` = Null | Select | Reject | Select patients from the specified population who have a diagnosis of hypertension which has not been subsequently resolved. Reject the remaining patients. |
-
-
 
 ## Codelists
 
@@ -108,11 +106,9 @@ The description and rules for the Hypertension Register (HYP001, Version: 46.0) 
 | [NHS England Care Homes residential status](https://www.opencodelists.org/codelist/opensafely/nhs-england-care-homes-residential-status/3712ef13) | This codelists supports analysis of records of people who may reside in a nursing or care home. | SNOMED CT |
 | [Learning disability (LD) codes](https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/) | The following codes are used to check for a record of learning disability. | SNOMED CT |
 
-
 # Results
 
-Note that the scaling of the y-axis is different for the total population (0 to 100%) and outputs by subgroup (scaling differs across grouping variables to highlight differences between groups).
-SMALL NUMBER REDACTION.
+Note that the scaling of the y-axis scale is different for the total population (0 to 100%) and breakdowns by subgroups (scaling differs across grouping variables to highlight differences between groups).
 
 ## HYP001 (Register)
 
@@ -225,7 +221,6 @@ df_measures_hyp001 %>%
 
 ```
 
-
 ```{r fig.width=8, fig.height=4}
 
 df_measures_hyp001 %>%
@@ -292,9 +287,7 @@ df_measures_hyp001 %>%
   scale_colour_brewer(palette = "Set1")
 ```
 
-
 ### Learning disability
-
 
 ```{r fig.width=8, fig.height=4}
 
@@ -379,5 +372,7 @@ df_measures_hyp001 %>%
 # References 
 
 1. Curtis HJ, MacKenna B, Croker R, Inglesby P, Walker AJ, Morley J, et al. OpenSAFELY NHS Service Restoration Observatory 1: describing trends and variation in primary care clinical activity for 23.3 million patients in England during the first wave of COVID-19. Br J Gen Pract [Internet]. 2021 Sep 20 [cited 2021 Oct 5]; Available from: https://bjgp.org/content/early/2021/09/24/BJGP.2021.0380
+1. NHS Digital. QOF 2020-21 results. 2021a. https://qof.digital.nhs.uk/
+1. NHS Digital. Quality and Outcomes Framework, 2020-21 Official Statistics. 2021b. https://digital.nhs.uk/data-and-information/publications/statistical/quality-and-outcomes-framework-achievement-prevalence-and-exceptions-data/2020-21
 1. Williamson EJ, Walker AJ, Bhaskaran K, Bacon S, Bates C, Morton CE, et al. Factors associated with COVID-19-related death using OpenSAFELY. Nature. 2020 Aug;584(7821):430–6. https://www.nature.com/articles/s41586-020-2521-4
 1. Xu W, Goldberg SI, Shubina M, Turchin A. Optimal systolic blood pressure target, time to intensification, and time to follow-up in treatment of hypertension: population based retrospective cohort study. BMJ. 2015 Feb 5;350:h158. https://www.bmj.com/content/350/bmj.h158
