@@ -18,8 +18,10 @@ dir_hyp_001_measures <- fs::dir_ls(path = "output/indicators/joined",
                                    glob = "*hyp001*.csv$")
 
 # Split dir paths because file structure differes
-## Grouped measures
+## Grouped measures (excluding practice)
 dir_hyp_001_measures_groups <- dir_hyp_001_measures[!stringr::str_detect(dir_hyp_001_measures, "population")]
+dir_hyp_001_measures_groups <- dir_hyp_001_measures_groups[!stringr::str_detect(dir_hyp_001_measures_groups, "practice")]
+
 ## Population measure
 dir_hyp_001_measures_pop <- dir_hyp_001_measures[stringr::str_detect(dir_hyp_001_measures, "population")]
 
