@@ -121,7 +121,6 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    geom_segment = TRUE,
     legend = "none",
     y_label = "Prevalence (%)",
     set_y_scale_limits = TRUE)
@@ -137,7 +136,6 @@ df_measures_hyp001 %>%
     y_scale = "count",
     legend = "none",
     x_scale_date_breaks = "4 months",
-    geom_segment = TRUE,
     y_label = "Prevalence (Count)",
     set_y_scale_limits = TRUE)
 
@@ -214,10 +212,12 @@ df_measures_hyp001 %>%
     levels = c(1:5),
     labels = c("1 - Most deprived", "2", "3", "4", "5 - Least deprived")
   )) %>%
+  # dplyr::mutate(category = forcats::fct_explicit_na(category)) %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    y_label = "Prevalence (%)")
+    y_label = "Prevalence (%)") +
+    guides(colour = guide_legend(nrow = 1))
 
 ```
 
@@ -233,7 +233,8 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)")
+    y_label = "Prevalence (Count)") +
+    guides(colour = guide_legend(nrow = 1))
 
 ```
 

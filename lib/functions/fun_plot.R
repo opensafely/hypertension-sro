@@ -15,7 +15,6 @@
 #' @param legend_position String, legend position, "none" to remove legend
 #' @param x_label String, specifying x label
 #' @param y_label String, specifying y label
-#' @param geom_segment Logical, specifying
 #' @param set_y_scale_limits Logical, when  y_scale argument = "percent"
 #' specifying whether to set y scale limits
 #' @param vline_nhs_fy Logical, specifying whether to show NHS financial year
@@ -31,7 +30,6 @@ plot_qof_indicator <- function(df,
                                x_scale_date_breaks = "4 months",
                                x_label = NULL,
                                y_label = NULL,
-                               geom_segment = FALSE,
                                set_y_scale_limits = FALSE,
                                vline_nhs_fy = TRUE,
                                vline_1st_national_lockdown = FALSE,
@@ -60,7 +58,7 @@ plot_qof_indicator <- function(df,
       colour = NULL,
       title = title
     ) +
-    ggplot2::scale_color_viridis_d() +
+    ggplot2::scale_color_viridis_d(na.value = "grey50") +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = legend_position) +
     ggplot2::theme(text = ggplot2::element_text(size = 14))
@@ -88,14 +86,6 @@ plot_qof_indicator <- function(df,
       ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, "")),
         show.legend = FALSE,
         segment.color = NA
-      )
-  }
-
-  if (geom_segment) {
-    plot <- plot +
-      ggplot2::geom_segment(ggplot2::aes(xend = date, yend = 0),
-        size = 2,
-        alpha = 0.3
       )
   }
 
