@@ -97,6 +97,16 @@ actions:
      outputs:
        moderately_sensitive:
          measure_csv: output/indicators/joined/measure_hyp007_*_rate.csv
+
+  generate_deciles_charts:
+    run: >
+      deciles-charts:v0.0.1
+      --input_dir output/indicators/joined
+      --output_dir output/indicators/joined
+    needs: [generate_measures_hyp001]
+    outputs:
+      moderately_sensitive:
+        cohort: output/indicators/joined/deciles_chart_*.png
   
   # Join all measure files for each indicator
   join_measures:
