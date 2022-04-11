@@ -28,18 +28,21 @@ library(stringr)
 library(gt)
 library(ggrepel)
 library(fs)
+library(ggforce)
 
 # Load plotting function
 source(here::here("lib", "functions", "fun_plot.R"))
 
+# Set plotly
+plotly <- FALSE
+
 # Create directory if it doesnt exist
-fs::dir_create(here::here("output", "notebooks"))
+# fs::dir_create(here::here("output", "notebooks"))
 ```
 
 ```{r load-data, include=FALSE}
 # Get file names and path ----
-df_measures_hyp001 <- readr::read_csv(here::here("output", "measures", "measures_hyp001.csv"))
-list_nhs_financial_years <- unique(df_measures_hyp001$date[lubridate::month(df_measures_hyp001$date) == 4])
+df_measures_hyp001 <- readr::read_csv(here::here("released_outputs", "measures", "measures_hyp001.csv"))
 ```
 # Introduction
 
@@ -123,7 +126,8 @@ df_measures_hyp001 %>%
     y_scale = "percent",
     legend = "none",
     y_label = "Prevalence (%)",
-    set_y_scale_limits = TRUE)
+    set_y_scale_limits = TRUE,
+    plotly = plotly)
 
 ```
 
@@ -137,7 +141,8 @@ df_measures_hyp001 %>%
     legend = "none",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
-    set_y_scale_limits = TRUE)
+    set_y_scale_limits = TRUE,
+    plotly = plotly)
 
 ```
 
@@ -152,10 +157,11 @@ df_measures_hyp001 %>%
     labels = c("Female", "Male")
   )) %>%
   plot_qof_indicator(
-    value = value,
+    value = value, 
     y_scale = "percent",
-    y_label = "Prevalence (%)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (%)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 
 ```
 
@@ -170,8 +176,9 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (Count)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 
 ```
 
@@ -185,7 +192,8 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    y_label = "Prevalence (%)")
+    y_label = "Prevalence (%)",
+    plotly = plotly)
 
 ```
 
@@ -198,7 +206,8 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)")
+    y_label = "Prevalence (Count)",
+    plotly = plotly)
 
 ```
 
@@ -212,13 +221,11 @@ df_measures_hyp001 %>%
     levels = c(1:5),
     labels = c("1 - Most deprived", "2", "3", "4", "5 - Least deprived")
   )) %>%
-  # dplyr::mutate(category = forcats::fct_explicit_na(category)) %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    y_label = "Prevalence (%)") +
-    guides(colour = guide_legend(nrow = 1))
-
+    y_label = "Prevalence (%)",
+    plotly = plotly)
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -233,8 +240,8 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-    guides(colour = guide_legend(nrow = 1))
+    y_label = "Prevalence (Count)",
+    plotly = plotly) 
 
 ```
 
@@ -248,8 +255,9 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (%)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (%)",
+    scale_colour = "brewer_set1",
+    plotly = plotly)
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -259,8 +267,9 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (Count)",
+    scale_colour = "brewer_set1",
+    plotly = plotly)
 ```
 
 ### Region
@@ -273,8 +282,9 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (%)") +
-  scale_colour_brewer(palette = "Set1")
+    y_label = "Prevalence (%)",
+    scale_colour = "brewer_set1",
+    plotly = plotly)
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -284,8 +294,10 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-  scale_colour_brewer(palette = "Set1")
+    y_label = "Prevalence (Count)",
+    scale_colour = "brewer_set1",
+    plotly = plotly)
+  
 ```
 
 ### Learning disability
@@ -305,8 +317,9 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (%)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (%)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -323,8 +336,9 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (Count)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 ```
 
 ### Care home status
@@ -344,8 +358,9 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (%)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (%)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -362,8 +377,9 @@ df_measures_hyp001 %>%
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
-    y_label = "Prevalence (Count)") +
-  scale_colour_brewer(palette = "Dark2")
+    y_label = "Prevalence (Count)",
+    scale_colour = "brewer_dark2",
+    plotly = plotly)
 ```
 
 # Discussion
