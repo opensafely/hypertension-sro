@@ -87,7 +87,7 @@ plot_qof_indicator <- function(df,
       ggplot2::geom_point(ggplot2::aes(text = paste0("<b>Date:</b> ", 
                            lubridate::month(date, label = TRUE), " ",
                            lubridate::year(date), "<br>",
-                           "<b>Percent:</b> ", scales::comma({{value}}))),
+                           "<b>Count:</b> ", scales::comma({{value}}))),
                         size = 1.5) +
       ggplot2::scale_y_continuous(labels = scales::comma) +
       ggplot2::expand_limits(y = 0)
