@@ -127,8 +127,8 @@ df_measures_hyp001 %>%
     legend = "none",
     y_label = "Prevalence (%)",
     set_y_scale_limits = TRUE,
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -142,8 +142,8 @@ df_measures_hyp001 %>%
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     set_y_scale_limits = TRUE,
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ### Sex
@@ -157,12 +157,12 @@ df_measures_hyp001 %>%
     labels = c("Female", "Male")
   )) %>%
   plot_qof_indicator(
-    value = value, 
+    value = value,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -170,16 +170,17 @@ df_measures_hyp001 %>%
 df_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>%
   dplyr::mutate(category = factor(category,
-                                  levels = c("F", "M"),
-                                  labels = c("Female", "Male"))) %>%
+    levels = c("F", "M"),
+    labels = c("Female", "Male")
+  )) %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ### Age band
@@ -193,8 +194,8 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     y_label = "Prevalence (%)",
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -202,13 +203,13 @@ df_measures_hyp001 %>%
 df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>%
   dplyr::filter(category != "missing") %>%
-    plot_qof_indicator(
+  plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
-    plotly = plotly)
-
+    plotly = plotly
+  )
 ```
 
 ### IMD
@@ -225,7 +226,8 @@ df_measures_hyp001 %>%
     value = value,
     y_scale = "percent",
     y_label = "Prevalence (%)",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -235,14 +237,14 @@ df_measures_hyp001 %>%
   dplyr::mutate(category = factor(category,
     levels = c(1:5),
     labels = c("1 - Most deprived", "2", "3", "4", "5 - Least deprived")
-  )) %>% 
+  )) %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
-    plotly = plotly) 
-
+    plotly = plotly
+  )
 ```
 
 ### Ethnicity
@@ -251,13 +253,14 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "ethnicity") %>%
-    plot_qof_indicator(
+  plot_qof_indicator(
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -269,7 +272,8 @@ df_measures_hyp001 %>%
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ### Region
@@ -278,13 +282,14 @@ df_measures_hyp001 %>%
 
 df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>%
-    plot_qof_indicator(
+  plot_qof_indicator(
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -296,8 +301,8 @@ df_measures_hyp001 %>%
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1",
-    plotly = plotly)
-  
+    plotly = plotly
+  )
 ```
 
 ### Learning disability
@@ -313,13 +318,14 @@ df_measures_hyp001 %>%
       "No record of learning disability"
     )
   )) %>%
-      plot_qof_indicator(
+  plot_qof_indicator(
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -338,7 +344,8 @@ df_measures_hyp001 %>%
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ### Care home status
@@ -354,13 +361,14 @@ df_measures_hyp001 %>%
       "No record of positive care home status"
     )
   )) %>%
-      plot_qof_indicator(
+  plot_qof_indicator(
     value = value,
     y_scale = "percent",
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 ```{r fig.width=8, fig.height=4}
@@ -379,7 +387,8 @@ df_measures_hyp001 %>%
     x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
-    plotly = plotly)
+    plotly = plotly
+  )
 ```
 
 # Discussion
