@@ -30,28 +30,28 @@ actions:
         cohort: output/indicators/input_hyp001_*.feather
 
   # Extract cohort for indicator HYP003 by month 
-  generate_study_population_hyp003:
-    run: > 
-      cohortextractor:latest generate_cohort 
-      --study-definition study_definition_hyp003 
-      --index-date-range "2019-01-01 to 2022-01-01 by month" 
-      --output-dir=output/indicators  
-      --output-format=feather
-    outputs:
-      highly_sensitive:
-        cohort: output/indicators/input_hyp003_*.feather
+  # generate_study_population_hyp003:
+  #   run: > 
+  #     cohortextractor:latest generate_cohort 
+  #     --study-definition study_definition_hyp003 
+  #     --index-date-range "2019-01-01 to 2022-01-01 by month" 
+  #     --output-dir=output/indicators  
+  #     --output-format=feather
+  #   outputs:
+  #     highly_sensitive:
+  #       cohort: output/indicators/input_hyp003_*.feather
   
   # Extract cohort for indicator HYP007 by month 
-  generate_study_population_hyp007:
-    run: > 
-      cohortextractor:latest generate_cohort 
-      --study-definition study_definition_hyp007 
-      --index-date-range "2019-01-01 to 2022-01-01 by month" 
-      --output-dir=output/indicators  
-      --output-format=feather
-    outputs:
-      highly_sensitive:
-        cohort: output/indicators/input_hyp007_*.feather
+  # generate_study_population_hyp007:
+  #   run: > 
+  #     cohortextractor:latest generate_cohort 
+  #     --study-definition study_definition_hyp007 
+  #     --index-date-range "2019-01-01 to 2022-01-01 by month" 
+  #     --output-dir=output/indicators  
+  #     --output-format=feather
+  #   outputs:
+  #     highly_sensitive:
+  #       cohort: output/indicators/input_hyp007_*.feather
 
   join_ethnicity:
     run: >
@@ -59,7 +59,7 @@ actions:
         --lhs output/indicators/input_hyp*.feather
         --rhs output/indicators/input_ethnicity.feather
         --output-dir output/indicators/joined
-    needs: [generate_study_population_ethnicity, generate_study_population_hyp001, generate_study_population_hyp003, generate_study_population_hyp007]
+    needs: [generate_study_population_ethnicity, generate_study_population_hyp001]
     outputs:
       highly_sensitive:
         cohort: output/indicators/joined/input_hyp*.feather
@@ -77,26 +77,26 @@ actions:
          measure_csv: output/indicators/joined/measure_hyp001_*_rate.csv
 
  # Generate measures for indicator HYP003 by month
-  generate_measures_hyp003:
-     run: >
-       cohortextractor:latest generate_measures 
-       --study-definition study_definition_hyp003 
-       --output-dir=output/indicators/joined
-     needs: [join_ethnicity]
-     outputs:
-       moderately_sensitive:
-         measure_csv: output/indicators/joined/measure_hyp003_*_rate.csv
+  # generate_measures_hyp003:
+  #    run: >
+  #      cohortextractor:latest generate_measures 
+  #      --study-definition study_definition_hyp003 
+  #      --output-dir=output/indicators/joined
+  #    needs: [join_ethnicity]
+  #    outputs:
+  #      moderately_sensitive:
+  #        measure_csv: output/indicators/joined/measure_hyp003_*_rate.csv
 
   # Generate measures for indicator HYP007 by month
-  generate_measures_hyp007:
-     run: >
-       cohortextractor:latest generate_measures 
-       --study-definition study_definition_hyp007 
-       --output-dir=output/indicators/joined
-     needs: [join_ethnicity]
-     outputs:
-       moderately_sensitive:
-         measure_csv: output/indicators/joined/measure_hyp007_*_rate.csv
+  # generate_measures_hyp007:
+  #    run: >
+  #      cohortextractor:latest generate_measures 
+  #      --study-definition study_definition_hyp007 
+  #      --output-dir=output/indicators/joined
+  #    needs: [join_ethnicity]
+  #    outputs:
+  #      moderately_sensitive:
+  #        measure_csv: output/indicators/joined/measure_hyp007_*_rate.csv
 
   generate_deciles_charts:
     run: >
