@@ -46,3 +46,13 @@ ht_max_12m=patients.with_these_clinical_events(
 # Note that the time frame for each measure gets specified in the
 # variables get defined using the 'between' argument and added as a suffix
 # to the variable names.
+
+
+# Generate notebooks
+# Notebooks get generated after releasing output, no longer using this action
+  # generate_hyp_report:
+  #   run: r:latest -e 'rmarkdown::render("notebooks/qof-hypertension.Rmd", knit_root_dir = "/workspace", output_dir = "notebooks")'
+  #   needs: [join_measures]
+  #   outputs:
+  #     moderately_sensitive:
+  #       report: notebooks/qof-hypertension.html
