@@ -6,7 +6,6 @@
 # differ in the number of their variables
 
 # Load packages ----
-library(ggplot2)
 library(magrittr)
 library(dplyr)
 library(tidyr)
@@ -54,8 +53,8 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
 fs::dir_create(here::here("output", "measures"))
 
 # Round counts to the nearest 10
-df_hyp_001_measures <- df_hyp_001_measures %>% 
-   dplyr::mutate(dplyr::across(c("hypertension", "population"), round, -1))
+df_hyp_001_measures <- df_hyp_001_measures %>%
+   dplyr::mutate(dplyr::across(c("hypertension_register", "population"), round, -1))
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
