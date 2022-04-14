@@ -22,9 +22,7 @@ study = StudyDefinition(
         registered AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
-        (age_band != 'missing') AND
-
-        hypertension_register
+        (age_band != 'missing')
         """,
     ),
     # Include hypertension variables
@@ -37,63 +35,63 @@ study = StudyDefinition(
 measures = [
     Measure(
         id="hyp001_population_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["population"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_practice_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["practice"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_age_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["age_band"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_sex_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["sex"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_imd_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["imd"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_region_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["region"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_ethnicity_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["ethnicity"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_learning_disability_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["learning_disability"],
         small_number_suppression=True,
     ),
     Measure(
         id="hyp001_care_home_rate",
-        numerator="hypertension",
+        numerator="hypertension_register",
         denominator="population",
         group_by=["care_home"],
         small_number_suppression=True,
