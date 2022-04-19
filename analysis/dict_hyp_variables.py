@@ -64,8 +64,10 @@ hyp_reg_variables = dict(
         # of hypertension which has not been subsequently resolved.
         (hypertension AND (NOT hypertension_resolved)) OR
 
-        ((hypertension AND hypertension_resolved) AND
-        (hypertension_resolved_date <= hypertension_date))
+        (
+            (hypertension AND hypertension_resolved) AND
+            (hypertension_resolved_date <= hypertension_date)
+        )
         """
     ),
 )
