@@ -28,7 +28,7 @@ plot_qof_indicator <- function(df,
                                scale_colour = c("viridis", "brewer_dark2", "brewer_set1"),
                                title = NULL,
                                legend_position = "top",
-                               x_scale_date_breaks = "4 months",
+                               x_scale_date_breaks = "2 months",
                                x_label = NULL,
                                y_label = NULL,
                                set_y_scale_limits = FALSE,
@@ -53,7 +53,7 @@ plot_qof_indicator <- function(df,
     ) +
     ggplot2::scale_x_date(
       date_breaks = x_scale_date_breaks,
-      date_labels = "%b %y"
+      labels = scales::label_date_short()
     ) +
     ggplot2::labs(
       x = x_label,
@@ -63,7 +63,7 @@ plot_qof_indicator <- function(df,
     ) +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = legend_position) +
-    ggplot2::theme(text = ggplot2::element_text(size = 14))
+    ggplot2::theme(text = ggplot2::element_text(size = 12))
 
   # Add labels for y axis (pct or counts)
   if (y_scale == "percent") {
@@ -89,8 +89,12 @@ plot_qof_indicator <- function(df,
                            lubridate::year(date), "<br>",
                            "<b>Count:</b> ", scales::comma({{value}}))),
                         size = 1.5) +
-      ggplot2::scale_y_continuous(labels = scales::comma) +
-      ggplot2::expand_limits(y = 0)
+      ggplot2::scale_y_continuous(labels = scales::comma)
+
+    if (set_y_scale_limits) {
+      plot <- plot +
+        ggplot2::expand_limits(y = 0)
+    }
   }
 
   # Add label
