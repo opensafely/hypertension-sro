@@ -25,7 +25,7 @@ library(knitr)
 library(readr)
 library(purrr)
 library(stringr)
-
+library(patchwork)
 
 # Load plotting function
 source(here::here("lib", "functions", "fun_plot.R"))
@@ -132,9 +132,9 @@ Note that the scaling of the y-axis scale is different for the total population 
 
 ### Total population
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_population_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "population") %>%
   plot_qof_indicator(
     value = value,
@@ -144,28 +144,39 @@ df_measures_hyp001 %>%
     set_y_scale_limits = TRUE,
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-
-df_measures_hyp001 %>%
+hyp001_population_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "population") %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
     legend = "none",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     set_y_scale_limits = TRUE,
     plotly = plotly
   )
+
+hyp001_population_pct_count <- (hyp001_population_pct / hyp001_population_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A')
+
+hyp001_population_pct_count
+
+ggplot2::ggsave(filename = "hyp001_population_pct_count.png",
+                plot = hyp001_population_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
+
 
 ### Sex
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_sex_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>%
   dplyr::mutate(category = factor(category,
     levels = c("F", "M"),
@@ -178,11 +189,8 @@ df_measures_hyp001 %>%
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-
-df_measures_hyp001 %>%
+hyp001_sex_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>%
   dplyr::mutate(category = factor(category,
     levels = c("F", "M"),
@@ -191,18 +199,30 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
+
+hyp001_sex_pct_count <- (hyp001_sex_pct / hyp001_sex_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+ggplot2::ggsave(filename = "hyp001_sex_pct_count.png",
+                plot = hyp001_sex_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### Age band
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_age_band_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>%
   dplyr::filter(category != "missing") %>%
   plot_qof_indicator(
@@ -211,27 +231,38 @@ df_measures_hyp001 %>%
     y_label = "Prevalence (%)",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-
-df_measures_hyp001 %>%
+hyp001_age_band_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>%
   dplyr::filter(category != "missing") %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     plotly = plotly
   )
+
+hyp001_age_band_pct_count <- (hyp001_age_band_pct / hyp001_age_band_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_age_band_pct_count
+
+ggplot2::ggsave(filename = "hyp001_age_band_pct_count.png",
+                plot = hyp001_age_band_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### IMD
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_imd_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
   dplyr::mutate(category = factor(category,
     levels = c(1:5),
@@ -243,11 +274,8 @@ df_measures_hyp001 %>%
     y_label = "Prevalence (%)",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-
-df_measures_hyp001 %>%
+hyp001_imd_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
   dplyr::mutate(category = factor(category,
     levels = c(1:5),
@@ -256,75 +284,111 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     plotly = plotly
   )
+
+hyp001_imd_pct_count <- (hyp001_imd_pct / hyp001_imd_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_imd_pct_count
+
+ggplot2::ggsave(filename = "hyp001_imd_pct_count.png",
+                plot = hyp001_imd_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### Ethnicity
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_ethnicity_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "ethnicity") %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-df_measures_hyp001 %>%
+hyp001_ethnicity_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "ethnicity") %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1",
     plotly = plotly
   )
+
+hyp001_ethnicity_pct_count <- (hyp001_ethnicity_pct / hyp001_ethnicity_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_ethnicity_pct_count
+
+ggplot2::ggsave(filename = "hyp001_ethnicity_pct_count.png",
+                plot = hyp001_ethnicity_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### Region
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_region_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-df_measures_hyp001 %>%
+hyp001_region_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "region") %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1",
     plotly = plotly
   )
+
+hyp001_region_pct_count <- (hyp001_region_pct / hyp001_region_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_region_pct_count
+
+ggplot2::ggsave(filename = "hyp001_region_pct_count.png",
+                plot = hyp001_region_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### Learning disability
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_learning_disability_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "learning_disability") %>%
   dplyr::mutate(category = factor(category,
     levels = c(TRUE, FALSE),
@@ -336,15 +400,12 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-df_measures_hyp001 %>%
+hyp001_learning_disability_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "learning_disability") %>%
   dplyr::mutate(category = factor(category,
     levels = c(TRUE, FALSE),
@@ -356,18 +417,32 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
+
+hyp001_learning_disability_pct_count <- (hyp001_learning_disability_pct / hyp001_learning_disability_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_learning_disability_pct_count
+
+ggplot2::ggsave(filename = "hyp001_learning_disability_pct_count.png",
+                plot = hyp001_learning_disability_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 ### Care home status
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=6.5}
 
-df_measures_hyp001 %>%
+hyp001_care_home_pct <- df_measures_hyp001 %>%
   dplyr::filter(group == "care_home") %>%
   dplyr::mutate(category = factor(category,
     levels = c(TRUE, FALSE),
@@ -379,15 +454,12 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = value,
     y_scale = "percent",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
-```
 
-```{r fig.width=8, fig.height=4}
-df_measures_hyp001 %>%
+hyp001_care_home_count <- df_measures_hyp001 %>%
   dplyr::filter(group == "care_home") %>%
   dplyr::mutate(category = factor(category,
     levels = c(TRUE, FALSE),
@@ -399,11 +471,25 @@ df_measures_hyp001 %>%
   plot_qof_indicator(
     value = hypertension,
     y_scale = "count",
-    x_scale_date_breaks = "4 months",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2",
     plotly = plotly
   )
+
+hyp001_care_home_pct_count <- (hyp001_care_home_pct / hyp001_care_home_count) +
+  patchwork::plot_layout(guides = 'collect') &
+  patchwork::plot_annotation(tag_levels = 'A') &
+  ggplot2::theme(legend.position = "top")
+
+hyp001_care_home_pct_count
+
+ggplot2::ggsave(filename = "hyp001_care_home_pct_count.png",
+                plot = hyp001_care_home_pct_count,
+                width = 8,
+                height = 6.5, 
+                units = "in",
+                path = here::here("released_outputs", "figures")
+                )
 ```
 
 # Discussion
