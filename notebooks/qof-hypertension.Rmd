@@ -3,6 +3,7 @@ title: "QOF - Hypertension"
 subtitle: "Indicators: HYP001 (Register)"
 bibliography: references.bib
 link-citations: true
+csl: elsevier-vancouver.csl
 output:
   html_document:
     toc: true
@@ -47,7 +48,7 @@ df_measures_hyp001 <- readr::read_csv(path_measures_hyp001)
 > *The objective of the Quality and Outcomes Framework (QOF) is to improve the quality of care patients are given by rewarding practices for the quality of care they provide to their patients, based on a number of indicators across a range of key areas of clinical care and public health.*
 > *QOF participation by GP practices is very high, with 96.7% of practices participating in the 2020/21 publication* [@NHSDigital2021a].
 
-OpenSAFELY is a secure analytics platform for electronic patient records built by our group on behalf of NHS England to deliver urgent academic and operational research during the pandemic [e.g., @Curtis2021; @Williamson2020; @Williamson2020].
+OpenSAFELY is a secure analytics platform for electronic patient records built by our group on behalf of NHS England to deliver urgent academic and operational research during the pandemic [e.g., @Curtis2021; @Williamson2020].
 Analyses can currently run across all patients' full pseudonymised primary care records, with patient-level linkage to various sources of secondary care data.
 The OpenSAFELY-TPP is a Trusted Research Environment (TRE) containing the routine clinical data of 23.4m people, approximately 40% of England's population.
 
@@ -62,9 +63,8 @@ This report describes the prevalence of people who have a diagnosis of hypertens
 # Methods
 
 Using OpenSAFELY-TPP, covering 40% of England's population, we have evaluated the QOF Hypertension register (HYP001) between 2019-09-01 and 2022-03-31.
-The codelist used can be found here at [OpenSAFELY Codelists](https://codelists.opensafely.org/).
 
-The **study population** for the register was defined following the business rules the (v46).
+The **study population** for the register was defined following the QOF business rules the (v46).
 For each month within the study period, we have calculated the percentage of registered patients with a diagnosis of hypertension which has not been subsequently resolved.
 All analytical code and output is available for inspection at the [OpenSAFELY GitHub repository](https://github.com/opensafely/hypertension-sro).
 
