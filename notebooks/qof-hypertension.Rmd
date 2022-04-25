@@ -1,7 +1,7 @@
 ---
-title: "Trends in Hypertension Prevalence in the UK"
+title: "Trends in QOF Hypertension Prevalence"
 subtitle: |
-  Quality and Outcomes Framework Indicator HYP001 (Register)
+  Quality and Outcomes Framework Indicators: HYP001 (Register)
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 # author:
 #   - first_name: "Milan"
@@ -73,7 +73,9 @@ library(lubridate)
 library(gt)
 
 # Load plotting function
-source(here::here("lib", "functions", "fun_plot.R"))
+source(here::here("lib", "functions", "funs_plot_measures.R"))
+source(here::here("lib", "functions", "funs_report_results.R"))
+source(here::here("lib", "functions", "funs_tidy_data.R"))
 ```
 
 ```{r load-data, include=FALSE}
@@ -152,7 +154,9 @@ The description and rules for the Hypertension Register (HYP001, Version: 46.0) 
 
 # Results
 
-Note that the scaling of the y-axis scale is different for the total population (0 to 100%) and breakdowns by subgroups (scaling differs across grouping variables to highlight differences between groups).
+Note that the scaling of the y-axis scale is different for the total population (0% to 100%) and breakdowns by subgroups (scaling differs across grouping variables to highlight differences between groups).
+All figures are showing the percentage prevalence (Panel A) and the total count (Panel B) for context.
+Table 1 shows the register, list size and prevalence of the study population at the end of each financial year (March).
 
 ## HYP001 (Register)
 
