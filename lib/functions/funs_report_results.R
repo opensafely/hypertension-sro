@@ -1,7 +1,7 @@
 
 report_measures <- function(df, value, date, group, category, convert_percent = TRUE) {
   
-  report_value <- df_measures_hyp001 %>% 
+  report_value <- df %>% 
     filter(date == {{ date }}) %>% 
     filter(group == {{ group }}) %>% 
     filter(category == {{ category }}) %>% 

@@ -592,7 +592,10 @@ hyp001_care_home_pct_count
 
 # Discussion
 
-For hypertension we found a prevalence of `r tab1_measures_hyp001 %>% filter(group == "Population") %>% pull(value_march_2019) %>% scales::percent(accuracy = 0.01)` in March 2019, `r tab1_measures_hyp001 %>% filter(group == "Population") %>% pull(value_march_2020) %>% scales::percent(accuracy = 0.01)` in March 2020, and `r tab1_measures_hyp001 %>% filter(group == "Population") %>% pull(value_march_2021) %>% scales::percent(accuracy = 0.01)` in March 2021.
+For hypertension we found a prevalence of 
+`r report_measures(df = df_measures_hyp001, value = value, date = "2019-03-01", group = "population", category = population)` in March 2019, 
+`r report_measures(df = df_measures_hyp001, value = value, date = "2020-03-01", group = "population", category = population)` in March 2020, and 
+`r report_measures(df = df_measures_hyp001, value = value, date = "2021-03-01", group = "population", category = population)` in March 2021.
 Overall, we observed a small gradual decline in hypertension prevalence over time, with the biggest drop from March to April 2020 (12580 patients).
 Our results are very similar to the hypertension prevalence recorded by NHS Digital in 2019-22 (14.1%) and 2020-21 (13.9%) [@NHSDigital2021d].
 
