@@ -1,29 +1,30 @@
-#' Plotting function for measures
+#' Plot longitudinal OpenSAFELY measures
 #'
-#' @param df Dataframe from OpenSAFELY "Measures" framework.
-#' Expects the following variables:
-#' value (percentage with leading 0, e.g., 0.50 indicates 50%) <dbl>;
-#' date (YYYY-MM-DD) <date>;
-#' group (e.g., age_group) <chr>;
-#' category (e.g., "65+) <chr>
-#' @param df Dataframe
-#' @param value variable name
+#' @param df Dataframe of combined measures from OpenSAFELY
+#' @param value String, specifying variable name of event count or percentage 
+#' @param group_category String, specifying variable name of group categories 
 #' @param y_scale String, specifying wheather variable `value` is
 #' (i) in percent (where 0.5 indicates 50%) or
 #' (ii) a count
+#' @param scale_colour String, specifying colour palette for group_category
 #' @param title String, specifying title of plot
-#' @param legend_position String, legend position, "none" to remove legend
+#' @param legend_position String, specifying legend position. Select "none" to 
+#' remove legend
+#' @param x_scale_date_breaks String, specifying date breaks on x axis
 #' @param x_label String, specifying x label
 #' @param y_label String, specifying y label
 #' @param set_y_scale_limits Logical, when  y_scale argument = "percent"
 #' specifying whether to set y scale limits
 #' @param vline_nhs_fy Logical, specifying whether to show NHS financial year
-#' @param show_label Logical, specifying whether to show label
-
+#' @param vline_1st_national_lockdown Logical, specifying whether to add dotted 
+#' line showing 1st national lockdown (2020-03-01)
+#' @param plotly Logical, specifying whether to convert ggplot2 opbject to plotly
+#' @param show_label Logical, specifying whether to show label for each category
 #'
 #' @return ggplot2 object
 plot_qof_indicator <- function(df,
                                value,
+                               group_category = NULL,
                                y_scale = c("percent", "count"),
                                scale_colour = c("viridis", "brewer_dark2", "brewer_set1"),
                                title = NULL,
@@ -45,7 +46,7 @@ plot_qof_indicator <- function(df,
     ggplot2::ggplot(ggplot2::aes(
       x = date,
       y = {{ value }},
-      colour = category
+      colour = {{ group_category }}
     )) +
     ggplot2::geom_line(
       size = 1,
@@ -100,7 +101,7 @@ plot_qof_indicator <- function(df,
   # Add label
   if (show_label) {
     plot <- plot +
-      ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), category, "")),
+      ggrepel::geom_label_repel(ggplot2::aes(label = ifelse(date == min(date), group_category, "")),
         show.legend = FALSE,
         segment.color = NA
       )
@@ -134,7 +135,7 @@ plot_qof_indicator <- function(df,
   # Add colour palette
   if (scale_colour == "viridis") {
       plot <- plot +
-        ggplot2::scale_color_viridis_d(na.value = "grey50")
+        ggplot2::scale_colour_viridis_d(na.value = "grey50")
   } else if (scale_colour == "brewer_dark2") {
       plot <- plot +
         ggplot2::scale_colour_brewer(palette = "Dark2")
