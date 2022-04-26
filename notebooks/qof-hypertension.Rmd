@@ -40,13 +40,14 @@ csl: elsevier-vancouver.csl
 #     toc: true
 #     code_folding: true
 # repository_url: https://github.com/opensafely/hypertension-sro
-
 output:
   html_document:
     toc: true
     toc_float: true
     number_sections: true
     code_folding: hide
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -175,29 +176,14 @@ tab1_measures_hyp001 <- df_measures_hyp001 %>%
   relocate(group, category, 
            hypertension_march_2019, population_march_2019, value_march_2019,
            hypertension_march_2020, population_march_2020, value_march_2020,
-           hypertension_march_2021, population_march_2021, value_march_2021) %>% 
-  mutate(category = case_when(group == "care_home" ~ as.character(factor(category,
-                                                                         levels = c(TRUE, FALSE),
-                                                                         labels = c("Yes",
-                                                                                    "No"))),
-                              group == "learning_disability" ~ as.character(factor(category,
-                                                                                   levels = c(TRUE, FALSE),
-                                                                                   labels = c("Yes",
-                                                                                              "No"))),
-                              group == "imd" ~ as.character(factor(category,
-                                                                   levels = c(0:5),
-                                                                   labels = c("(Missing)",
-                                                                              "1 - Most deprived", 
-                                                                              "2", "3", "4", 
-                                                                              "5 - Least deprived"))),
-                              group == "sex" ~ as.character(factor(category,
-                                                                   levels = c("F", "M"),
-                                                                   labels = c("Female", "Male"))),
-                              group == "population" ~ "Total",
-    TRUE ~ category),
-  )
-
-tab1_measures_hyp001 <- tab1_measures_hyp001 %>% 
+           hypertension_march_2021, population_march_2021, value_march_2021) %>%
+  tidy_category_names(group = group,
+                      category = category,
+                      learning_disability = "learning_disability",
+                      imd = "imd",
+                      sex = "sex",
+                      care_home = "care_home",
+                      population = "population") %>% 
   mutate(group = case_when(group == "age_band" ~ "Age band",
                            group == "care_home" ~ "Record of care home status",
                            group == "learning_disability" ~ "Record of learning disability",
@@ -208,6 +194,10 @@ tab1_measures_hyp001 <- tab1_measures_hyp001 %>%
                            group == "sex" ~ "Sex",
                            TRUE ~ group))
 
+```
+
+
+```{r tab1-hyp001}
 
 # Create initial table object
 gt_tab1_measures_hyp001 <- tab1_measures_hyp001 %>% 
@@ -273,20 +263,33 @@ gt_tab1_measures_hyp001 %>%
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_population_pct <- df_measures_hyp001 %>%
+df_figs_measures_hyp001 <- df_measures_hyp001 %>% 
+  tidy_category_names(group = group,
+                      category = category,
+                      learning_disability = "learning_disability",
+                      imd = "imd",
+                      sex = "sex",
+                      care_home = "care_home",
+                      population = "population", 
+                      long_labels = TRUE,
+                      imd_explicit_na = FALSE) 
+
+hyp001_population_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "population") %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     legend = "none",
     y_label = "Prevalence (%)",
     set_y_scale_limits = TRUE
   )
 
-hyp001_population_count <- df_measures_hyp001 %>%
+hyp001_population_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "population") %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     legend = "none",
     y_label = "Prevalence (Count)",
@@ -313,27 +316,21 @@ hyp001_population_pct_count
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_sex_pct <- df_measures_hyp001 %>%
+hyp001_sex_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c("F", "M"),
-    labels = c("Female", "Male")
-  )) %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2"
   )
 
-hyp001_sex_count <- df_measures_hyp001 %>%
+hyp001_sex_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "sex") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c("F", "M"),
-    labels = c("Female", "Male")
-  )) %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2"
@@ -359,20 +356,22 @@ ggplot2::ggsave(filename = "hyp001_sex_pct_count.png",
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_age_band_pct <- df_measures_hyp001 %>%
+hyp001_age_band_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>%
   dplyr::filter(category != "missing") %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)"
   )
 
-hyp001_age_band_count <- df_measures_hyp001 %>%
+hyp001_age_band_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "age_band") %>%
   dplyr::filter(category != "missing") %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)"
   )
@@ -382,8 +381,6 @@ hyp001_age_band_pct_count <- (hyp001_age_band_pct / hyp001_age_band_count) +
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_age_band_pct_count
-
 ggplot2::ggsave(filename = "hyp001_age_band_pct_count.png",
                 plot = hyp001_age_band_pct_count,
                 width = 8,
@@ -391,32 +388,28 @@ ggplot2::ggsave(filename = "hyp001_age_band_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_age_band_pct_count
 ```
 
 ### IMD
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_imd_pct <- df_measures_hyp001 %>%
+hyp001_imd_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(1:5),
-    labels = c("1 - Most deprived", "2", "3", "4", "5 - Least deprived")
-  )) %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)"
   )
 
-hyp001_imd_count <- df_measures_hyp001 %>%
+hyp001_imd_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "imd") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(1:5),
-    labels = c("1 - Most deprived", "2", "3", "4", "5 - Least deprived")
-  )) %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)"
   )
@@ -426,8 +419,6 @@ hyp001_imd_pct_count <- (hyp001_imd_pct / hyp001_imd_count) +
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_imd_pct_count
-
 ggplot2::ggsave(filename = "hyp001_imd_pct_count.png",
                 plot = hyp001_imd_pct_count,
                 width = 8,
@@ -435,25 +426,29 @@ ggplot2::ggsave(filename = "hyp001_imd_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_imd_pct_count
 ```
 
 ### Ethnicity
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_ethnicity_pct <- df_measures_hyp001 %>%
+hyp001_ethnicity_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "ethnicity") %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1"
   )
 
-hyp001_ethnicity_count <- df_measures_hyp001 %>%
+hyp001_ethnicity_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "ethnicity") %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1"
@@ -464,8 +459,6 @@ hyp001_ethnicity_pct_count <- (hyp001_ethnicity_pct / hyp001_ethnicity_count) +
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_ethnicity_pct_count
-
 ggplot2::ggsave(filename = "hyp001_ethnicity_pct_count.png",
                 plot = hyp001_ethnicity_pct_count,
                 width = 8,
@@ -473,25 +466,29 @@ ggplot2::ggsave(filename = "hyp001_ethnicity_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_ethnicity_pct_count
 ```
 
 ### Region
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_region_pct <- df_measures_hyp001 %>%
+hyp001_region_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "region") %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_set1"
   )
 
-hyp001_region_count <- df_measures_hyp001 %>%
+hyp001_region_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "region") %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_set1"
@@ -502,8 +499,6 @@ hyp001_region_pct_count <- (hyp001_region_pct / hyp001_region_count) +
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_region_pct_count
-
 ggplot2::ggsave(filename = "hyp001_region_pct_count.png",
                 plot = hyp001_region_pct_count,
                 width = 8,
@@ -511,39 +506,29 @@ ggplot2::ggsave(filename = "hyp001_region_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_region_pct_count
 ```
 
 ### Learning disability
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_learning_disability_pct <- df_measures_hyp001 %>%
+hyp001_learning_disability_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "learning_disability") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(TRUE, FALSE),
-    labels = c(
-      "Record of learning disability",
-      "No record of learning disability"
-    )
-  )) %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2"
   )
 
-hyp001_learning_disability_count <- df_measures_hyp001 %>%
+hyp001_learning_disability_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "learning_disability") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(TRUE, FALSE),
-    labels = c(
-      "Record of learning disability",
-      "No record of learning disability"
-    )
-  )) %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2"
@@ -554,8 +539,6 @@ hyp001_learning_disability_pct_count <- (hyp001_learning_disability_pct / hyp001
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_learning_disability_pct_count
-
 ggplot2::ggsave(filename = "hyp001_learning_disability_pct_count.png",
                 plot = hyp001_learning_disability_pct_count,
                 width = 8,
@@ -563,39 +546,29 @@ ggplot2::ggsave(filename = "hyp001_learning_disability_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_learning_disability_pct_count
 ```
 
 ### Care home status
 
 ```{r fig.width=8, fig.height=6.5}
 
-hyp001_care_home_pct <- df_measures_hyp001 %>%
+hyp001_care_home_pct <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "care_home") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(TRUE, FALSE),
-    labels = c(
-      "Record of positive care home status",
-      "No record of positive care home status"
-    )
-  )) %>%
   plot_qof_indicator(
     value = value,
+    group_category = category,
     y_scale = "percent",
     y_label = "Prevalence (%)",
     scale_colour = "brewer_dark2"
   )
 
-hyp001_care_home_count <- df_measures_hyp001 %>%
+hyp001_care_home_count <- df_figs_measures_hyp001 %>%
   dplyr::filter(group == "care_home") %>%
-  dplyr::mutate(category = factor(category,
-    levels = c(TRUE, FALSE),
-    labels = c(
-      "Record of positive care home status",
-      "No record of positive care home status"
-    )
-  )) %>%
   plot_qof_indicator(
     value = hypertension,
+    group_category = category,
     y_scale = "count",
     y_label = "Prevalence (Count)",
     scale_colour = "brewer_dark2"
@@ -606,8 +579,6 @@ hyp001_care_home_pct_count <- (hyp001_care_home_pct / hyp001_care_home_count) +
   patchwork::plot_annotation(tag_levels = 'A') &
   ggplot2::theme(legend.position = "top")
 
-hyp001_care_home_pct_count
-
 ggplot2::ggsave(filename = "hyp001_care_home_pct_count.png",
                 plot = hyp001_care_home_pct_count,
                 width = 8,
@@ -615,6 +586,8 @@ ggplot2::ggsave(filename = "hyp001_care_home_pct_count.png",
                 units = "in",
                 path = here::here("released_outputs", "figures")
                 )
+
+hyp001_care_home_pct_count
 ```
 
 # Discussion
