@@ -1,11 +1,15 @@
-#' Tidy category labels
+#' Tidy categories in joint measures file
 #'
 #' @param df 
+#' @param group 
+#' @param category 
 #' @param care_home 
 #' @param learning_disability 
 #' @param imd 
+#' @param imd_explicit_na 
 #' @param sex 
 #' @param population 
+#' @param long_labels 
 #'
 #' @return
 #' @export
