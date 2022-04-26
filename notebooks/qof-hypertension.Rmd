@@ -601,8 +601,13 @@ Our results are very similar to the hypertension prevalence recorded by NHS Digi
 Observed differences in prevalence count and percentage across the subgroups were mainly as expected.
 For example, while age group 80+ has the highest prevalence, age groups 60-69 and 70-79 are larger in size.
 The largest difference between subgroups was observed between patients with and without a record of 
-learning disability (Yes: `r tab1_measures_hyp001 %>% filter(group == "Record of learning disability" & category == "Yes") %>% pull(value_march_2019) %>% scales::percent(accuracy = 0.01)`; No: `r tab1_measures_hyp001 %>% filter(group == "Record of learning disability" & category == "No") %>% pull(value_march_2019) %>% scales::percent(accuracy = 0.01)`) and 
-care home status (Yes: `r tab1_measures_hyp001 %>% filter(group == "Record of care home status" & category == "Yes") %>% pull(value_march_2019) %>% scales::percent(accuracy = 0.01)`; No: `r tab1_measures_hyp001 %>% filter(group == "Record of care home status" & category == "No") %>% pull(value_march_2019) %>% scales::percent(accuracy = 0.01)`) and for age bands 40-49 and lower compared with age bands 50-59 and higher.
+learning disability (
+Yes: `r report_measures(df = df_measures_hyp001, value = value, date = "2019-03-01", group = "learning_disability", category = TRUE)`; 
+No: `r report_measures(df = df_measures_hyp001, value = value, date = "2019-03-01", group = "learning_disability", category = FALSE)`) and 
+care home status (
+Yes: `r report_measures(df = df_measures_hyp001, value = value, date = "2019-03-01", group = "care_home", category = TRUE)`; 
+No: `r report_measures(df = df_measures_hyp001, value = value, date = "2019-03-01", group = "care_home", category = FALSE)`) and 
+for age bands 40-49 and lower compared with age bands 50-59 and higher.
 
 - TODO: Add how this relates to the pandemic
 - TODO: Add advantages of analysing QOF in OpenSAFELY 
