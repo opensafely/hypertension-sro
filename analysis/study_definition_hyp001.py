@@ -3,7 +3,7 @@ from cohortextractor import StudyDefinition, patients, Measure
 import json
 import pandas as pd
 
-from config import start_date, end_date
+from config import start_date, end_date, demographic_breakdowns
 from codelists import hyp_codes, hyp_res_codes
 
 from dict_hyp_variables import hyp_reg_variables
@@ -41,66 +41,28 @@ study = StudyDefinition(
 # Create default measures
 measures = [
     Measure(
-        id="hyp001_population_rate",
+        id="hyp001_prevalence _population_rate",
         numerator="hyp_reg",
         denominator="population",
         group_by=["population"],
         small_number_suppression=True,
     ),
     Measure(
-        id="hyp001_practice_rate",
+        id="hyp001_prevalence_practice_rate",
         numerator="hyp_reg",
         denominator="population",
         group_by=["practice"],
         small_number_suppression=True,
     ),
-    Measure(
-        id="hyp001_age_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["age_band"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_sex_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["sex"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_imd_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["imd"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_region_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["region"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_ethnicity_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["ethnicity"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_learning_disability_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["learning_disability"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp001_care_home_rate",
-        numerator="hyp_reg",
-        denominator="population",
-        group_by=["care_home"],
-        small_number_suppression=True,
-    ),
 ]
+
+# Create blood pressure exclusion measures (3) for total population
+for breakdown in demographic_breakdowns:
+    m = Measure(
+        id=f"hyp001_prevalence_{breakdown}_breakdown_rate",
+        numerator="hyp_reg",
+        denominator="population",
+        group_by=[breakdown],
+        small_number_suppression=True,
+    )
+    measures.append(m)
