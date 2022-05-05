@@ -76,6 +76,7 @@ hyp_ind_variables = dict(
     #
     # BPSYS_VAL: The systolic blood pressure values associated
     # with each date in the BPSYS_DAT array.
+    # Date variable extracted: "bp_sys_val_12m_date_measured"
     bp_sys_val_12m=patients.mean_recorded_value(
         bp_sys_codes,
         on_most_recent_day_of_measurement=True,
@@ -92,13 +93,9 @@ hyp_ind_variables = dict(
             "rate": "uniform",
         },
     ),
-    # BP_DAT: Date of the most recent blood
-    # pressure reading with a systolic and diastolic value, up to and
-    # including the achievement date.
-    # Variable extracted above: bp_sys_val_12m_date_measured
-
     # BPDIA_VAL: The diastolic blood pressure values associated
     # with each date in the BPSYS_DAT array.
+    # Date variable extracted: "bp_dia_val_12m_date_measured"
     bp_dia_val_12m=patients.mean_recorded_value(
         bp_dia_codes,
         on_most_recent_day_of_measurement=True,
@@ -115,17 +112,9 @@ hyp_ind_variables = dict(
             "rate": "uniform",
         },
     ),
-    # BP_DAT: Date of the most recent blood
-    # pressure reading with a systolic and diastolic value, up to and
-    # including the achievement date.
-    # Variable extracted above: bp_dia_val_12m_date_measured
-
-    # PPED: Payment Period End Date. The last day of each period
-    # for which payments are made for the Quality Service.
-    # Note that this date gets defined in 'analysis/config.py'.
-    #
-    # HTMAX_DAT (ht_max_date): Date of the most recent maximal blood pressure
+    # HTMAX_DAT: Date of the most recent maximal blood pressure
     # therapy code recorded up to and including the achievement date.
+    # Date variable extracted: "ht_max_12m_date"
     ht_max_12m=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 11 months",
@@ -140,6 +129,7 @@ hyp_ind_variables = dict(
     # HYPPCAPU_DAT: Most recent date that hypertension
     # quality indicator care was deemed unsuitable for the patient up to and
     # including the achievement date.
+    # Date variable extracted: "hyp_pca_pu_12m_date"
     hyp_pca_pu_12m=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 11 months",
@@ -153,6 +143,7 @@ hyp_ind_variables = dict(
     ),
     # BPDEC_DAT: Codes indicating the patient has chosen
     # not to have blood pressure procedure.
+    # Date variable extracted: "bp_dec_12m_date"
     bp_dec_12m=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 11 months",
@@ -167,6 +158,7 @@ hyp_ind_variables = dict(
     # HYPPCADEC_DAT: Date the patient most recently chose
     # not receive hypertension quality indicator care up to and including
     # the achievement date.
+    # Date variable extracted: "hyp_pca_dec_12m_date"
     hyp_pca_dec_12m=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 11 months",
@@ -181,36 +173,34 @@ hyp_ind_variables = dict(
     # HYPINVITE1_DAT: Date of the earliest invitation for a hypertension care
     # review on or after the quality service start date and up to and
     # including the achievement date.
-    # NOTE: that the hyp_invite_1_date variable gets defined here
+    # Date variable extracted: "hyp_invite_1_date"
     hyp_invite_1=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 11 months",
-            "last_day_of_month(index_date)"
-            ],
+            "last_day_of_month(index_date)",
+        ],
         codelist=hyp_invite_codes,
         returning="binary_flag",
-        find_last_match_in_period=True,
+        find_first_match_in_period=True,
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
-
     # HYPINVITE2_DAT: Date of the earliest invite for a hypertension care
     # review recorded at least 7 days after the first invitation and up to
     # and including the achievement date.
+    # Date variable extracted: "hyp_invite_2_date"
     hyp_invite_2=patients.with_these_clinical_events(
-        between=[
-            "hyp_invite_1_date + 7 days",
-            "last_day_of_month(index_date)"
-            ],
+        between=["hyp_invite_1_date + 7 days", "last_day_of_month(index_date)"],
         codelist=hyp_invite_codes,
         returning="binary_flag",
-        find_last_match_in_period=True,
+        find_first_match_in_period=True,
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
     # Reject patients passed to this rule whose earliest hypertension
-    # diagnosis was in the 9 months leading up to and including the 
+    # diagnosis was in the 9 months leading up to and including the
     # paymentperiod end date. Pass all remaining patients to the next rule.
+    # Date variable extracted: "hyp_9m_date"
     hyp_9m=patients.with_these_clinical_events(
         between=[
             "first_day_of_month(index_date) - 9 months",
@@ -218,16 +208,16 @@ hyp_ind_variables = dict(
         ],
         codelist=hyp_codes,
         returning="binary_flag",
-        find_last_match_in_period=True,
+        find_first_match_in_period=True,
         include_date_of_match=True,
         date_format="YYYY-MM-DD",
     ),
-    # Reject patients passed to this rule who were recently gms_reg_status at the
-    # practice (patient gms_reg_status in the 9 month period leading up to and
+    # Reject patients passed to this rule who were recently registered at the
+    # practice (patient registered in the 9 month period leading up to and
     # including the payment period end date).
-    registered_9m=patients.registered_with_one_practice_between(
+    reg_9m=patients.registered_with_one_practice_between(
         start_date="first_day_of_month(index_date) - 9 months",
         end_date="last_day_of_month(index_date)",
-        return_expectations={"incidence": 0.1}
-        )
-    )
+        return_expectations={"incidence": 0.1},
+    ),
+)
