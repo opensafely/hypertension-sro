@@ -8,12 +8,12 @@ from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
+    # Include demographic variables
+    **demographic_variables,
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
     # Include hypertension variables for register
     **hyp_reg_variables,
-    # Include demographic variables
-    **demographic_variables,
     # Set index date to start date
     index_date=start_date,
     default_expectations={
@@ -25,12 +25,12 @@ study = StudyDefinition(
     population=patients.satisfying(
         """
         # Define general population parameters
-        registered AND
+        gms_reg_status AND
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
         (age_band != 'missing') AND
 
-        hypertension_register
+        hyp_reg
         """,
     ),
     # Define composite denominator
@@ -127,11 +127,11 @@ study = StudyDefinition(
         # payment period end date.
         hyp003_denominator_r8=patients.satisfying(
             """
-            hypertension_9m
+            hyp_9m
             """
         ),
-        # Reject patients passed to this rule who were recently registered at
-        # the practice (patient registered in the 9 month period leading up to
+        # Reject patients passed to this rule who were recently gms_reg_status at
+        # the practice (patient gms_reg_status in the 9 month period leading up to
         # and including the payment period end date).
         hyp003_denominator_r9=patients.satisfying(
             """
