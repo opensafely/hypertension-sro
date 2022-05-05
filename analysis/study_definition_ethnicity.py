@@ -19,13 +19,13 @@ study = StudyDefinition(
         """
         NOT has_died
         AND
-        registered
+        gms_reg_status
         """,
         has_died=patients.died_from_any_cause(
             on_or_before="last_day_of_month(index_date)",
             returning="binary_flag",
         ),
-        registered=patients.satisfying(
+        gms_reg_status=patients.satisfying(
             "registered_at_start",
             registered_at_start=patients.registered_as_of("last_day_of_month(index_date)"),
         ),
