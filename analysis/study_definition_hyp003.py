@@ -115,11 +115,16 @@ study = StudyDefinition(
         # and including the achievement date.
         hyp003_denominator_r7=patients.satisfying(
             """
-            bp_sys_val_12m <= 140 AND
-            bp_dia_val_12m <= 90 AND
+            ((bp_sys_val_12m > 140 OR bp_dia_val_12m > 90) AND
 
-            (hyp_invite_1_date > bp_sys_val_12m_date_measured OR
-            hyp_invite_1_date > bp_dia_val_12m_date_measured)
+            (hyp_invite_1 AND hyp_invite_2 AND
+            hyp_invite_1_date > bp_sys_val_12m_date_measured AND
+            hyp_invite_1_date > bp_dia_val_12m_date_measured) AND
+            hyp_invite_2) OR
+
+            (hyp_invite_2 AND
+            bp_sys_val_12m_date_measured AND
+            bp_dia_val_12m_date_measured)
             """
         ),
         # Reject patients passed to this rule whose earliest hypertension
@@ -130,12 +135,12 @@ study = StudyDefinition(
             hyp_9m
             """
         ),
-        # Reject patients passed to this rule who were recently gms_reg_status at
-        # the practice (patient gms_reg_status in the 9 month period leading up to
+        # Reject patients passed to this rule who were recently registered at
+        # the practice (patient registered in the 9 month period leading up to
         # and including the payment period end date).
         hyp003_denominator_r9=patients.satisfying(
             """
-            registered_9m
+            reg_9m
             """
         ),
     ),
