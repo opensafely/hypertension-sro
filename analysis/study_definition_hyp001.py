@@ -26,7 +26,7 @@ study = StudyDefinition(
         (age_band != 'missing') AND
 
         # Define GMS registration status
-        gms_reg_status 
+        gms_reg_status
 
         # Define list size type:
         # TOTAL for HYP so no further exclusions
@@ -41,7 +41,7 @@ study = StudyDefinition(
 # Create default measures
 measures = [
     Measure(
-        id="hyp001_prevalence _population_rate",
+        id="hyp001_prevalence_population_rate",
         numerator="hyp_reg",
         denominator="population",
         group_by=["population"],
