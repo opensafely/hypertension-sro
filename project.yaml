@@ -100,18 +100,34 @@ actions:
 
   generate_deciles_charts:
     run: >
-      deciles-charts:v0.0.1
-      --input_dir output/indicators/joined
-      --output_dir output/indicators/joined
+      deciles-charts:v0.0.15
+        --input-files output/indicators/joined/measure_*.csv
+        --output-dir output/indicators/joined
+    config:
+      show_outer_percentiles: false
+      tables:
+        output: true
+      charts:
+        output: true
     needs: [generate_measures_hyp001]
     outputs:
       moderately_sensitive:
-        cohort: output/indicators/joined/deciles_chart_*.png
+        deciles_charts: output/indicators/joined/deciles_*_*.*
+
+  # generate_deciles_charts:
+  #   run: >
+  #     deciles-charts:v0.0.1
+  #     --input_dir output/indicators/joined
+  #     --output_dir output/indicators/joined
+  #   needs: [generate_measures_hyp001]
+  #   outputs:
+  #     moderately_sensitive:
+  #       cohort: output/indicators/joined/deciles_chart_*.png
   
   # Join all measure files for each indicator
-  join_measures:
-    run: r:latest analysis/join_measures.R
-    needs: [generate_measures_hyp001]
-    outputs:
-      moderately_sensitive:
-        measure_csv: output/measures/measures_hyp001.csv
+  # join_measures:
+  #   run: r:latest analysis/join_measures.R
+  #   needs: [generate_measures_hyp001]
+  #   outputs:
+  #     moderately_sensitive:
+  #       measure_csv: output/measures/measures_hyp001.csv
