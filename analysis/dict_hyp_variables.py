@@ -190,7 +190,9 @@ hyp_ind_variables = dict(
     # and including the achievement date.
     # Date variable extracted: "hyp_invite_2_date"
     hyp_invite_2=patients.with_these_clinical_events(
-        between=["hyp_invite_1_date + 7 days", "last_day_of_month(index_date)"],
+        between=[
+            "hyp_invite_1_date + 7 days",
+            "last_day_of_month(index_date)"],
         codelist=hyp_invite_codes,
         returning="binary_flag",
         find_first_match_in_period=True,
