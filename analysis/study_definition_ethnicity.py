@@ -8,27 +8,25 @@ from cohortextractor import (
 
 from config import end_date
 from codelists import ethnicity6_codes
+from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
+    # Include demographic variables
+    **demographic_variables,
+    # Set default expectations
     default_expectations={
         "date": {"earliest": "1900-01-01", "latest": "today"},
         "rate": "uniform",
     },
+    # Set index date to end_date specified in config.py
     index_date=end_date,
+    # Define general study population
     population=patients.satisfying(
         """
-        NOT has_died
+        (NOT died)
         AND
         gms_reg_status
         """,
-        has_died=patients.died_from_any_cause(
-            on_or_before="last_day_of_month(index_date)",
-            returning="binary_flag",
-        ),
-        gms_reg_status=patients.satisfying(
-            "registered_at_start",
-            registered_at_start=patients.registered_as_of("last_day_of_month(index_date)"),
-        ),
     ),
     ethnicity=patients.categorised_as(
         {
