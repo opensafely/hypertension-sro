@@ -8,12 +8,6 @@ from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
-    # Include demographic variables
-    **demographic_variables,
-    # Include hypertension variables for denominator and numerator rules
-    **hyp_ind_variables,
-    # Include hypertension variables for register
-    **hyp_reg_variables,
     # Set index date to start date
     index_date=start_date,
     # Set default expectations
@@ -35,7 +29,13 @@ study = StudyDefinition(
         hyp_reg
         """,
     ),
-    # Define composite denominator
+    # Include demographic variables
+    **demographic_variables,
+    # Include hypertension variables for denominator and numerator rules
+    **hyp_ind_variables,
+    # Include hypertension variables for register
+    **hyp_reg_variables,
+    # DEFINE COMPOSITE DENOMINATOR
     # NOTE: The individual rules (suffix: _r*) are specified as described
     # in the rules and the action (reject / select) is defined in the composite
     # denominator.

@@ -11,8 +11,6 @@ from codelists import ethnicity6_codes
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
-    # Include demographic variables
-    **demographic_variables,
     # Set default expectations
     default_expectations={
         "date": {"earliest": "1900-01-01", "latest": "today"},
@@ -27,6 +25,8 @@ study = StudyDefinition(
         AND
         gms_reg_status
         """,
+        # Include demographic variables
+        **demographic_variables,
     ),
     ethnicity=patients.categorised_as(
         {

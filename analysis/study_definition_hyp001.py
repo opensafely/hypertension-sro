@@ -10,10 +10,6 @@ from dict_hyp_variables import hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
-    # Include demographic variables
-    **demographic_variables,
-    # Include hypertension variables for register
-    **hyp_reg_variables,
     # Set start date
     index_date=start_date,
     # Set default expectations
@@ -38,6 +34,11 @@ study = StudyDefinition(
         # TOTAL for HYP so no further exclusions
         """,
     ),
+    # Include variable dictionaries
+    # Demographic variables
+    **demographic_variables,
+    # QOF hypertension variables for register
+    **hyp_reg_variables,
 )
 
 # Create default measures
