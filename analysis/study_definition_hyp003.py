@@ -37,8 +37,8 @@ study = StudyDefinition(
     **hyp_reg_variables,
     # Define composite denominator
     # NOTE: The individual rules (suffix: _r*) are specified as described
-    # in the rules and the action (reject / select) is defined in the composite
-    # denominator.
+    # in the rules and the actions (reject / select) are defined in the
+    # composite denominator below (hyp003_denominator).
     hyp003_denominator=patients.satisfying(
         """
         (NOT hyp003_denominator_r1) AND
