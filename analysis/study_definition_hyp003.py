@@ -3,7 +3,7 @@ from cohortextractor import StudyDefinition, patients, Measure
 import json
 import pandas as pd
 
-from config import start_date, end_date
+from config import start_date, end_date, demographic_breakdowns
 from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
@@ -106,25 +106,28 @@ study = StudyDefinition(
             """
         ),
         # Reject patients passed to this rule who meet either of the criteria
-        # below: Latest blood pressure reading in the 12 months leading up to
+        # below:
+        # - Latest blood pressure reading in the 12 months leading up to
         # and including the payment period end date was above target levels
         # (systolic value of over 140 mmHg and/or a diastolic value of over 90
         # mmHg), and was followed by two invitations for hypertension
-        # monitoring. Received two invitations for hypertension monitoring and
+        # monitoring.
+        # - Received two invitations for hypertension monitoring and
         # had no blood pressure recordings during the 12 months leading up to
         # and including the achievement date.
         hyp003_denominator_r7=patients.satisfying(
             """
             ((bp_sys_val_12m > 140 OR bp_dia_val_12m > 90) AND
-
-            (hyp_invite_1 AND hyp_invite_2 AND
+            (hyp_invite_1 AND
             hyp_invite_1_date > bp_sys_val_12m_date_measured AND
             hyp_invite_1_date > bp_dia_val_12m_date_measured) AND
-            hyp_invite_2) OR
+            hyp_invite_2)
+
+            OR
 
             (hyp_invite_2 AND
-            bp_sys_val_12m_date_measured AND
-            bp_dia_val_12m_date_measured)
+            (NOT bp_sys_val_12m_date_measured) AND
+            (NOT bp_dia_val_12m_date_measured))
             """
         ),
         # Reject patients passed to this rule whose earliest hypertension
@@ -162,52 +165,28 @@ study = StudyDefinition(
 # Create default measures
 measures = [
     Measure(
-        id="hyp003_population_rate",
+        id="hyp003_achievem_population_rate",
         numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=["population"],
         small_number_suppression=True,
     ),
     Measure(
-        id="hyp003_practice_rate",
+        id="hyp003_achievem_practice_rate",
         numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=["practice"],
         small_number_suppression=True,
     ),
-    Measure(
-        id="hyp003_age_rate",
-        numerator="hyp003_numerator",
-        denominator="hyp003_denominator",
-        group_by=["age_band"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp003_sex_rate",
-        numerator="hyp003_numerator",
-        denominator="hyp003_denominator",
-        group_by=["sex"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp003_imd_rate",
-        numerator="hyp003_numerator",
-        denominator="hyp003_denominator",
-        group_by=["imd"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp003_region_rate",
-        numerator="hyp003_numerator",
-        denominator="hyp003_denominator",
-        group_by=["region"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp003_ethnicity_rate",
-        numerator="hypertension",
-        denominator="population",
-        group_by=["ethnicity"],
-        small_number_suppression=True,
-    ),
 ]
+
+# Create blood pressure exclusion measures (3) for total population
+for breakdown in demographic_breakdowns:
+    m = Measure(
+        id=f"hyp003_achievem_{breakdown}_breakdown_rate",
+        numerator="hyp003_numerator",
+        denominator="hyp003_denominator",
+        group_by=[breakdown],
+        small_number_suppression=True,
+    )
+    measures.append(m)
