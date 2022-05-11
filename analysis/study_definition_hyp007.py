@@ -16,12 +16,14 @@ study = StudyDefinition(
     **hyp_reg_variables,
     # Set index date to start date
     index_date=start_date,
+    # Set default expectations
     default_expectations={
         "date": {"earliest": start_date, "latest": end_date},
         "rate": "uniform",
         "incidence": 0.5,
     },
     # Define general study population
+    # NOTE: For indicator HYP007 this is the HYP register
     population=patients.satisfying(
         """
         # Define general population parameters
@@ -34,7 +36,7 @@ study = StudyDefinition(
         """,
     ),
     # Define composite denominator
-    # Note that the individual rules (suffix: _r*) are specified as described
+    # NOTE: The individual rules (suffix: _r*) are specified as described
     # in the rules and the action (reject / select) is defined in the composite
     # denominator.
     hyp007_denominator=patients.satisfying(
@@ -67,6 +69,8 @@ study = StudyDefinition(
         # - Diastolic blood pressure value was 90 mmHg or less.
         # Most recent blood pressure recording was in the 12 months leading up
         # to and including the payment period end date.
+        # NOTE: This implementation assumes that both values (sys, dia) were
+        # measured on the same day.
         hyp007_denominator_r2=patients.satisfying(
             """
             bp_sys_val_12m <= 150 AND
@@ -115,6 +119,8 @@ study = StudyDefinition(
         # - Received two invitations for hypertension monitoring and
         # had no blood pressure recordings during the 12 months leading up to
         # and including the achievement date.
+        # NOTE: This implementation assumes that both values (sys, dia) were
+        # measured on the same day.
         hyp007_denominator_r7=patients.satisfying(
             """
             ((bp_sys_val_12m <= 150 OR bp_dia_val_12m <= 90) AND
