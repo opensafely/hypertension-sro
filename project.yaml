@@ -112,7 +112,8 @@ actions:
     needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/indicators/joined/deciles_*_*.*
+        deciles_charts: output/indicators/joined/deciles_chart_*_*_population_rate.png
+        deciles_tables: output/indicators/joined/deciles_table_*_*_population_rate.csv
   
   # Join all measure files for each indicator
   # join_measures:
