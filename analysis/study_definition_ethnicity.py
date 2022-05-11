@@ -26,7 +26,10 @@ study = StudyDefinition(
         gms_reg_status
         """,
         # Include demographic variables
-        **demographic_variables,
+        **{
+            "died": demographic_variables["died"],
+            "gms_reg_status": demographic_variables["gms_reg_status"],
+        },
     ),
     ethnicity=patients.categorised_as(
         {
