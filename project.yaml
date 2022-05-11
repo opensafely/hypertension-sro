@@ -55,7 +55,7 @@ actions:
 
   join_ethnicity:
     run: >
-      cohort-joiner:v0.0.12 
+      cohort-joiner:v0.0.27
         --lhs output/indicators/input_hyp*.feather
         --rhs output/indicators/input_ethnicity.feather
         --output-dir output/indicators/joined
@@ -98,31 +98,21 @@ actions:
        moderately_sensitive:
          measure_csv: output/indicators/joined/measure_hyp007_*_rate.csv
 
-  generate_deciles_charts:
+  generate_deciles:
     run: >
-      deciles-charts:v0.0.15
-        --input-files output/indicators/joined/measure_*.csv
-        --output-dir output/indicators/joined
+      deciles-charts:v0.0.21
+        --input-files output/indicators/joined/measure_*_*_rate.csv
+        --output-dir output/indicators/joined/
     config:
       show_outer_percentiles: false
       tables:
         output: true
       charts:
         output: true
-    needs: [generate_measures_hyp001]
+    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
     outputs:
       moderately_sensitive:
         deciles_charts: output/indicators/joined/deciles_*_*.*
-
-  # generate_deciles_charts:
-  #   run: >
-  #     deciles-charts:v0.0.1
-  #     --input_dir output/indicators/joined
-  #     --output_dir output/indicators/joined
-  #   needs: [generate_measures_hyp001]
-  #   outputs:
-  #     moderately_sensitive:
-  #       cohort: output/indicators/joined/deciles_chart_*.png
   
   # Join all measure files for each indicator
   # join_measures:
