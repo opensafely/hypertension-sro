@@ -8,6 +8,7 @@ from cohortextractor import (
 
 from config import end_date
 from codelists import ethnicity6_codes
+from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
     default_expectations={
@@ -17,27 +18,24 @@ study = StudyDefinition(
     index_date=end_date,
     population=patients.satisfying(
         """
-        NOT has_died
+        (NOT died)
         AND
-        registered
+        gms_reg_status
         """,
-        has_died=patients.died_from_any_cause(
-            on_or_before="last_day_of_month(index_date)",
-            returning="binary_flag",
-        ),
-        registered=patients.satisfying(
-            "registered_at_start",
-            registered_at_start=patients.registered_as_of("last_day_of_month(index_date)"),
-        ),
+        # Include demographic variables
+        **{
+            "died": demographic_variables["died"],
+            "gms_reg_status": demographic_variables["gms_reg_status"],
+        },
     ),
     ethnicity=patients.categorised_as(
         {
             "Unknown": "DEFAULT",
-            "White": "eth='1' OR (NOT eth AND ethnicity_sus='1')",
-            "Mixed": "eth='2' OR (NOT eth AND ethnicity_sus='2')",
-            "Asian": "eth='3' OR (NOT eth AND ethnicity_sus='3')",
-            "Black": "eth='4' OR (NOT eth AND ethnicity_sus='4')",
-            "Other": "eth='5' OR (NOT eth AND ethnicity_sus='5')",
+            "White": "eth='1'",
+            "Mixed": "eth='2'",
+            "Asian": "eth='3'",
+            "Black": "eth='4'",
+            "Other": "eth='5'",
         },
         eth=patients.with_these_clinical_events(
             ethnicity6_codes,
@@ -49,17 +47,6 @@ study = StudyDefinition(
                     "ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}
                 },
                 "incidence": 0.75,
-            },
-        ),
-        # fill missing ethnicity from SUS
-        ethnicity_sus=patients.with_ethnicity_from_sus(
-            returning="group_6",
-            use_most_frequent_code=True,
-            return_expectations={
-                "category": {
-                    "ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}
-                },
-                "incidence": 0.4,
             },
         ),
         return_expectations={

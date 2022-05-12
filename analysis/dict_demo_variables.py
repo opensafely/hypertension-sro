@@ -5,6 +5,11 @@ from cohortextractor import patients
 from codelists import nhse_care_homes_codes, learning_disability_codes
 
 demographic_variables = dict(
+    # GMS registration status
+    gms_reg_status=patients.registered_as_of(
+        "last_day_of_month(index_date)",
+        return_expectations={"incidence": 0.9},
+    ),
     died=patients.died_from_any_cause(
         on_or_before="last_day_of_month(index_date)",
         returning="binary_flag",
