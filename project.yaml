@@ -116,7 +116,7 @@ actions:
         deciles_tables: output/indicators/joined/deciles_table_*_*_population_rate.csv
   
   check_data:
-    run: r:analysis/check_bp_recording_values_dates.R
+    run: r:latest analysis/check_bp_recording_values_dates.R
     needs: [join_ethnicity]
     outputs:
       moderately_sensitive:
