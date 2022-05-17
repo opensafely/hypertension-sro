@@ -73,7 +73,7 @@ study = StudyDefinition(
         # measured on the same day.
         hyp007_denominator_r2=patients.satisfying(
             """
-            (bp_sys_val_12m_date AND bp_dia_val_12m_date) AND
+            (bp_sys_val_12m_date_measured AND bp_dia_val_12m_date_measured) AND
             (bp_sys_val_12m <= 150 AND bp_dia_val_12m <= 90)
             """
         ),
@@ -123,7 +123,7 @@ study = StudyDefinition(
         # measured on the same day.
         hyp007_denominator_r7=patients.satisfying(
             """
-            (bp_sys_val_12m_date AND bp_dia_val_12m_date) AND
+            (bp_sys_val_12m_date_measured AND bp_dia_val_12m_date_measured) AND
             ((bp_sys_val_12m <= 150 OR bp_dia_val_12m <= 90) AND
             (hyp_invite_1 AND
             hyp_invite_1_date > bp_sys_val_12m_date_measured AND
