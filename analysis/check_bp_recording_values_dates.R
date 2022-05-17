@@ -8,7 +8,7 @@ library(ggplot2)
 library(magrittr)
 library(readr)
 
-df_hyp003_2019_01_01 <- read_feather(here("output/indicators/input_hyp003_2019-01-01.feather"))
+df_hyp003_2019_01_01 <- read_feather(here("output/indicators/joined/input_hyp003_2019-01-01.feather"))
 
 df_hyp003_2019_01_01 <- df_hyp003_2019_01_01 %>%
   select(patient_id, bp_sys_val_12m_date_measured,
