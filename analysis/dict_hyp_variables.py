@@ -190,9 +190,7 @@ hyp_ind_variables = dict(
     # and including the achievement date.
     # Date variable extracted: "hyp_invite_2_date"
     hyp_invite_2=patients.with_these_clinical_events(
-        between=[
-            "hyp_invite_1_date + 7 days",
-            "last_day_of_month(index_date)"],
+        between=["hyp_invite_1_date + 7 days", "last_day_of_month(index_date)"],
         codelist=hyp_invite_codes,
         returning="binary_flag",
         find_first_match_in_period=True,
@@ -202,17 +200,26 @@ hyp_ind_variables = dict(
     # Reject patients passed to this rule whose earliest hypertension
     # diagnosis was in the 9 months leading up to and including the
     # paymentperiod end date. Pass all remaining patients to the next rule.
-    # Date variable extracted: "hyp_9m_date"
-    hyp_9m=patients.with_these_clinical_events(
-        between=[
-            "first_day_of_month(index_date) - 9 months",
-            "last_day_of_month(index_date)",
-        ],
-        codelist=hyp_codes,
-        returning="binary_flag",
-        find_first_match_in_period=True,
-        include_date_of_match=True,
-        date_format="YYYY-MM-DD",
+    hyp_9m=patients.satisfying(
+        """
+        (NOT hyp_before_9m) AND
+        hyp_last_9m
+        """,
+        hyp_before_9m=patients.with_these_clinical_events(
+            on_or_before="first_day_of_month(index_date) - 9 months",
+            codelist=hyp_codes,
+            returning="binary_flag",
+            include_date_of_match=False,
+        ),
+        hyp_last_9m=patients.with_these_clinical_events(
+            between=[
+                "first_day_of_month(index_date) - 9 months",
+                "last_day_of_month(index_date)",
+            ],
+            codelist=hyp_codes,
+            returning="binary_flag",
+            include_date_of_match=False,
+        ),
     ),
     # Reject patients passed to this rule who were recently registered at the
     # practice (patient registered in the 9 month period leading up to and
