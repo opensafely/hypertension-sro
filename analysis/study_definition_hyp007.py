@@ -56,8 +56,8 @@ study = StudyDefinition(
             )
         )
         """,
-        # Reject patients from the specified population who are aged greater
-        # than 79 years old.
+        # Reject patients from the specified population who are aged less
+        # than 80 years old.
         hyp007_denominator_r1=patients.satisfying(
             """
             age < 80
