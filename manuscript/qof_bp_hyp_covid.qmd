@@ -1,0 +1,127 @@
+---
+title: "Changes in the Quality and Outcomes Framework indicators for blood pressure and hypertension throughout the COVID-19 pandemic"
+title-block-banner: true
+abstract: | 
+  **Objective**: To describe the impact of the COVID-19 pandemic on QOF; to implement QOF at national scale using GP data. 
+  **Design**: Population based cohort study, with the approval of NHS England using the OpenSAFELY platform.
+  **Setting**: Electronic health record data from XXX NHS patients' general practice records. 
+  Participants: All NHS patients registered at a GP practice using TPP the computer system and QOF between XXX and XXX. 
+  Main outcome measure: Monthly trends in prevalence, percentage achievement, and between-practice variation for QOF between XXX and XXX. 
+  **Results**: The QOF indicators for blood pressure (BP) and hypertension (HYP) were successfully implemented across GP data in OpenSAFELY. 
+  **Conclusion**: XXX.
+  
+  **Keywords**: COVID-19, electronic health records, general practice, quality and outcomes framework, blood pressure, hypertension
+date: now
+date-format: "MMM D, YYYY HH:mm"
+language: 
+  title-block-published: "Updated"
+authors:   
+  - name: "Milan Wiedemann"
+    url: https://www.bennett.ox.ac.uk/about-us/milan-wiedemann
+    affiliation: Bennett Institute for Applied Data Science
+    affiliation-url: https://www.bennett.ox.ac.uk/
+    orcid-id: 0000-0003-1991-282X
+  - name: "Rose Higgins"
+    url: https://www.bennett.ox.ac.uk/about-us/rose-higgins/
+    affiliation: Bennett Institute for Applied Data Science
+    affiliation-url: https://www.bennett.ox.ac.uk/
+    orcid-id: 0000-0002-5295-4370
+  - name: "Christine Cunningham"
+    url: https://www.bennett.ox.ac.uk/about-us/christine-cunningham/
+    affiliation: Bennett Institute for Applied Data Science
+    affiliation-url: https://www.bennett.ox.ac.uk/
+  - name: "Brian MacKenna"
+    url: https://www.bennett.ox.ac.uk/about-us/brian-mackenna/
+    affiliation: Bennett Institute for Applied Data Science
+    affiliation-url: https://www.bennett.ox.ac.uk/
+    orcid-id: 0000-0002-3786-9063
+bibliography: references.bib
+link-citations: true
+csl: elsevier-vancouver.csl
+---
+
+# Background
+
+# Methods
+
+TODO
+
+## Study design
+
+TODO
+
+## Data sharing
+
+All data were linked, stored and analysed securely within the OpenSAFELY platform https://opensafely.org/.
+Data include pseudonymized data such as coded diagnoses, medications and physiological parameters.
+No free text data are included.
+All code is shared openly for review and re-use under MIT open license (LINK TO GITHUB REPO OF PAPER BEING SUBMITTED).
+Detailed pseudonymised patient data is potentially re-identifiable and therefore not shared.
+We rapidly delivered the OpenSAFELY data analysis platform without prior funding to deliver timely analyses on urgent research questions in the context of the global Covid-19 health emergency: now that the platform is established we are developing a formal process for external users to request access in collaboration with NHS England; details of this process are available at OpenSAFELY.org.
+
+## Data source
+
+Primary care records managed by the GP software provider, TPP were linked to ONS death data through OpenSAFELY, a data analytics platform created by our team on behalf of NHS England to address urgent COVID-19 research questions (<https://opensafely.org>).
+OpenSAFELY provides a secure software interface allowing the analysis of pseudonymized primary care patient records from England in near real-time within the EHR vendor's highly secure data centre, avoiding the need for large volumes of potentially disclosive pseudonymized patient data to be transferred off-site.
+This, in addition to other technical and organisational controls, minimizes any risk of re-identification.
+Similarly pseudonymized datasets from other data providers are securely provided to the EHR vendor and linked to the primary care data.
+The dataset analysed within OpenSAFELY is based on 24 million people currently registered with GP surgeries using TPP SystmOne software.
+It includes pseudonymized data such as coded diagnoses, medications and physiological parameters.
+No free text data are included.
+Further details on our information governance can be found on page X, under information governance and ethics.
+
+## Study population
+
+TODO
+
+## Study measures
+
+TODO
+
+## Codelists
+
+### Blood pressure (BP)
+
+### Hypertension (HYP)
+
+TODO
+
+## Software and reproducibility
+
+Data management and analysis was performed using the OpenSAFELY software libraries and Python, both implemented using Python 3.
+This analysis was delivered using federated analysis through the OpenSAFELY platform: codelists and code for data management and data analysis were specified once using the OpenSAFELY tools; then transmitted securely to the OpenSAFELY-TPP platform within TPP's secure environment, and separately to the OpenSAFELY-EMIS platform within EMIS's secure environment, where they were each executed separately against local patient data; summary results were then reviewed for disclosiveness, released, and combined for the final outputs.
+All code for the OpenSAFELY platform for data management, analysis and secure code execution is shared for review and re-use under open licenses at GitHub.com/OpenSAFELY.
+Data management was performed using Python 3.8, with analysis carried out using Stata 16.1/Python/R. Code for data management and analysis as well as codelists archived online \[link your project github repo\].
+All iterations of the pre-specified study protocol are archived with version control (https://github.com/opensafely/xxxxxx/protocol).
+
+## Patient and public involvement
+
+TODO
+
+# Results
+
+TODO
+
+# Discussion
+
+TODO
+
+## Summary
+
+TODO
+
+## Strengths and limitations
+
+TODO
+
+## Findings in context
+
+TODO
+
+## Implications for policy and future research
+
+TODO
+
+## Conclusion
+
+TODO

@@ -56,8 +56,8 @@ study = StudyDefinition(
             )
         )
         """,
-        # Reject patients from the specified population who are aged greater
-        # than 79 years old.
+        # Reject patients from the specified population who are aged less
+        # than 80 years old.
         hyp007_denominator_r1=patients.satisfying(
             """
             age < 80
@@ -113,7 +113,7 @@ study = StudyDefinition(
         # below:
         # - Latest blood pressure reading in the 12 months leading up to
         # and including the payment period end date was above target levels
-        # (systolic value of over 140 mmHg and/or a diastolic value of over 90
+        # (systolic value of over 150 mmHg and/or a diastolic value of over 90
         # mmHg), and was followed by two invitations for hypertension
         # monitoring.
         # - Received two invitations for hypertension monitoring and
@@ -156,7 +156,7 @@ study = StudyDefinition(
     ),
     # Define composite numerator
     # Select patients from the denominator who meet all of the criteria below:
-    # - Systolic blood pressure value was 140 mmHg or less.
+    # - Systolic blood pressure value was 150 mmHg or less.
     # - Diastolic blood pressure value was 90 mmHg or less.
     # Most recent blood pressure recording was in the 12 months up to and
     # including the payment period end date.

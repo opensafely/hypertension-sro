@@ -3,43 +3,9 @@ title: "Trends in QOF Hypertension Prevalence"
 subtitle: |
   Quality and Outcomes Framework Indicators: HYP001 (Register)
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-# author:
-#   - first_name: "Milan"
-#     last_name: "Wiedemann"
-#     url: https://www.bennett.ox.ac.uk/about-us/milan-wiedemann
-#     affiliation: Bennett Institute for Applied Data Science
-#     affiliation_url: https://www.bennett.ox.ac.uk/
-#     orcid_id: 0000-0003-1991-282X
-#   - first_name: "Rose"
-#     last_name: "Higgins"
-#     url: https://www.bennett.ox.ac.uk/about-us/rose-higgins/
-#     affiliation: Bennett Institute for Applied Data Science
-#     affiliation_url: https://www.bennett.ox.ac.uk/
-#     orcid_id: 0000-0002-5295-4370
-#   - first_name: "Christine"
-#     last_name: "Cunningham"
-#     url: https://www.bennett.ox.ac.uk/about-us/christine-cunningham/
-#     affiliation: Bennett Institute for Applied Data Science
-#     affiliation_url: https://www.bennett.ox.ac.uk/
-#   - first_name: "AND everyone else"
-#     last_name: "(just QOF workgroup for now)"
-#     url: https://www.bennett.ox.ac.uk/about-us/
-#     affiliation: Bennett Institute for Applied Data Science
-#     affiliation_url: https://www.bennett.ox.ac.uk/
-#   - first_name: "Brian"
-#     last_name: "MacKenna"
-#     url: https://www.bennett.ox.ac.uk/about-us/brian-mackenna/
-#     affiliation: Bennett Institute for Applied Data Science
-#     affiliation_url: https://www.bennett.ox.ac.uk/
-#     orcid_id: 0000-0002-3786-9063
 bibliography: references.bib
 link-citations: true
 csl: elsevier-vancouver.csl
-# output: 
-#   distill::distill_article:
-#     toc: true
-#     code_folding: true
-# repository_url: https://github.com/opensafely/hypertension-sro
 output:
   html_document:
     toc: true
@@ -52,8 +18,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 # Set Rmd options ----
-knitr::opts_chunk$set(echo = TRUE, 
-                      warning = FALSE, 
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
                       message = FALSE, 
                       cache = TRUE, 
                       R.options = list(width = 70), 
