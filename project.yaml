@@ -120,9 +120,12 @@ actions:
     needs: [join_ethnicity]
     outputs:
       moderately_sensitive:
-        table_count_csv: output/indicators/joined/data_check/tab_hyp003_2019_01_01.csv
-        table_date_diff_csv: output/indicators/joined/data_check/tab_bp_date_diff_2019_01_01.csv
-        plot_date_diff: output/indicators/joined/data_check/bp_date_diff_2019_01_01.png
+        table_count_csv: output/indicators/joined/data_check/tab_hyp*_*_2019_01_01.csv
+        skim_txt: output/indicators/joined/data_check/skim_df_hyp*_2019_01_01.txt
+        table_date_diff_csv: output/indicators/joined/data_check/tab_hyp*_num_bp_date_diff_2019_01_01.csv
+        plot_date_diff: output/indicators/joined/data_check/plot_hyp*_num_bp_date_diff_2019_01_01.png
+
+        
 
   # Join all measure files for each indicator
   # join_measures:
