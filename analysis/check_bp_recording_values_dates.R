@@ -106,11 +106,22 @@ write_csv(tab_hyp007_den_2019_01_01, here("output", "indicators", "joined", "dat
 
 
 # Calculate absolute diff (in days) between systolic and diastolic bp readings
-df_hyp003_bp_date_diff_2019_01_01 <- df_hyp003_2019_01_01 %>%
+df_hyp003_num_bp_date_diff_2019_01_01 <- df_hyp003_2019_01_01 %>%
   filter(hyp003_numerator == TRUE) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
-tab_hyp003_bp_date_diff_2019_01_01 <- df_hyp003_bp_date_diff_2019_01_01 %>%
+tab_hyp003_num_bp_date_diff_2019_01_01 <- df_hyp003_num_bp_date_diff_2019_01_01 %>%
+  mutate(diff_weeks = case_when(bp_date_diff <= 7 ~ "1 week",
+                                bp_date_diff <= 30 ~ "1 month",
+                                bp_date_diff > 30 ~ "more than 1 month")) %>%
+  count(diff_weeks) %>%
+  mutate(pct = n / sum(n))
+
+df_hyp007_num_bp_date_diff_2019_01_01 <- df_hyp007_2019_01_01 %>%
+  filter(hyp007_numerator == TRUE) %>%
+  mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
+
+tab_hyp007_num_bp_date_diff_2019_01_01 <- df_hyp007_num_bp_date_diff_2019_01_01 %>%
   mutate(diff_weeks = case_when(bp_date_diff <= 7 ~ "1 week",
                                 bp_date_diff <= 30 ~ "1 month",
                                 bp_date_diff > 30 ~ "more than 1 month")) %>%
@@ -118,10 +129,18 @@ tab_hyp003_bp_date_diff_2019_01_01 <- df_hyp003_bp_date_diff_2019_01_01 %>%
   mutate(pct = n / sum(n))
 
 # Write csv with counts and pct
-write_csv(tab_hyp003_bp_date_diff_2019_01_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_bp_date_diff_2019_01_01.csv"))
+write_csv(tab_hyp003_num_bp_date_diff_2019_01_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_bp_date_diff_2019_01_01.csv"))
+write_csv(tab_hyp007_num_bp_date_diff_2019_01_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_num_bp_date_diff_2019_01_01.csv"))
 
 
-plot_hyp003_bp_date_diff_2019_01_01 <- df_hyp003_bp_date_diff_2019_01_01 %>%
+plot_hyp003_num_bp_date_diff_2019_01_01 <- df_hyp003_num_bp_date_diff_2019_01_01 %>%
+  ggplot(aes(bp_date_diff)) +
+  labs(x = "Absolute difference in days between systolic and diastolic blood pressure readings",
+       y = "Count of patients in HYP003 numerator") +
+  geom_histogram() +
+  ggplot2::scale_y_continuous(labels = scales::label_comma())
+
+plot_hyp007_num_bp_date_diff_2019_01_01 <- df_hyp007_num_bp_date_diff_2019_01_01 %>%
   ggplot(aes(bp_date_diff)) +
   labs(x = "Absolute difference in days between systolic and diastolic blood pressure readings",
        y = "Count of patients in HYP003 numerator") +
@@ -129,6 +148,9 @@ plot_hyp003_bp_date_diff_2019_01_01 <- df_hyp003_bp_date_diff_2019_01_01 %>%
   ggplot2::scale_y_continuous(labels = scales::label_comma())
 
 # Save plot
-ggsave(here("output", "indicators", "joined", "data_check", "bp_hyp003_date_diff_2019_01_01.png"),
-       plot = plot_hyp003_bp_date_diff_2019_01_01)
+ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp003_num_bp_date_diff_2019_01_01.png"),
+       plot = plot_hyp003_num_bp_date_diff_2019_01_01)
+
+ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp007_num_bp_date_diff_2019_01_01.png"),
+       plot = plot_hyp007_num_bp_date_diff_2019_01_01)
 
