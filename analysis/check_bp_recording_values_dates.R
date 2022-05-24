@@ -7,6 +7,7 @@ library(lubridate)
 library(ggplot2)
 library(magrittr)
 library(readr)
+library(skimr)
 
 # Create dir (if it doesnt exist)
 fs::dir_create(here("output", "indicators", "joined", "data_check"))
@@ -19,22 +20,30 @@ df_hyp007_2019_01_01 <- read_feather(here("output/indicators/joined/input_hyp007
 
 # Select variables
 df_hyp003_2019_01_01 <- df_hyp003_2019_01_01 %>%
-  select(patient_id,
-         hyp003_numerator,
+  select(hyp003_numerator,
          hyp003_denominator,
          bp_sys_val_12m_date_measured,
          bp_dia_val_12m_date_measured,
          bp_sys_val_12m,
          bp_dia_val_12m)
 
+capture.output(
+  skimr::skim_without_charts(df_hyp003_2019_01_01),
+  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp003_2019_01_01.txt"),
+  split = FALSE)
+
 df_hyp007_2019_01_01 <- df_hyp007_2019_01_01 %>%
-  select(patient_id,
-         hyp007_numerator,
+  select(hyp007_numerator,
          hyp007_denominator,
          bp_sys_val_12m_date_measured,
          bp_dia_val_12m_date_measured,
          bp_sys_val_12m,
          bp_dia_val_12m)
+
+capture.output(
+  skimr::skim_without_charts(df_hyp003_2019_01_01),
+  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp007_2019_01_01.txt"),
+  split = FALSE)
 
 # Count available bp recordings for sys and dia readings in numerator
 
