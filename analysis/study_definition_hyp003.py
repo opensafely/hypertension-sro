@@ -41,18 +41,18 @@ study = StudyDefinition(
     # composite denominator below (hyp003_denominator).
     hyp003_denominator=patients.satisfying(
         """
-        (NOT hyp003_denominator_r1) AND
+        (hyp003_denominator_r1) AND
 
             (hyp003_denominator_r2 OR
 
             (
-                (NOT hyp003_denominator_r3) AND
-                (NOT hyp003_denominator_r4) AND
-                (NOT hyp003_denominator_r5) AND
-                (NOT hyp003_denominator_r6) AND
-                (NOT hyp003_denominator_r7) AND
-                (NOT hyp003_denominator_r8) AND
-                (NOT hyp003_denominator_r9)
+                (hyp003_denominator_r3) AND
+                (hyp003_denominator_r4) AND
+                (hyp003_denominator_r5) AND
+                (hyp003_denominator_r6) AND
+                (hyp003_denominator_r7) AND
+                (hyp003_denominator_r8) AND
+                (hyp003_denominator_r9)
             )
         )
         """,
@@ -60,7 +60,7 @@ study = StudyDefinition(
         # than 79 years old.
         hyp003_denominator_r1=patients.satisfying(
             """
-            age > 79
+            NOT age > 79
             """
         ),
         # Select patients passed to this rule who meet all of the criteria
@@ -73,7 +73,7 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r2=patients.satisfying(
             """
-            (bp_sys_val_12m_date_measured AND bp_dia_val_12m_date_measured) AND
+            valid_bp_sys_dia_values AND
             (bp_sys_val_12m <= 140 AND bp_dia_val_12m <= 90)
             """
         ),
@@ -82,7 +82,7 @@ study = StudyDefinition(
         # payment period end date.
         hyp003_denominator_r3=patients.satisfying(
             """
-            ht_max_12m
+            NOT ht_max_12m
             """
         ),
         # Reject patients passed to this rule for whom hypertension quality
@@ -90,7 +90,7 @@ study = StudyDefinition(
         # including the payment period end date.
         hyp003_denominator_r4=patients.satisfying(
             """
-            hyp_pca_pu_12m
+            NOT hyp_pca_pu_12m
             """
         ),
         # Reject patients passed to this rule who chose not to have their
@@ -98,7 +98,7 @@ study = StudyDefinition(
         # the payment period end date.
         hyp003_denominator_r5=patients.satisfying(
             """
-            bp_dec_12m
+            NOT bp_dec_12m
             """
         ),
         # Reject patients passed to this rule who chose not to receive
@@ -106,7 +106,7 @@ study = StudyDefinition(
         # and including the payment period end date.
         hyp003_denominator_r6=patients.satisfying(
             """
-            hyp_pca_dec_12m
+            NOT hyp_pca_dec_12m
             """
         ),
         # Reject patients passed to this rule who meet either of the criteria
@@ -123,26 +123,37 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r7=patients.satisfying(
             """
-            (bp_sys_val_12m_date_measured AND bp_dia_val_12m_date_measured) AND
-            ((bp_sys_val_12m > 140 OR bp_dia_val_12m > 90) AND
-            (hyp_invite_1 AND
-            hyp_invite_1_date > bp_sys_val_12m_date_measured AND
-            hyp_invite_1_date > bp_dia_val_12m_date_measured) AND
-            hyp_invite_2)
+            # Require that dates are available
+            valid_bp_sys_dia_values AND
 
-            OR
-
-            (hyp_invite_2 AND
-            (NOT bp_sys_val_12m_date_measured) AND
-            (NOT bp_dia_val_12m_date_measured))
-            """
+            (NOT hyp003_denominator_r7_crit1) OR
+            (NOT hyp003_denominator_r7_crit2)
+            """,
+            hyp003_denominator_r7_crit1=patients.satisfying(
+                """
+                # Criterion 1
+                ((bp_sys_val_12m > 140 OR bp_dia_val_12m > 90) AND
+                (hyp_invite_1 AND
+                hyp_invite_1_date > bp_sys_val_12m_date_measured AND
+                hyp_invite_1_date > bp_dia_val_12m_date_measured) AND
+                hyp_invite_2)
+                """
+            ),
+            hyp003_denominator_r7_crit2=patients.satisfying(
+                """
+                # Criterion 2
+                (hyp_invite_1 AND hyp_invite_2 AND
+                (NOT bp_sys_val_12m_date_measured) AND
+                (NOT bp_dia_val_12m_date_measured))
+                """
+            ),
         ),
         # Reject patients passed to this rule whose earliest hypertension
         # diagnosis was in the 9 months leading up to and including the
         # payment period end date.
         hyp003_denominator_r8=patients.satisfying(
             """
-            hyp_9m
+            NOT hyp_9m
             """
         ),
         # Reject patients passed to this rule who were recently registered at
@@ -150,7 +161,7 @@ study = StudyDefinition(
         # and including the payment period end date).
         hyp003_denominator_r9=patients.satisfying(
             """
-            reg_9m
+            NOT reg_9m
             """
         ),
     ),

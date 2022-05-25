@@ -229,4 +229,16 @@ hyp_ind_variables = dict(
         end_date="last_day_of_month(index_date)",
         return_expectations={"incidence": 0.1},
     ),
+    # Define variable to check for valid blood pressure values
+    # NOTE: The cutoff values need to be reviewed
+    valid_bp_sys_dia_values=patients.satisfying(
+        """
+        # Set min cutoff values
+        (bp_sys_val_12m > 0) AND
+        (bp_dia_val_12m > 0) AND
+        # Set max cutoff values
+        (bp_sys_val_12m < 500) AND
+        (bp_dia_val_12m < 500)
+        """
+    ),
 )
