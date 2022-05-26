@@ -25,10 +25,11 @@ df_hyp003_2021_03_01 <- df_hyp003_2021_03_01 %>%
          bp_sys_val_12m_date_measured,
          bp_dia_val_12m_date_measured,
          bp_sys_val_12m,
-         bp_dia_val_12m)
+         bp_dia_val_12m,
+         valid_bp_sys_dia_values)
 
 capture.output(
-  skimr::skim_without_charts(df_hyp003_2021_03_01),
+  skimr::skim_without_charts(df_hyp003_2021_03_01 %>% filter(valid_bp_sys_dia_values)),
   file = here("output", "indicators", "joined", "data_check", "skim_df_hyp003_2021_03_01.txt"),
   split = FALSE)
 
@@ -38,10 +39,11 @@ df_hyp007_2021_03_01 <- df_hyp007_2021_03_01 %>%
          bp_sys_val_12m_date_measured,
          bp_dia_val_12m_date_measured,
          bp_sys_val_12m,
-         bp_dia_val_12m)
+         bp_dia_val_12m,
+         valid_bp_sys_dia_values)
 
 capture.output(
-  skimr::skim_without_charts(df_hyp003_2021_03_01),
+  skimr::skim_without_charts(df_hyp003_2021_03_01 %>% filter(valid_bp_sys_dia_values)),
   file = here("output", "indicators", "joined", "data_check", "skim_df_hyp007_2021_03_01.txt"),
   split = FALSE)
 
@@ -49,32 +51,37 @@ capture.output(
 
 # Numerator
 tab_hyp003_num_2021_03_01 <- df_hyp003_2021_03_01 %>%
-  filter(hyp003_numerator == TRUE) %>%
+  filter(hyp003_numerator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
          sys_value_recording = !is.na(bp_sys_val_12m),
          dia_value_recording = !is.na(bp_dia_val_12m)) %>%
   select(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+         sys_value_recording, dia_value_recording,
+         valid_bp_sys_dia_values) %>%
   group_by(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+           sys_value_recording, dia_value_recording,
+           valid_bp_sys_dia_values) %>%
   count() %>%
   ungroup() %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 tab_hyp007_num_2021_03_01 <- df_hyp007_2021_03_01 %>%
-  filter(hyp007_numerator == TRUE) %>%
+  filter(hyp007_numerator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
          sys_value_recording = !is.na(bp_sys_val_12m),
          dia_value_recording = !is.na(bp_dia_val_12m)) %>%
   select(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+         sys_value_recording, dia_value_recording,
+         valid_bp_sys_dia_values) %>%
   group_by(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+           sys_value_recording, dia_value_recording,
+           valid_bp_sys_dia_values) %>%
+
   count() %>%
   ungroup() %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts
 write_csv(tab_hyp003_num_2021_03_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_2021_03_01.csv"))
@@ -82,41 +89,44 @@ write_csv(tab_hyp007_num_2021_03_01, here("output", "indicators", "joined", "dat
 
 # Count available bp recordings for sys and dia readings in denominator
 tab_hyp003_den_2021_03_01 <- df_hyp003_2021_03_01 %>%
-  filter(hyp003_denominator == TRUE) %>%
+  filter(hyp003_denominator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
          sys_value_recording = !is.na(bp_sys_val_12m),
          dia_value_recording = !is.na(bp_dia_val_12m)) %>%
   select(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+         sys_value_recording, dia_value_recording,
+          valid_bp_sys_dia_values) %>%
   group_by(sys_date_recording, dia_date_recording,
-           sys_value_recording, dia_value_recording) %>%
+           sys_value_recording, dia_value_recording,
+           valid_bp_sys_dia_values) %>%
   count() %>%
   ungroup() %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 tab_hyp007_den_2021_03_01 <- df_hyp007_2021_03_01 %>%
-  filter(hyp007_denominator == TRUE) %>%
+  filter(hyp007_denominator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
          sys_value_recording = !is.na(bp_sys_val_12m),
          dia_value_recording = !is.na(bp_dia_val_12m)) %>%
   select(sys_date_recording, dia_date_recording,
-         sys_value_recording, dia_value_recording) %>%
+         sys_value_recording, dia_value_recording,
+         valid_bp_sys_dia_values) %>%
   group_by(sys_date_recording, dia_date_recording,
-           sys_value_recording, dia_value_recording) %>%
+           sys_value_recording, dia_value_recording,
+           valid_bp_sys_dia_values) %>%
   count() %>%
   ungroup() %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts
 write_csv(tab_hyp003_den_2021_03_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_den_2021_03_01.csv"))
 write_csv(tab_hyp007_den_2021_03_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_den_2021_03_01.csv"))
 
-
 # Calculate absolute diff (in days) between systolic and diastolic bp readings
 df_hyp003_num_bp_date_diff_2021_03_01 <- df_hyp003_2021_03_01 %>%
-  filter(hyp003_numerator == TRUE) %>%
+  filter(hyp003_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
 tab_hyp003_num_bp_date_diff_2021_03_01 <- df_hyp003_num_bp_date_diff_2021_03_01 %>%
@@ -124,10 +134,10 @@ tab_hyp003_num_bp_date_diff_2021_03_01 <- df_hyp003_num_bp_date_diff_2021_03_01 
                                 bp_date_diff <= 30 ~ "1 month",
                                 bp_date_diff > 30 ~ "more than 1 month")) %>%
   count(diff_weeks) %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 df_hyp007_num_bp_date_diff_2021_03_01 <- df_hyp007_2021_03_01 %>%
-  filter(hyp007_numerator == TRUE) %>%
+  filter(hyp007_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
 tab_hyp007_num_bp_date_diff_2021_03_01 <- df_hyp007_num_bp_date_diff_2021_03_01 %>%
@@ -135,7 +145,7 @@ tab_hyp007_num_bp_date_diff_2021_03_01 <- df_hyp007_num_bp_date_diff_2021_03_01 
                                 bp_date_diff <= 30 ~ "1 month",
                                 bp_date_diff > 30 ~ "more than 1 month")) %>%
   count(diff_weeks) %>%
-  mutate(pct = n / sum(n))
+  mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts and pct
 write_csv(tab_hyp003_num_bp_date_diff_2021_03_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_bp_date_diff_2021_03_01.csv"))
