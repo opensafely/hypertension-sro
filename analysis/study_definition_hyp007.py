@@ -50,7 +50,7 @@ study = StudyDefinition(
         hyp007_denominator_r1 AND
 
             # Actions in business rules: True: Select; False: Next
-            (hyp007_denominator_r2 AND
+            (hyp007_denominator_r2 OR
 
             (
                 # Actions in business rules: True: Reject; False: Next
