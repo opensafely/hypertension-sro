@@ -224,6 +224,10 @@ hyp_ind_variables = dict(
     # Reject patients passed to this rule who were recently registered at the
     # practice (patient registered in the 9 month period leading up to and
     # including the payment period end date).
+    # NOTE: This variable selects patients that were registered with one
+    # practice in the last 9 months. Therefore, this variable (reg_9m)
+    # specifies the patients that need to be selected for in the
+    # denominator.
     reg_9m=patients.registered_with_one_practice_between(
         start_date="first_day_of_month(index_date) - 9 months",
         end_date="last_day_of_month(index_date)",

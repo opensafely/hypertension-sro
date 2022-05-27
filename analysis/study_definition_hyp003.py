@@ -190,9 +190,13 @@ study = StudyDefinition(
         # Reject patients passed to this rule who were recently registered at
         # the practice (patient registered in the 9 month period leading up to
         # and including the payment period end date).
+        # NOTE: This variable selects patients that were registered with one
+        # practice in the last 9 months. Therefore, this variable (reg_9m)
+        # specifies the patients that need to be selected for in the
+        # denominator.
         hyp003_denominator_r9=patients.satisfying(
             """
-            NOT reg_9m
+            reg_9m
             """
         ),
     ),
