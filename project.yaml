@@ -112,8 +112,8 @@ actions:
     needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/indicators/joined/deciles_chart_*_*_population_rate.png
-        deciles_tables: output/indicators/joined/deciles_table_*_*_population_rate.csv
+        deciles_charts: output/indicators/joined/deciles_chart_*_*_practice_rate.png
+        deciles_tables: output/indicators/joined/deciles_table_*_*_practice_rate.csv
   
   check_data:
     run: r:latest analysis/check_bp_recording_values_dates.R
