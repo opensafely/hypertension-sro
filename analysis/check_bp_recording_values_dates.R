@@ -14,12 +14,12 @@ fs::dir_create(here("output", "indicators", "joined", "data_check"))
 
 # Import data
 ## Indicator hyp003 and hyp007
-## Date: 2020-05-01
-df_hyp003_2020_05_01 <- read_feather(here("output/indicators/joined/input_hyp003_2020-05-01.feather"))
-df_hyp007_2020_05_01 <- read_feather(here("output/indicators/joined/input_hyp007_2020-05-01.feather"))
+## Date: 2020-10-01
+df_hyp003_2020_10_01 <- read_feather(here("output/indicators/joined/input_hyp003_2020-10-01.feather"))
+df_hyp007_2020_10_01 <- read_feather(here("output/indicators/joined/input_hyp007_2020-10-01.feather"))
 
 # Select variables
-df_hyp003_2020_05_01 <- df_hyp003_2020_05_01 %>%
+df_hyp003_2020_10_01 <- df_hyp003_2020_10_01 %>%
   select(hyp003_numerator,
          hyp003_denominator,
          bp_sys_val_12m_date_measured,
@@ -29,11 +29,11 @@ df_hyp003_2020_05_01 <- df_hyp003_2020_05_01 %>%
          valid_bp_sys_dia_values)
 
 capture.output(
-  skimr::skim_without_charts(df_hyp003_2020_05_01 %>% filter(valid_bp_sys_dia_values)),
-  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp003_2020_05_01.txt"),
+  skimr::skim_without_charts(df_hyp003_2020_10_01 %>% filter(valid_bp_sys_dia_values)),
+  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp003_2020_10_01.txt"),
   split = FALSE)
 
-df_hyp007_2020_05_01 <- df_hyp007_2020_05_01 %>%
+df_hyp007_2020_10_01 <- df_hyp007_2020_10_01 %>%
   select(hyp007_numerator,
          hyp007_denominator,
          bp_sys_val_12m_date_measured,
@@ -43,14 +43,14 @@ df_hyp007_2020_05_01 <- df_hyp007_2020_05_01 %>%
          valid_bp_sys_dia_values)
 
 capture.output(
-  skimr::skim_without_charts(df_hyp003_2020_05_01 %>% filter(valid_bp_sys_dia_values)),
-  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp007_2020_05_01.txt"),
+  skimr::skim_without_charts(df_hyp003_2020_10_01 %>% filter(valid_bp_sys_dia_values)),
+  file = here("output", "indicators", "joined", "data_check", "skim_df_hyp007_2020_10_01.txt"),
   split = FALSE)
 
 # Count available bp recordings for sys and dia readings in numerator
 
 # Numerator
-tab_hyp003_num_2020_05_01 <- df_hyp003_2020_05_01 %>%
+tab_hyp003_num_2020_10_01 <- df_hyp003_2020_10_01 %>%
   filter(hyp003_numerator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
@@ -66,7 +66,7 @@ tab_hyp003_num_2020_05_01 <- df_hyp003_2020_05_01 %>%
   ungroup() %>%
   mutate(pct = round(n / sum(n), 4))
 
-tab_hyp007_num_2020_05_01 <- df_hyp007_2020_05_01 %>%
+tab_hyp007_num_2020_10_01 <- df_hyp007_2020_10_01 %>%
   filter(hyp007_numerator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
@@ -84,11 +84,11 @@ tab_hyp007_num_2020_05_01 <- df_hyp007_2020_05_01 %>%
   mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts
-write_csv(tab_hyp003_num_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_2020_05_01.csv"))
-write_csv(tab_hyp007_num_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_num_2020_05_01.csv"))
+write_csv(tab_hyp003_num_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_2020_10_01.csv"))
+write_csv(tab_hyp007_num_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_num_2020_10_01.csv"))
 
 # Count available bp recordings for sys and dia readings in denominator
-tab_hyp003_den_2020_05_01 <- df_hyp003_2020_05_01 %>%
+tab_hyp003_den_2020_10_01 <- df_hyp003_2020_10_01 %>%
   filter(hyp003_denominator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
@@ -104,7 +104,7 @@ tab_hyp003_den_2020_05_01 <- df_hyp003_2020_05_01 %>%
   ungroup() %>%
   mutate(pct = round(n / sum(n), 4))
 
-tab_hyp007_den_2020_05_01 <- df_hyp007_2020_05_01 %>%
+tab_hyp007_den_2020_10_01 <- df_hyp007_2020_10_01 %>%
   filter(hyp007_denominator) %>%
   mutate(sys_date_recording = !is.na(bp_sys_val_12m_date_measured),
          dia_date_recording = !is.na(bp_dia_val_12m_date_measured),
@@ -121,26 +121,26 @@ tab_hyp007_den_2020_05_01 <- df_hyp007_2020_05_01 %>%
   mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts
-write_csv(tab_hyp003_den_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_den_2020_05_01.csv"))
-write_csv(tab_hyp007_den_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_den_2020_05_01.csv"))
+write_csv(tab_hyp003_den_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_den_2020_10_01.csv"))
+write_csv(tab_hyp007_den_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_den_2020_10_01.csv"))
 
 # Calculate absolute diff (in days) between systolic and diastolic bp readings
-df_hyp003_num_bp_date_diff_2020_05_01 <- df_hyp003_2020_05_01 %>%
+df_hyp003_num_bp_date_diff_2020_10_01 <- df_hyp003_2020_10_01 %>%
   filter(hyp003_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
-tab_hyp003_num_bp_date_diff_2020_05_01 <- df_hyp003_num_bp_date_diff_2020_05_01 %>%
+tab_hyp003_num_bp_date_diff_2020_10_01 <- df_hyp003_num_bp_date_diff_2020_10_01 %>%
   mutate(diff_weeks = case_when(bp_date_diff == 0 ~ "same day",
                                 bp_date_diff > 0 & bp_date_diff <= 7 ~ "within 2 to 7 days",
                                 bp_date_diff > 7 ~ "more than 1 week")) %>%
   count(diff_weeks) %>%
   mutate(pct = round(n / sum(n), 4))
 
-df_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_2020_05_01 %>%
+df_hyp007_num_bp_date_diff_2020_10_01 <- df_hyp007_2020_10_01 %>%
   filter(hyp007_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
-tab_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_num_bp_date_diff_2020_05_01 %>%
+tab_hyp007_num_bp_date_diff_2020_10_01 <- df_hyp007_num_bp_date_diff_2020_10_01 %>%
   mutate(diff_weeks = case_when(bp_date_diff == 0 ~ "same day",
                                 bp_date_diff > 0 & bp_date_diff <= 7 ~ "within 2 to 7 days",
                                 bp_date_diff > 7 ~ "more than 1 week")) %>%
@@ -148,18 +148,18 @@ tab_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_num_bp_date_diff_2020_05_01 
   mutate(pct = round(n / sum(n), 4))
 
 # Write csv with counts and pct
-write_csv(tab_hyp003_num_bp_date_diff_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_bp_date_diff_2020_05_01.csv"))
-write_csv(tab_hyp007_num_bp_date_diff_2020_05_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_num_bp_date_diff_2020_05_01.csv"))
+write_csv(tab_hyp003_num_bp_date_diff_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp003_num_bp_date_diff_2020_10_01.csv"))
+write_csv(tab_hyp007_num_bp_date_diff_2020_10_01, here("output", "indicators", "joined", "data_check", "tab_hyp007_num_bp_date_diff_2020_10_01.csv"))
 
 
-plot_hyp003_num_bp_date_diff_2020_05_01 <- df_hyp003_num_bp_date_diff_2020_05_01 %>%
+plot_hyp003_num_bp_date_diff_2020_10_01 <- df_hyp003_num_bp_date_diff_2020_10_01 %>%
   ggplot(aes(bp_date_diff)) +
   labs(x = "Absolute difference in days between systolic and diastolic blood pressure readings",
        y = "Count of patients in HYP003 numerator") +
   geom_histogram() +
   ggplot2::scale_y_continuous(labels = scales::label_comma())
 
-plot_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_num_bp_date_diff_2020_05_01 %>%
+plot_hyp007_num_bp_date_diff_2020_10_01 <- df_hyp007_num_bp_date_diff_2020_10_01 %>%
   ggplot(aes(bp_date_diff)) +
   labs(x = "Absolute difference in days between systolic and diastolic blood pressure readings",
        y = "Count of patients in HYP003 numerator") +
@@ -167,9 +167,8 @@ plot_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_num_bp_date_diff_2020_05_01
   ggplot2::scale_y_continuous(labels = scales::label_comma())
 
 # Save plot
-ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp003_num_bp_date_diff_2020_05_01.png"),
-       plot = plot_hyp003_num_bp_date_diff_2020_05_01)
+ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp003_num_bp_date_diff_2020_10_01.png"),
+       plot = plot_hyp003_num_bp_date_diff_2020_10_01)
 
-ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp007_num_bp_date_diff_2020_05_01.png"),
-       plot = plot_hyp007_num_bp_date_diff_2020_05_01)
-
+ggsave(here("output", "indicators", "joined", "data_check", "plot_hyp007_num_bp_date_diff_2020_10_01.png"),
+       plot = plot_hyp007_num_bp_date_diff_2020_10_01)
