@@ -66,7 +66,7 @@ study = StudyDefinition(
                 hyp007_denominator_r6 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                hyp007_denominator_r7 OR
+                # hyp007_denominator_r7 OR
 
                 # Actions in business rules: True: Reject; False: Next
                 hyp007_denominator_r8 OR
