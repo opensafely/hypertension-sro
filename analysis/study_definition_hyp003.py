@@ -50,26 +50,28 @@ study = StudyDefinition(
         hyp003_denominator_r1 AND
 
             # True: Select; False: Next
-            (hyp003_denominator_r2 OR
+            (hyp003_denominator_r2 AND
 
             (
+                (
                 # True: Reject; False: Next
-                hyp003_denominator_r3 AND
+                hyp003_denominator_r3 OR
 
                 # True: Reject; False: Next
-                hyp003_denominator_r4 AND
+                hyp003_denominator_r4 OR
 
                 # True: Reject; False: Next
-                hyp003_denominator_r5 AND
+                hyp003_denominator_r5 OR
 
                 # True: Reject; False: Next
-                hyp003_denominator_r6 AND
+                hyp003_denominator_r6 OR
 
                 # True: Reject; False: Next
-                hyp003_denominator_r7 AND
+                hyp003_denominator_r7 OR
 
                 # True: Reject; False: Next
-                hyp003_denominator_r8 AND
+                hyp003_denominator_r8
+                ) AND
 
                 # True: Reject; False: Select
                 hyp003_denominator_r9
