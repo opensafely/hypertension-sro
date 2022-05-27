@@ -44,18 +44,34 @@ study = StudyDefinition(
         # Require valid blood pressure values
         valid_bp_sys_dia_values AND
 
-        # Specify denominator select/reject logic
+        # Specify denominator select / reject logic:
+
+        # True: Select; False: Reject
         hyp003_denominator_r1 AND
 
+            # True: Select; False: Next
             (hyp003_denominator_r2 OR
 
             (
+                # True: Reject; False: Next
                 hyp003_denominator_r3 AND
+
+                # True: Reject; False: Next
                 hyp003_denominator_r4 AND
+
+                # True: Reject; False: Next
                 hyp003_denominator_r5 AND
+
+                # True: Reject; False: Next
                 hyp003_denominator_r6 AND
+
+                # True: Reject; False: Next
                 hyp003_denominator_r7 AND
+
+                # True: Reject; False: Next
                 hyp003_denominator_r8 AND
+
+                # True: Reject; False: Select
                 hyp003_denominator_r9
             )
         )
