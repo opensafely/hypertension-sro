@@ -66,7 +66,7 @@ study = StudyDefinition(
                 hyp007_denominator_r6 AND
 
                 # True: Reject; False: Next
-                hyp007_denominator_r7 AND
+                # hyp007_denominator_r7 AND
 
                 # True: Reject; False: Next
                 hyp007_denominator_r8 AND
