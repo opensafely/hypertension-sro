@@ -22,7 +22,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp001 
-      --index-date-range "2021-03-01 to 2021-05-01 by month" 
+      --index-date-range "2020-04-01 to 2020-06-01 by month" 
       --output-dir=output/indicators
       --output-format=feather
     outputs:
@@ -34,7 +34,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp003 
-      --index-date-range "2021-03-01 to 2021-05-01 by month" 
+      --index-date-range "2020-04-01 to 2020-06-01 by month" 
       --output-dir=output/indicators  
       --output-format=feather
     outputs:
@@ -46,7 +46,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp007 
-      --index-date-range "2021-03-01 to 2021-05-01 by month" 
+      --index-date-range "2020-04-01 to 2020-06-01 by month" 
       --output-dir=output/indicators  
       --output-format=feather
     outputs:
@@ -124,7 +124,6 @@ actions:
         skim_txt: output/indicators/joined/data_check/skim_df_hyp*_2021_03_01.txt
         table_date_diff_csv: output/indicators/joined/data_check/tab_hyp*_num_bp_date_diff_2021_03_01.csv
         plot_date_diff: output/indicators/joined/data_check/plot_hyp*_num_bp_date_diff_2021_03_01.png
-
 
   # Join all measure files for each indicator
   # join_measures:
