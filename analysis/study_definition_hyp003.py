@@ -47,7 +47,7 @@ study = StudyDefinition(
         # Specify denominator select/reject logic
         hyp003_denominator_r1 AND
 
-            # (hyp003_denominator_r2 OR
+            (hyp003_denominator_r2 OR
 
             (
                 hyp003_denominator_r3 AND
@@ -58,7 +58,7 @@ study = StudyDefinition(
                 hyp003_denominator_r8 AND
                 hyp003_denominator_r9
             )
-        # )
+        )
         """,
         # Reject patients from the specified population who are aged greater
         # than 79 years old.

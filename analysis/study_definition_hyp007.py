@@ -64,7 +64,7 @@ study = StudyDefinition(
         # than 80 years old.
         hyp007_denominator_r1=patients.satisfying(
             """
-            NOT age < 80
+            age >= 80
             """
         ),
         # Select patients passed to this rule who meet all of the criteria
@@ -77,7 +77,8 @@ study = StudyDefinition(
         # measured on the same day.
         hyp007_denominator_r2=patients.satisfying(
             """
-            bp_sys_val_12m <= 150 AND bp_dia_val_12m <= 90
+            bp_sys_val_12m <= 150 AND
+            bp_dia_val_12m <= 90
             """
         ),
         # Reject patients passed to this rule who are receiving maximal blood
@@ -126,25 +127,39 @@ study = StudyDefinition(
         # measured on the same day.
         hyp007_denominator_r7=patients.satisfying(
             """
-            hyp007_denominator_r7_crit1 OR
-            hyp007_denominator_r7_crit2
+            ((NOT hyp007_denominator_r7_crit1_1) AND
+            hyp007_denominator_r7_crit1_2)
+
+            OR
+
+            ((NOT hyp007_denominator_r7_crit2_1) AND
+            (NOT hyp007_denominator_r7_crit2_2))
             """,
-            hyp007_denominator_r7_crit1=patients.satisfying(
+            hyp007_denominator_r7_crit1_1=patients.satisfying(
                 """
-                # Criterion 1
-                (((NOT bp_sys_val_12m > 150) OR (NOT bp_dia_val_12m > 90)) AND
-                (hyp_invite_1 AND
-                hyp_invite_1_date > bp_sys_val_12m_date_measured AND
-                hyp_invite_1_date > bp_dia_val_12m_date_measured) AND
-                hyp_invite_2)
+                # Criterion 1.1
+                bp_sys_val_12m > 150 OR bp_dia_val_12m > 90
                 """
             ),
-            hyp007_denominator_r7_crit2=patients.satisfying(
+            hyp007_denominator_r7_crit1_2=patients.satisfying(
                 """
-                # Criterion 2
-                (hyp_invite_1 AND hyp_invite_2 AND
+                # Criterion 1.2
+                (hyp_invite_1 AND hyp_invite_2) AND
+                (hyp_invite_1_date > bp_sys_val_12m_date_measured) AND
+                (hyp_invite_1_date > bp_dia_val_12m_date_measured)
+                """
+            ),
+            hyp007_denominator_r7_crit2_1=patients.satisfying(
+                """
+                # Criterion 2.1
+                hyp_invite_1 AND hyp_invite_2
+                """
+            ),
+            hyp007_denominator_r7_crit2_2=patients.satisfying(
+                """
+                # Criterion 2.2
                 (NOT bp_sys_val_12m_date_measured) AND
-                (NOT bp_dia_val_12m_date_measured))
+                (NOT bp_dia_val_12m_date_measured)
                 """
             ),
         ),
