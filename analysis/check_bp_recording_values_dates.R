@@ -129,10 +129,10 @@ df_hyp003_num_bp_date_diff_2021_03_01 <- df_hyp003_2021_03_01 %>%
   filter(hyp003_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
-tab_hyp003_num_bp_date_diff_2021_03_01 <- df_hyp003_num_bp_date_diff_2021_03_01 %>%
-  mutate(diff_weeks = case_when(bp_date_diff <= 7 ~ "1 week",
-                                bp_date_diff <= 30 ~ "1 month",
-                                bp_date_diff > 30 ~ "more than 1 month")) %>%
+tab_hyp003_num_bp_date_diff_2020_05_01 <- df_hyp003_num_bp_date_diff_2020_05_01 %>%
+  mutate(diff_weeks = case_when(bp_date_diff == 0 ~ "same day",
+                                bp_date_diff > 0 & bp_date_diff <= 7 ~ "within 2 to 7 days",
+                                bp_date_diff > 7 ~ "more than 1 week")) %>%
   count(diff_weeks) %>%
   mutate(pct = round(n / sum(n), 4))
 
@@ -140,10 +140,10 @@ df_hyp007_num_bp_date_diff_2021_03_01 <- df_hyp007_2021_03_01 %>%
   filter(hyp007_numerator) %>%
   mutate(bp_date_diff = abs(as.duration(bp_sys_val_12m_date_measured - bp_dia_val_12m_date_measured) / ddays()))
 
-tab_hyp007_num_bp_date_diff_2021_03_01 <- df_hyp007_num_bp_date_diff_2021_03_01 %>%
-  mutate(diff_weeks = case_when(bp_date_diff <= 7 ~ "1 week",
-                                bp_date_diff <= 30 ~ "1 month",
-                                bp_date_diff > 30 ~ "more than 1 month")) %>%
+tab_hyp007_num_bp_date_diff_2020_05_01 <- df_hyp007_num_bp_date_diff_2020_05_01 %>%
+  mutate(diff_weeks = case_when(bp_date_diff == 0 ~ "same day",
+                                bp_date_diff > 0 & bp_date_diff <= 7 ~ "within 2 to 7 days",
+                                bp_date_diff > 7 ~ "more than 1 week")) %>%
   count(diff_weeks) %>%
   mutate(pct = round(n / sum(n), 4))
 
