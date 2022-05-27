@@ -233,8 +233,11 @@ hyp_ind_variables = dict(
         end_date="last_day_of_month(index_date)",
         return_expectations={"incidence": 0.1},
     ),
-    # Define variable to check for valid blood pressure values
-    # NOTE: The cutoff values need to be reviewed
+    # Define variable to check for blood pressure values within a
+    # prespecified range.
+    # NOTE: This is not part of the QOF business rules but a first step at
+    # tidying the underlying data.
+    # TODO: This approach and the cutoff values both need to be reviewed.
     valid_bp_sys_dia_values=patients.satisfying(
         """
         # Set min cutoff values
