@@ -128,7 +128,7 @@ actions:
   # Join all measure files for each indicator
   join_measures:
     run: r:latest analysis/join_measures.R
-    needs: [generate_measures_hyp001]
+    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
     outputs:
       moderately_sensitive:
         measure_csv: output/indicators/joined/measures/measures_hyp*.csv
