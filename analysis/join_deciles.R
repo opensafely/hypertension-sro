@@ -21,9 +21,19 @@ dir_hyp_deciles_practice <- fs::dir_ls(path = "output/indicators/joined",
 ## Bind rows of all deciles files
 ## Extract indicator shortcut from file name
 df_hyp_deciles_practice <- dir_hyp_deciles_practice %>%
-  purrr::map(readr::read_csv, id = "id") %>%
+  purrr::map(readr::read_csv)
+
+for (file in dir_hyp_deciles_practice) {
+   file_name <- dir_hyp_deciles_practice[file]
+   
+   df_hyp_deciles_practice[[file]] <- df_hyp_deciles_practice[[file]] %>%
+   dplyr::mutate(id = file_name)
+}
+
+df_hyp_deciles_practice <- df_hyp_deciles_practice %>%
   purrr::map_dfr(dplyr::bind_rows) %>%
-  mutate(id = str_extract(id, "hyp\\d+"))
+  dplyr::mutate(id = stringr::str_extract(id, "hyp\\d+")) %>%
+  dplyr::relocate(id)
 
 fs::dir_create(here::here("output", "indicators", "joined", "deciles"))
 
