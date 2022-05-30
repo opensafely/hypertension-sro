@@ -132,3 +132,11 @@ actions:
     outputs:
       moderately_sensitive:
         measure_csv: output/indicators/joined/measures/measures_hyp*.csv
+
+  # Join all deciles (by practice) files for each indicator
+  join_deciles:
+    run: r:latest analysis/join_deciles.R
+    needs: [generate_deciles]
+    outputs:
+      moderately_sensitive:
+        measure_csv: output/indicators/joined/deciles/deciles_hyp_practice.csv
