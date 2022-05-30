@@ -16,18 +16,10 @@ study = StudyDefinition(
         "rate": "uniform",
     },
     index_date=end_date,
-    population=patients.satisfying(
-        """
-        (NOT died)
-        AND
-        gms_reg_status
-        """,
-        # Include demographic variables
-        **{
-            "died": demographic_variables["died"],
-            "gms_reg_status": demographic_variables["gms_reg_status"],
-        },
-    ),
+    # Here we extract from all patients because we are only extracting
+    # ethnicity at one time point. If we restrict this to our study population,
+    # cohorts extracted at another time may not be included in this cohort
+    population=patients.all(),
     ethnicity=patients.categorised_as(
         {
             "Unknown": "DEFAULT",
