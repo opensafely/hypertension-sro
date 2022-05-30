@@ -15,25 +15,11 @@ library(stringr)
 dir_hyp_deciles_practice <- fs::dir_ls(path = "output/indicators/joined",
                                        glob = "*deciles_table_hyp*_*_practice_rate.csv$")
 
-
-# Load files
-## Load grouped measures
-## Bind rows of all deciles files
-## Extract indicator shortcut from file name
-df_hyp_deciles_practice <- dir_hyp_deciles_practice %>%
-  purrr::map(readr::read_csv)
-
-for (file in dir_hyp_deciles_practice) {
-   file_name <- dir_hyp_deciles_practice[file]
-   
-   df_hyp_deciles_practice[[file]] <- df_hyp_deciles_practice[[file]] %>%
-   dplyr::mutate(id = file_name)
-}
-
-df_hyp_deciles_practice <- df_hyp_deciles_practice %>%
-  purrr::map_dfr(dplyr::bind_rows) %>%
-  dplyr::mutate(id = stringr::str_extract(id, "hyp\\d+")) %>%
-  dplyr::relocate(id)
+# Read all data
+df_hyp_deciles_practice <- purrr::map_dfr(dir_hyp_deciles_practice,
+                                          readr::read_csv,
+                                          .id = "id") %>%
+                           dplyr::mutate(id = stringr::str_extract(id, "hyp\\d+"))
 
 fs::dir_create(here::here("output", "indicators", "joined", "deciles"))
 
