@@ -1,0 +1,63 @@
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+# Load plotting function
+source(here::here("lib", "functions", "funs_plot_measures.R"))
+source(here::here("lib", "functions", "funs_report_results.R"))
+source(here::here("lib", "functions", "funs_tidy_data.R"))
+```
+
+
+## Deciles
+```{r}
+df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
+
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  mutate(percentile = factor(percentile,
+                             levels = seq(10, 90, 10),
+                             labels = c(seq(1, 4, 1), "5 - Median", seq(6, 9, 1))),
+         indicator = factor(indicator, 
+                            levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                            labels = c("HYP001 (Register)", "HYP003", "HYP007", "BP002")))
+```
+
+```{r}
+df_deciles_bp_hyp_practice |>
+  ggplot(aes(x = date, 
+             y = value, 
+             colour = percentile, 
+             group = percentile)) +
+  geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                             "2021-04-01", "2022-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = .5) +
+  geom_point(size = .5) +
+  geom_line(alpha = .5) +
+  scale_y_continuous(labels = scales::label_percent(),
+                     limits = c(0, 1), 
+                     breaks = seq(0, 1, .25)) +
+  scale_x_date(date_breaks = "5 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = NULL, colour = "Decile") +
+  theme(legend.position = "right") +
+  facet_wrap(~indicator, ncol = 4) +
+  scale_colour_manual(values = c("#6DCD59FF", "#35B779FF", "#1F9E89FF", "#26828EFF", 
+                                 "#482878FF",
+                                 "#26828EFF", "#1F9E89FF", "#35B779FF", "#6DCD59FF"))
+
+```
+
+## Achievement
+```{r}
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv"))
+
+
+df_measures_bp_hyp |>
+  pivot_longer(cols = c(count, pct), 
+               values_to = "value",
+               names_to = "variable")
+```

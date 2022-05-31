@@ -18,3 +18,15 @@ demographic_breakdowns = [
     "imd",
     "ethnicity",
 ]
+
+# Define list of rules with exclusion (reject) criteria
+hyp_exclusions = [
+    "denominator_r1",
+    "denominator_r3",
+    "denominator_r4",
+    "denominator_r5",
+    "denominator_r6",
+    "denominator_r7",
+    "denominator_r8",
+    "denominator_r9",
+]
