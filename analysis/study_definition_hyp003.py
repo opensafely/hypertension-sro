@@ -3,7 +3,7 @@ from cohortextractor import StudyDefinition, patients, Measure
 import json
 import pandas as pd
 
-from config import start_date, end_date, demographic_breakdowns
+from config import start_date, end_date, demographic_breakdowns, hyp_exclusions
 from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
@@ -46,37 +46,40 @@ study = StudyDefinition(
 
         # Specify denominator select / reject logic:
 
-        # Actions in business rules: True: Select; False: Reject
+        # Actions in business rules: True: Reject; False: Next
+        # NOTE: This rule is coded reversely. True: Select; False: Next
         hyp003_denominator_r1 AND
 
         # Actions in business rules: True: Select; False: Next
         (hyp003_denominator_r2 OR
 
             (
-                (
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r3 OR
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r3 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r4 OR
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r4 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r5 OR
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r5 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r6 OR
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r6 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r7 OR
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r7 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r8
-                ) AND
+                # Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r8 AND
 
                 # Actions in business rules: True: Reject; False: Select
-                # NOTE: This rule is coded reversely so that:
-                # - True: Select
-                # - False: Reject
+                # NOTE: This rule is coded reversely. True: Select; False: Reject
                 hyp003_denominator_r9
             )
         )
@@ -205,6 +208,47 @@ study = StudyDefinition(
             """
         ),
     ),
+    # Add exclusion variables
+    hyp003_denominator_r1_excl=patients.satisfying(
+        """
+        NOT hyp003_denominator_r1
+        """
+    ),
+    hyp003_denominator_r3_excl=patients.satisfying(
+        """
+        ht_max_12m
+        """
+    ),
+    hyp003_denominator_r4_excl=patients.satisfying(
+        """
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp003_denominator_r5_excl=patients.satisfying(
+        """
+        bp_dec_12m
+        """
+    ),
+    hyp003_denominator_r6_excl=patients.satisfying(
+        """
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp003_denominator_r7_excl=patients.satisfying(
+        """
+        NOT hyp003_denominator_r7
+        """
+    ),
+    hyp003_denominator_r8_excl=patients.satisfying(
+        """
+        hyp_9m
+        """
+    ),
+    hyp003_denominator_r9_excl=patients.satisfying(
+        """
+        NOT reg_9m
+        """
+    ),
     # Define composite numerator
     # Select patients from the denominator who meet all of the criteria below:
     # - Systolic blood pressure value was 140 mmHg or less.
@@ -245,6 +289,17 @@ for breakdown in demographic_breakdowns:
         numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=[breakdown],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create blood pressure exclusion measures (3) for total population
+for exclusion in hyp_exclusions:
+    m = Measure(
+        id=f"""hyp003_excl_{exclusion.lstrip("hyp003_")}_population_rate""",
+        numerator=f"hyp003_{exclusion}_excl",
+        denominator="population",
+        group_by=["population"],
         small_number_suppression=True,
     )
     measures.append(m)
