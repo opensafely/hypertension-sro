@@ -293,7 +293,7 @@ for breakdown in demographic_breakdowns:
     )
     measures.append(m)
 
-# Create blood pressure exclusion measures (3) for total population
+# Create hypertension exclusion measures (3) for total population
 for exclusion in hyp_exclusions:
     m = Measure(
         id=f"""hyp003_excl_{exclusion.lstrip("hyp003_")}_population_rate""",
