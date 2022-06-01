@@ -174,7 +174,7 @@ study = StudyDefinition(
             hyp007_denominator_r7_crit2_1=patients.satisfying(
                 """
                 # Criterion 2.1
-                (NOT hyp_invite_1) AND (NOT hyp_invite_2)
+                hyp_invite_1 AND hyp_invite_2
                 """
             ),
             hyp007_denominator_r7_crit2_2=patients.satisfying(
@@ -234,7 +234,7 @@ study = StudyDefinition(
     ),
     hyp007_denominator_r7_excl=patients.satisfying(
         """
-        NOT hyp007_denominator_r7
+        hyp007_denominator_r7
         """
     ),
     hyp007_denominator_r8_excl=patients.satisfying(
