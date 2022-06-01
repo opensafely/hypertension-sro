@@ -242,23 +242,23 @@ hyp_ind_variables = dict(
         """
         valid_bp_sys_dia_values OR
         missing_bp_sys_dia_values
-        """
-    ),
-    valid_bp_sys_dia_values=patients.satisfying(
-        """
-        # Set min cutoff values
-        (bp_sys_val_12m > 0) AND
-        (bp_dia_val_12m > 0) AND
-        # Set max cutoff values
-        (bp_sys_val_12m < 500) AND
-        (bp_dia_val_12m < 500)
-        """
-    ),
-    missing_bp_sys_dia_values=patients.satisfying(
-        """
-        # No bp measurement
-        (NOT bp_sys_val_12m_date_measured) AND
-        (NOT bp_dia_val_12m_date_measured)
-        """
+        """,
+        valid_bp_sys_dia_values=patients.satisfying(
+            """
+            # Set min cutoff values
+            (bp_sys_val_12m > 0) AND
+            (bp_dia_val_12m > 0) AND
+            # Set max cutoff values
+            (bp_sys_val_12m < 500) AND
+            (bp_dia_val_12m < 500)
+            """
+        ),
+        missing_bp_sys_dia_values=patients.satisfying(
+            """
+            # No bp measurement
+            (NOT bp_sys_val_12m_date_measured) AND
+            (NOT bp_dia_val_12m_date_measured)
+            """
+        ),
     ),
 )
