@@ -54,27 +54,27 @@ study = StudyDefinition(
 
             (
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r3 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r4 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r5 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r6 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r7 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp007_denominator_r8 AND
 
                 # Actions in business rules: True: Reject; False: Select
