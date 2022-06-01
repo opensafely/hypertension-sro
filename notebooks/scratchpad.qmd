@@ -1,6 +1,7 @@
 ```{r}
 library(tidyverse)
 library(here)
+library(janitor)
 ```
 
 ```{r}
@@ -60,4 +61,61 @@ df_measures_bp_hyp |>
   pivot_longer(cols = c(count, pct), 
                values_to = "value",
                names_to = "variable")
+```
+
+```{r}
+# Load data with national exclusions by practice
+df_qof_excl <- read_csv("lib/qof_nhsd_data/QOF2021_v2/PRACTICE_PCA_EXCL_2021.csv")
+
+# Filter for on indivator code
+# Group by indicator exclusion code
+# Calculate total count and percentage for each exclusion
+
+df_qof_excl_hyp003 <- df_qof_excl |> 
+  clean_names() |>
+  filter(indicator_code == "HYP003")  |>
+  group_by(pca_excl_name) |>
+  summarise(count = sum(count)) |>
+  mutate(pct = count / sum(count))
+
+df_qof_excl_hyp007 <- df_qof_excl |> 
+  clean_names() |>
+  filter(indicator_code == "HYP007")  |>
+  group_by(pca_excl_name) |>
+  summarise(count = sum(count)) |>
+  mutate(pct = count / sum(count))
+
+```
+
+
+```{r}
+
+df_qof_excl_hyp003 |>
+  mutate(denominator_rule = case_when(pca_excl_name == "PAT_AGEO79" ~ "hyp003_denominator_r1",
+                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
+                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
+                                      pca_excl_name == "DIAG_DAT9M" ~ "hyp003_denominator_r8",
+                                      pca_excl_name == "HTMAX" ~ "hyp003_denominator_r3",
+                                      pca_excl_name == "HYPBPINVITE" ~ "hyp003_denominator_r7",
+                                      pca_excl_name == "HYPPCADEC" ~ "hyp003_denominator_r6",
+                                      pca_excl_name == "HYPPCAPU" ~ "hyp003_denominator_r4",
+                                      pca_excl_name == "REG_DAT9" ~ "hyp003_denominator_r9")) |>
+  arrange(denominator_rule)
+
+```
+
+```{r}
+
+df_qof_excl_hyp007 |>
+  mutate(denominator_rule = case_when(pca_excl_name == "PAT_AGEU80" ~ "hyp003_denominator_r1",
+                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
+                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
+                                      pca_excl_name == "DIAG_DAT9M" ~ "hyp003_denominator_r8",
+                                      pca_excl_name == "HTMAX" ~ "hyp003_denominator_r3",
+                                      pca_excl_name == "HYPBPINVITE" ~ "hyp003_denominator_r7",
+                                      pca_excl_name == "HYPPCADEC" ~ "hyp003_denominator_r6",
+                                      pca_excl_name == "HYPPCAPU" ~ "hyp003_denominator_r4",
+                                      pca_excl_name == "REG_DAT9" ~ "hyp003_denominator_r9")) |>
+  arrange(denominator_rule)
+
 ```

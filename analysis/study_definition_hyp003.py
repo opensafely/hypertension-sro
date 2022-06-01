@@ -42,7 +42,7 @@ study = StudyDefinition(
     hyp003_denominator=patients.satisfying(
         """
         # Require valid blood pressure values
-        valid_bp_sys_dia_values AND
+        valid_or_missing_bp_sys_dia_values AND
 
         # Specify denominator select / reject logic:
 
@@ -55,27 +55,27 @@ study = StudyDefinition(
 
             (
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp003_denominator_r3 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp003_denominator_r4 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp003_denominator_r5 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp003_denominator_r6 AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
-                hyp003_denominator_r7 AND
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
+                (NOT hyp003_denominator_r7) AND
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Select; False: Next
+                # NOTE: This rule is coded reversely. True: Next; False: Reject
                 hyp003_denominator_r8 AND
 
                 # Actions in business rules: True: Reject; False: Select
@@ -151,13 +151,13 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r7=patients.satisfying(
             """
-            ((NOT hyp003_denominator_r7_crit1_1) AND
+            (hyp003_denominator_r7_crit1_1 AND
             hyp003_denominator_r7_crit1_2)
 
             OR
 
-            ((NOT hyp003_denominator_r7_crit2_1) AND
-            (NOT hyp003_denominator_r7_crit2_2))
+            (hyp003_denominator_r7_crit2_1 AND
+            hyp003_denominator_r7_crit2_2)
             """,
             hyp003_denominator_r7_crit1_1=patients.satisfying(
                 """
@@ -236,7 +236,7 @@ study = StudyDefinition(
     ),
     hyp003_denominator_r7_excl=patients.satisfying(
         """
-        NOT hyp003_denominator_r7
+        hyp003_denominator_r7
         """
     ),
     hyp003_denominator_r8_excl=patients.satisfying(
@@ -293,7 +293,7 @@ for breakdown in demographic_breakdowns:
     )
     measures.append(m)
 
-# Create blood pressure exclusion measures (3) for total population
+# Create hypertension exclusion measures (3) for total population
 for exclusion in hyp_exclusions:
     m = Measure(
         id=f"""hyp003_excl_{exclusion.lstrip("hyp003_")}_population_rate""",
