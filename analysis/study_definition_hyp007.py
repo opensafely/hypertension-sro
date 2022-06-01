@@ -42,7 +42,7 @@ study = StudyDefinition(
     hyp007_denominator=patients.satisfying(
         """
         # Require valid blood pressure values
-        valid_bp_sys_dia_values AND
+        valid_or_missing_bp_sys_dia_values AND
 
         # Specify denominator select / reject logic
 
@@ -150,7 +150,7 @@ study = StudyDefinition(
         # measured on the same day.
         hyp007_denominator_r7=patients.satisfying(
             """
-            ((NOT hyp007_denominator_r7_crit1_1) AND
+            (hyp007_denominator_r7_crit1_1 AND
             hyp007_denominator_r7_crit1_2)
 
             OR
