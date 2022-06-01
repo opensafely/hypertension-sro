@@ -72,7 +72,7 @@ study = StudyDefinition(
 
                 # Actions in business rules: True: Reject; False: Next
                 # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r7 AND
+                (NOT hyp003_denominator_r7) AND
 
                 # Actions in business rules: True: Reject; False: Next
                 # NOTE: This rule is coded reversely. True: Next; False: Reject
@@ -151,13 +151,13 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r7=patients.satisfying(
             """
-            ((NOT hyp003_denominator_r7_crit1_1) AND
+            (hyp003_denominator_r7_crit1_1 AND
             hyp003_denominator_r7_crit1_2)
 
             OR
 
-            ((NOT hyp003_denominator_r7_crit2_1) AND
-            (NOT hyp003_denominator_r7_crit2_2))
+            (hyp003_denominator_r7_crit2_1 AND
+            hyp003_denominator_r7_crit2_2)
             """,
             hyp003_denominator_r7_crit1_1=patients.satisfying(
                 """
@@ -236,7 +236,7 @@ study = StudyDefinition(
     ),
     hyp003_denominator_r7_excl=patients.satisfying(
         """
-        NOT hyp003_denominator_r7
+        hyp003_denominator_r7
         """
     ),
     hyp003_denominator_r8_excl=patients.satisfying(
