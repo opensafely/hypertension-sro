@@ -262,3 +262,131 @@ hyp_ind_variables = dict(
         ),
     ),
 )
+
+
+# Rules for indicator HYP007
+hyp007_denominator_rules_variables = dict(
+    # Reject patients from the specified population who are aged less
+    # than 80 years old.
+    hyp007_denominator_r1=patients.satisfying(
+        """
+        age < 80
+        """
+    ),
+    # Select patients passed to this rule who meet all of the criteria
+    # below:
+    # - Systolic blood pressure value was 150 mmHg or less.
+    # - Diastolic blood pressure value was 90 mmHg or less.
+    # Most recent blood pressure recording was in the 12 months leading up
+    # to and including the payment period end date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp007_denominator_r2=patients.satisfying(
+        """
+        bp_sys_val_12m <= 150 AND
+        bp_dia_val_12m <= 90
+        """
+    ),
+    # Reject patients passed to this rule who are receiving maximal blood
+    # pressure therapy in the 12 months leading up to and including the
+    # payment period end date.
+    hyp007_denominator_r3=patients.satisfying(
+        """
+        ht_max_12m
+        """
+    ),
+    # Reject patients passed to this rule for whom hypertension quality
+    # indicator care was unsuitable in the 12 months leading up to and
+    # including the payment period end date.
+    hyp007_denominator_r4=patients.satisfying(
+        """
+        hyp_pca_pu_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to have their
+    # blood pressure recorded in the 12 months leading up to and including
+    # the payment period end date.
+    hyp007_denominator_r5=patients.satisfying(
+        """
+        bp_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to receive
+    # hypertension quality indicator care in the 12 months leading up to
+    # and including the payment period end date.
+    hyp007_denominator_r6=patients.satisfying(
+        """
+        hyp_pca_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who meet either of the criteria
+    # below:
+    # - Latest blood pressure reading in the 12 months leading up to
+    # and including the payment period end date was above target levels
+    # (systolic value of over 150 mmHg and/or a diastolic value of over 90
+    # mmHg), and was followed by two invitations for hypertension
+    # monitoring.
+    # - Received two invitations for hypertension monitoring and
+    # had no blood pressure recordings during the 12 months leading up to
+    # and including the achievement date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp007_denominator_r7=patients.satisfying(
+        """
+        (hyp007_denominator_r7_crit1_1 AND
+        hyp007_denominator_r7_crit1_2)
+
+        OR
+
+        (hyp007_denominator_r7_crit2_1 AND
+        hyp007_denominator_r7_crit2_2)
+        """,
+        hyp007_denominator_r7_crit1_1=patients.satisfying(
+            """
+            # Criterion 1.1
+            bp_sys_val_12m > 150 OR bp_dia_val_12m > 90
+            """
+        ),
+        hyp007_denominator_r7_crit1_2=patients.satisfying(
+            """
+            # Criterion 1.2
+            (hyp_invite_1 AND hyp_invite_2) AND
+            (hyp_invite_1_date > bp_sys_val_12m_date_measured) AND
+            (hyp_invite_1_date > bp_dia_val_12m_date_measured)
+            """
+        ),
+        hyp007_denominator_r7_crit2_1=patients.satisfying(
+            """
+            # Criterion 2.1
+            hyp_invite_1 AND hyp_invite_2
+            """
+        ),
+        hyp007_denominator_r7_crit2_2=patients.satisfying(
+            """
+            # Criterion 2.2
+            (NOT bp_sys_val_12m_date_measured) AND
+            (NOT bp_dia_val_12m_date_measured)
+            """
+        ),
+    ),
+    # Reject patients passed to this rule whose earliest hypertension
+    # diagnosis was in the 9 months leading up to and including the
+    # payment period end date.
+    hyp007_denominator_r8=patients.satisfying(
+        """
+        hyp_9m
+        """
+    ),
+    # Reject patients passed to this rule who were recently registered at
+    # the practice (registered in the 9 month period leading up to
+    # and including the payment period end date).
+    # NOTE: This variable selects patients that were registered with one
+    # practice in the last 9 months. Therefore, this variable (reg_9m)
+    # specifies the patients that need to be selected for in the
+    # denominator.
+    hyp007_denominator_r9=patients.satisfying(
+        """
+        NOT reg_9m
+        """
+    ),
+)
