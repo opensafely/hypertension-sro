@@ -206,7 +206,9 @@ study = StudyDefinition(
             """
         ),
     ),
-    # Add exclusion variables
+    # Add exclusion variables to be used in measures 
+    # NOTE: These variables are coded as "reject" variables
+    # as specified in the business rules
     hyp007_denominator_r1_excl=patients.satisfying(
         """
         NOT hyp007_denominator_r1
