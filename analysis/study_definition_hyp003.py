@@ -55,31 +55,24 @@ study = StudyDefinition(
 
             (
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r3 AND
+                hyp003_denominator_r3 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r4 AND
+                hyp003_denominator_r4 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r5 AND
+                hyp003_denominator_r5 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r6 AND
+                hyp003_denominator_r6 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                (NOT hyp003_denominator_r7) AND
+                hyp003_denominator_r7 OR
 
                 # Actions in business rules: True: Reject; False: Next
-                # NOTE: This rule is coded reversely. True: Next; False: Reject
-                hyp003_denominator_r8 AND
+                hyp003_denominator_r8 OR
 
                 # Actions in business rules: True: Reject; False: Select
-                # NOTE: This rule is coded reversely. True: Select; False: Reject
                 hyp003_denominator_r9
             )
         )
@@ -151,13 +144,16 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r7=patients.satisfying(
             """
-            (hyp003_denominator_r7_crit1_1 AND
-            hyp003_denominator_r7_crit1_2)
+            NOT
+            (
+                (hyp003_denominator_r7_crit1_1 AND
+                hyp003_denominator_r7_crit1_2)
 
-            OR
+                OR
 
-            (hyp003_denominator_r7_crit2_1 AND
-            hyp003_denominator_r7_crit2_2)
+                (hyp003_denominator_r7_crit2_1 AND
+                hyp003_denominator_r7_crit2_2)
+            )
             """,
             hyp003_denominator_r7_crit1_1=patients.satisfying(
                 """
@@ -208,9 +204,13 @@ study = StudyDefinition(
             """
         ),
     ),
-    # Add exclusion variables to be used in measures 
-    # NOTE: These variables are coded as "reject" variables
-    # as specified in the business rules
+    # Add exclusion variables to be used in measures
+    # NOTE: Some of these variables are coded as "select" variables
+    # and not "reject" as specified in the business rules:
+    # - hyp003_denominator_r1 (special case, this is a select variable
+    # but needs to be reversed for counting exclusions)
+    # - hyp003_denominator_r7 (specified as reject in business rules)
+    # - reg_9m (specified as reject in business rules)
     hyp003_denominator_r1_excl=patients.satisfying(
         """
         NOT hyp003_denominator_r1
@@ -238,7 +238,7 @@ study = StudyDefinition(
     ),
     hyp003_denominator_r7_excl=patients.satisfying(
         """
-        hyp003_denominator_r7
+        NOT hyp003_denominator_r7
         """
     ),
     hyp003_denominator_r8_excl=patients.satisfying(
