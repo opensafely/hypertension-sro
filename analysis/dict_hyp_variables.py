@@ -270,7 +270,7 @@ hyp007_denominator_rules_variables = dict(
     # than 80 years old.
     hyp007_denominator_r1=patients.satisfying(
         """
-        age < 80
+        age >= 80
         """
     ),
     # Select patients passed to this rule who meet all of the criteria
@@ -292,7 +292,7 @@ hyp007_denominator_rules_variables = dict(
     # payment period end date.
     hyp007_denominator_r3=patients.satisfying(
         """
-        ht_max_12m
+        NOT ht_max_12m
         """
     ),
     # Reject patients passed to this rule for whom hypertension quality
@@ -300,7 +300,7 @@ hyp007_denominator_rules_variables = dict(
     # including the payment period end date.
     hyp007_denominator_r4=patients.satisfying(
         """
-        hyp_pca_pu_12m
+        NOT hyp_pca_pu_12m
         """
     ),
     # Reject patients passed to this rule who chose not to have their
@@ -308,7 +308,7 @@ hyp007_denominator_rules_variables = dict(
     # the payment period end date.
     hyp007_denominator_r5=patients.satisfying(
         """
-        bp_dec_12m
+        NOT bp_dec_12m
         """
     ),
     # Reject patients passed to this rule who chose not to receive
@@ -316,7 +316,7 @@ hyp007_denominator_rules_variables = dict(
     # and including the payment period end date.
     hyp007_denominator_r6=patients.satisfying(
         """
-        hyp_pca_dec_12m
+        NOT hyp_pca_dec_12m
         """
     ),
     # Reject patients passed to this rule who meet either of the criteria
@@ -333,13 +333,11 @@ hyp007_denominator_rules_variables = dict(
     # measured on the same day.
     hyp007_denominator_r7=patients.satisfying(
         """
-        (hyp007_denominator_r7_crit1_1 AND
+        ((NOT hyp007_denominator_r7_crit1_1) AND
         hyp007_denominator_r7_crit1_2)
-
         OR
-
-        (hyp007_denominator_r7_crit2_1 AND
-        hyp007_denominator_r7_crit2_2)
+        ((NOT hyp007_denominator_r7_crit2_1) AND
+        (NOT hyp007_denominator_r7_crit2_2))
         """,
         hyp007_denominator_r7_crit1_1=patients.satisfying(
             """
@@ -374,7 +372,7 @@ hyp007_denominator_rules_variables = dict(
     # payment period end date.
     hyp007_denominator_r8=patients.satisfying(
         """
-        hyp_9m
+        NOT hyp_9m
         """
     ),
     # Reject patients passed to this rule who were recently registered at
@@ -386,7 +384,7 @@ hyp007_denominator_rules_variables = dict(
     # denominator.
     hyp007_denominator_r9=patients.satisfying(
         """
-        NOT reg_9m
+        reg_9m
         """
     ),
 )
