@@ -145,16 +145,11 @@ study = StudyDefinition(
         # measured on the same day.
         hyp003_denominator_r7=patients.satisfying(
             """
-            NOT
-            (
-                (hyp003_denominator_r7_crit1_1 AND
-                hyp003_denominator_r7_crit1_2)
-
-                OR
-
-                (hyp003_denominator_r7_crit2_1 AND
-                hyp003_denominator_r7_crit2_2)
-            )
+            ((NOT hyp003_denominator_r7_crit1_1) AND
+            hyp003_denominator_r7_crit1_2)
+            OR
+            ((NOT hyp003_denominator_r7_crit2_1) AND
+            (NOT hyp003_denominator_r7_crit2_2))
             """,
             hyp003_denominator_r7_crit1_1=patients.satisfying(
                 """
