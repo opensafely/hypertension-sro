@@ -7,7 +7,7 @@ start_date = "2020-03-01"
 # Note: This should match the end dates in project.yaml
 # In QOF also: Payment Period End Date (PPED)
 end_date = "2020-05-01"
- 
+
 # Demographic variables by which measures are broken down
 demographic_breakdowns = [
     "age_band",
@@ -29,4 +29,12 @@ hyp_exclusions = [
     "denominator_r7",
     "denominator_r8",
     "denominator_r9",
+]
+
+# Define list of variables for checking data quality
+hyp_data_check = [
+    "valid_bp_sys_dia_values",
+    "invalid_bp_sys_dia_values",
+    "missing_bp_sys_dia_values",
+    "available_bp_sys_dia_values",
 ]
