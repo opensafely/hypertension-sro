@@ -1,15 +1,23 @@
-from cohortextractor import StudyDefinition, patients, Measure
-
+from cohortextractor import (
+    StudyDefinition,
+    patients,
+    Measure,
+)
 import json
 import pandas as pd
-
-from config import start_date, end_date, demographic_breakdowns, hyp_exclusions
+from config import (
+    start_date,
+    end_date,
+    demographic_breakdowns,
+    hyp_exclusions,
+    hyp_data_check,
+)
+from dict_demo_variables import demographic_variables
 from dict_hyp_variables import (
     hyp_ind_variables,
     hyp_reg_variables,
     hyp007_business_rules_variables,
 )
-from dict_demo_variables import demographic_variables
 
 study = StudyDefinition(
     # Set index date to start date
@@ -48,7 +56,7 @@ study = StudyDefinition(
     hyp007_denominator=patients.satisfying(
         """
         # Require valid blood pressure values
-        valid_or_missing_bp_sys_dia_values AND
+        valid_bp_sys_dia_values AND
 
         # Specify denominator select / reject logic
 
@@ -140,6 +148,17 @@ for exclusion in hyp_exclusions:
     m = Measure(
         id=f"""hyp007_excl_{exclusion.lstrip("hyp007_")}_population_rate""",
         numerator=f"hyp007_{exclusion}_excl",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create hypertension exclusion measures (3) for total population
+for data_check in hyp_data_check:
+    m = Measure(
+        id=f"hyp007_check_{data_check}_population_rate",
+        numerator=data_check,
         denominator="population",
         group_by=["population"],
         small_number_suppression=True,
