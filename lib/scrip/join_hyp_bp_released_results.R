@@ -1,8 +1,9 @@
 library(readr)
 library(dplyr)
 library(here)
-library(tindicatoryr)
+library(tidyr)
 library(stringr)
+source(here::here("lib", "functions", "funs_tidy_data.R"))
 
 # Deciles tables ----
 ## Read csv
@@ -27,6 +28,10 @@ df_measures_hyp001 <- read_csv(here("released_outputs/measures/measures_hyp001.c
 df_measures_hyp003 <- read_csv(here("released_outputs/measures/measures_hyp003.csv"))
 df_measures_hyp007 <- read_csv(here("released_outputs/measures/measures_hyp007.csv"))
 
+
+df_measures_bp002 <- df_measures_bp002 |>
+  mutate(category = case_when(group == "learning_disability" | group == "care_home" ~ as.character(as.logical(as.integer(category))),
+                              TRUE ~ category))
 # Read all measures files and pivot into indicatorentical structure
 df_measures_bp002_long <- df_measures_bp002 |>
   rename(pct = value) |>
@@ -67,5 +72,15 @@ df_measures_bp_hyp <- df_measures_bp002_long |>
            df_measures_hyp003_long,
            df_measures_hyp007_long)
 
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  tidy_category_names(group = group,
+                      category = category,
+                      learning_disability = "learning_disability",
+                      imd = "imd",
+                      sex = "sex",
+                      care_home = "care_home",
+                      population = "population",
+                      long_labels = TRUE,
+                      imd_explicit_na = FALSE)
 # Write measures files
 write_csv(df_measures_bp_hyp, here("released_outputs/measures/df_measures_bp_hyp.csv"))
