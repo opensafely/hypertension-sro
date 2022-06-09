@@ -80,6 +80,8 @@ study = StudyDefinition(
         """,
         # Reject patients from the specified population who are aged greater
         # than 79 years old.
+        # NOTE: This is a select rule, so "Select patients from the 
+        # specified population who are aged 79 years or less."
         hyp003_denominator_r1=patients.satisfying(
             """
             age <= 79
@@ -214,36 +216,64 @@ study = StudyDefinition(
     ),
     hyp003_denominator_r3_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
         ht_max_12m
         """
     ),
     hyp003_denominator_r4_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
         hyp_pca_pu_12m
         """
     ),
     hyp003_denominator_r5_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
         bp_dec_12m
         """
     ),
     hyp003_denominator_r6_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
         hyp_pca_dec_12m
         """
     ),
     hyp003_denominator_r7_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
         NOT hyp003_denominator_r7
         """
     ),
     hyp003_denominator_r8_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
+        hyp003_denominator_r7 AND
         hyp_9m
         """
     ),
     hyp003_denominator_r9_excl=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
+        hyp003_denominator_r7 AND
+        hyp003_denominator_r8 AND
         NOT reg_9m
         """
     ),
