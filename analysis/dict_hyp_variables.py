@@ -387,4 +387,79 @@ hyp007_denominator_rules_variables = dict(
         reg_9m
         """
     ),
+    # Add exclusion variables to be used in measures
+    # NOTE: Some of these variables are coded as "select" variables
+    # and not "reject" as specified in the business rules:
+    # - hyp007_denominator_r1 (special case, this is a select variable
+    # but needs to be reversed for counting exclusions)
+    # - hyp007_denominator_r7 (specified as reject in business rules)
+    # - reg_9m (specified as reject in business rules)
+    hyp007_denominator_r1_excl=patients.satisfying(
+        """
+        NOT hyp007_denominator_r1
+        """
+    ),
+    hyp007_denominator_r3_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        ht_max_12m
+        """
+    ),
+    hyp007_denominator_r4_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp007_denominator_r5_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        bp_dec_12m
+        """
+    ),
+    hyp007_denominator_r6_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp007_denominator_r7_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        NOT hyp007_denominator_r7
+        """
+    ),
+    hyp007_denominator_r8_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        hyp007_denominator_r7 AND
+        hyp_9m
+        """
+    ),
+    hyp007_denominator_r9_excl=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        hyp007_denominator_r7 AND
+        hyp007_denominator_r8 AND
+        NOT reg_9m
+        """
+    ),
 )
