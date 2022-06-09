@@ -139,7 +139,7 @@ for breakdown in demographic_breakdowns:
 for exclusion in hyp_exclusions:
     m = Measure(
         id=f"""hyp007_excl_{exclusion.lstrip("hyp007_")}_population_rate""",
-        numerator=f"hyp007_{exclusion}",
+        numerator=f"hyp007_{exclusion}_excl",
         denominator="population",
         group_by=["population"],
         small_number_suppression=True,
