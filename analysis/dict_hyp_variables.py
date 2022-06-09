@@ -1,6 +1,5 @@
 # Define common variables needed across indicators here
 # See https://docs.opensafely.org/study-def-tricks/
-
 import pandas as pd
 from config import start_date, end_date
 from cohortextractor import patients
@@ -238,35 +237,46 @@ hyp_ind_variables = dict(
     # NOTE: This is not part of the QOF business rules but a first step at
     # tidying the underlying data.
     # TODO: This approach and the cutoff values both need to be reviewed.
-    valid_or_missing_bp_sys_dia_values=patients.satisfying(
+    valid_bp_sys_dia_values=patients.satisfying(
         """
-        valid_bp_sys_dia_values
-        # OR missing_bp_sys_dia_values
-        """,
-        valid_bp_sys_dia_values=patients.satisfying(
-            """
-            # Set min cutoff values
-            (bp_sys_val_12m > 0) AND
-            (bp_dia_val_12m > 0) AND
-            # Set max cutoff values
-            (bp_sys_val_12m < 500) AND
-            (bp_dia_val_12m < 500)
-            """
-        ),
-        # missing_bp_sys_dia_values=patients.satisfying(
-        #     """
-        #     # No bp measurement
-        #     (NOT bp_sys_val_12m_date_measured) AND
-        #     (NOT bp_dia_val_12m_date_measured)
-        #     """
-        # ),
+        # Set min cutoff values
+        (bp_sys_val_12m > 0) AND
+        (bp_dia_val_12m > 0) AND
+        # Set max cutoff values
+        (bp_sys_val_12m < 500) AND
+        (bp_dia_val_12m < 500)
+        """
+    ),
+    invalid_bp_sys_dia_values=patients.satisfying(
+        """
+        # Set min cutoff values
+        (bp_sys_val_12m <= 0) AND
+        (bp_dia_val_12m <= 0) AND
+        # Set max cutoff values
+        (bp_sys_val_12m >= 500) AND
+        (bp_dia_val_12m >= 500)
+        """
+    ),
+    missing_bp_sys_dia_values=patients.satisfying(
+        """
+        # No bp measurement
+        (NOT bp_sys_val_12m_date_measured) AND
+        (NOT bp_dia_val_12m_date_measured)
+        """
+    ),
+    available_bp_sys_dia_values=patients.satisfying(
+        """
+        # No bp measurement
+        bp_sys_val_12m_date_measured AND
+        bp_dia_val_12m_date_measured
+        """
     ),
 )
 
 hyp003_business_rules_variables = dict(
     # Reject patients from the specified population who are aged greater
     # than 79 years old.
-    # NOTE: This is a select rule, so "Select patients from the 
+    # NOTE: This is a select rule, so "Select patients from the
     # specified population who are aged 79 years or less."
     hyp003_denominator_r1=patients.satisfying(
         """
