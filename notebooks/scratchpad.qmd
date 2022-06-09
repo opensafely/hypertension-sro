@@ -1,6 +1,7 @@
 ```{r}
 library(tidyverse)
 library(here)
+library(scales)
 library(janitor)
 ```
 
@@ -8,7 +9,6 @@ library(janitor)
 # Load plotting function
 source(here::here("lib", "functions", "funs_plot_measures.R"))
 source(here::here("lib", "functions", "funs_report_results.R"))
-source(here::here("lib", "functions", "funs_tidy_data.R"))
 ```
 
 
@@ -26,7 +26,7 @@ df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
 ```
 
 ```{r}
-df_deciles_bp_hyp_practice |>
+plot_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
   ggplot(aes(x = date, 
              y = value, 
              colour = percentile, 
@@ -50,72 +50,109 @@ df_deciles_bp_hyp_practice |>
                                  "#482878FF",
                                  "#26828EFF", "#1F9E89FF", "#35B779FF", "#6DCD59FF"))
 
+ggsave(filename = here("released_outputs", "figures", "deciles_bp_hyp_practice.png"),
+       plot = plot_deciles_bp_hyp_practice, width = 12, height = 6)
 ```
 
 ## Achievement
 ```{r}
-df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv"))
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) 
+# |>
+        #  mutate(indicator = factor(indicator, 
+                            # levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                            # labels = c("HYP001 (Register)", "HYP003", "HYP007", "BP002")))
+```
 
+
+```{r}
+
+df_measures_bp_hyp
+```
+
+```{r}
 
 df_measures_bp_hyp |>
-  pivot_longer(cols = c(count, pct), 
-               values_to = "value",
-               names_to = "variable")
-```
-
-```{r}
-# Load data with national exclusions by practice
-df_qof_excl <- read_csv("lib/qof_nhsd_data/QOF2021_v2/PRACTICE_PCA_EXCL_2021.csv")
-
-# Filter for on indivator code
-# Group by indicator exclusion code
-# Calculate total count and percentage for each exclusion
-
-df_qof_excl_hyp003 <- df_qof_excl |> 
-  clean_names() |>
-  filter(indicator_code == "HYP003")  |>
-  group_by(pca_excl_name) |>
-  summarise(count = sum(count)) |>
-  mutate(pct = count / sum(count))
-
-df_qof_excl_hyp007 <- df_qof_excl |> 
-  clean_names() |>
-  filter(indicator_code == "HYP007")  |>
-  group_by(pca_excl_name) |>
-  summarise(count = sum(count)) |>
-  mutate(pct = count / sum(count))
-
-```
-
-
-```{r}
-
-df_qof_excl_hyp003 |>
-  mutate(denominator_rule = case_when(pca_excl_name == "PAT_AGEO79" ~ "hyp003_denominator_r1",
-                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
-                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
-                                      pca_excl_name == "DIAG_DAT9M" ~ "hyp003_denominator_r8",
-                                      pca_excl_name == "HTMAX" ~ "hyp003_denominator_r3",
-                                      pca_excl_name == "HYPBPINVITE" ~ "hyp003_denominator_r7",
-                                      pca_excl_name == "HYPPCADEC" ~ "hyp003_denominator_r6",
-                                      pca_excl_name == "HYPPCAPU" ~ "hyp003_denominator_r4",
-                                      pca_excl_name == "REG_DAT9" ~ "hyp003_denominator_r9")) |>
-  arrange(denominator_rule)
+  filter(variable == "pct") |>
+  filter(group == "imd") |>
+  filter(indicator %in% c("HYP003", "HYP007", "BP002")) |>
+  mutate(category = na_if(category, "missing")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                             "2021-04-01", "2022-04-01")),
+                                                        linetype = "dotted",
+           colour = "orange",
+           size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+    scale_x_date(
+      date_breaks = "5 months",
+      labels = scales::label_date_short()
+    ) +
+    ggplot2::scale_y_continuous(
+          labels = scales::label_percent()) +
+          ggplot2::scale_colour_viridis_d(na.value = "grey50") +
+  facet_wrap(~indicator, ncol = 3)
 
 ```
 
 ```{r}
 
-df_qof_excl_hyp007 |>
-  mutate(denominator_rule = case_when(pca_excl_name == "PAT_AGEU80" ~ "hyp003_denominator_r1",
-                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
-                                      pca_excl_name == "BPDEC" ~ "hyp003_denominator_r5",
-                                      pca_excl_name == "DIAG_DAT9M" ~ "hyp003_denominator_r8",
-                                      pca_excl_name == "HTMAX" ~ "hyp003_denominator_r3",
-                                      pca_excl_name == "HYPBPINVITE" ~ "hyp003_denominator_r7",
-                                      pca_excl_name == "HYPPCADEC" ~ "hyp003_denominator_r6",
-                                      pca_excl_name == "HYPPCAPU" ~ "hyp003_denominator_r4",
-                                      pca_excl_name == "REG_DAT9" ~ "hyp003_denominator_r9")) |>
-  arrange(denominator_rule)
+df_measures_bp_hyp_split <- df_measures_bp_hyp |>
+  filter(variable == "pct") |>
+  group_split(indicator, group, .keep = TRUE)
 
+df_measures_bp_hyp_split
+
+```
+
+
+```{r}
+
+plot_temp_1 <- plot_qof_indicator(df = df_measures_bp_hyp_split[[1]], 
+                                value = value,
+                                group_category = category,
+                                scale_colour = "viridis")
+
+plot_temp2 <- plot_qof_indicator(df = df_measures_bp_hyp_split[[2]], 
+                                value = value,
+                                group_category = category,
+                                scale_colour = "viridis")
+
+plot_temp3 <- plot_qof_indicator(df = df_measures_bp_hyp_split[[3]], 
+                                value = value,
+                                group_category = category,
+                                scale_colour = "viridis")
+library(patchwork)
+plot_temp3 + plot_temp3 + plot_temp3
+```
+
+```{r}
+# for (plot in seq_along(df_measures_bp_hyp)) {
+
+#   group_name <- df_measures_bp_hyp[[plot]] |> pull(group) |> unique()
+#   indicator_name <- df_measures_bp_hyp[[plot]] |> pull(indicator) |> unique() |> as.character()
+  
+#   if (group_name %in% c("ethnicity", "region")) {
+#       scale_colours <- "brewer_set1"
+#   }
+
+#    if (group_name %in% c("learning_disability", "care_home", "sex")) {
+#       scale_colours <- "brewer_dark2"
+#   }
+
+#    if (group_name %in% c("imd", "population")) {
+#       scale_colours <- "viridis"
+#   }
+  
+#   plot_temp <- plot_qof_indicator(df = df_measures_bp_hyp[[plot]], 
+#                                   value = value,
+#                                   group_category = category,
+#                                   scale_colour = "viridis")
+
+#   ggsave(filename = here("released_outputs", "figures", paste0(indicator_name, "_", group_name, ".png")),
+#          plot = plot_temp, width = 12, height = 6)
+#   }
 ```
