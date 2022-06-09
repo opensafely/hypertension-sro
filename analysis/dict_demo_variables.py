@@ -7,8 +7,7 @@ from codelists import nhse_care_homes_codes, learning_disability_codes
 demographic_variables = dict(
     # GMS registration status
     gms_reg_status=patients.registered_as_of(
-        "last_day_of_month(index_date)",
-        return_expectations={"incidence": 0.9},
+        "last_day_of_month(index_date)", return_expectations={"incidence": 0.9},
     ),
     died=patients.died_from_any_cause(
         on_or_before="last_day_of_month(index_date)",
@@ -61,21 +60,17 @@ demographic_variables = dict(
         }
     ),
     # Index of Multiple Deprivation (IMD)
-    imd=patients.categorised_as(
+    imd_q5=patients.categorised_as(
         {
-            "missing": "DEFAULT",
-            "1": """index_of_multiple_deprivation>=1 AND
-                  index_of_multiple_deprivation < 32844*1/5""",
-            "2": """index_of_multiple_deprivation >= 32844*1/5 AND
-                  index_of_multiple_deprivation < 32844*2/5""",
-            "3": """index_of_multiple_deprivation >= 32844*2/5 AND
-                  index_of_multiple_deprivation < 32844*3/5""",
-            "4": """index_of_multiple_deprivation >= 32844*3/5 AND
-                  index_of_multiple_deprivation < 32844*4/5""",
-            "5": """index_of_multiple_deprivation >= 32844*4/5 """,
+            "Unknown": "DEFAULT",
+            "1": "imd >= 0 AND imd < 32800*1/5",
+            "2": "imd >= 32800*1/5 AND imd < 32800*2/5",
+            "3": "imd >= 32800*2/5 AND imd < 32800*3/5",
+            "4": "imd >= 32800*3/5 AND imd < 32800*4/5",
+            "5": "imd >= 32800*4/5 AND imd <= 32800",
         },
-        index_of_multiple_deprivation=patients.address_as_of(
-            "last_day_of_month(index_date)",
+        imd=patients.address_as_of(
+            "index_date",
             returning="index_of_multiple_deprivation",
             round_to_nearest=100,
         ),
@@ -83,7 +78,7 @@ demographic_variables = dict(
             "rate": "universal",
             "category": {
                 "ratios": {
-                    "missing": 0.05,
+                    "Unknown": 0.05,
                     "1": 0.20,
                     "2": 0.20,
                     "3": 0.20,
@@ -121,15 +116,13 @@ demographic_variables = dict(
         return_expectations={
             "int": {"distribution": "normal", "mean": 25, "stddev": 5},
             "incidence": 0.5,
-            },
-            ),
+        },
+    ),
     learning_disability=patients.with_these_clinical_events(
         learning_disability_codes,
         on_or_before="last_day_of_month(index_date)",
         returning="binary_flag",
-        return_expectations={
-            "incidence": 0.01,
-        },
+        return_expectations={"incidence": 0.01,},
     ),
     care_home=patients.with_these_clinical_events(
         nhse_care_homes_codes,
@@ -137,5 +130,4 @@ demographic_variables = dict(
         on_or_before="last_day_of_month(index_date)",
         return_expectations={"incidence": 0.2},
     ),
-
 )
