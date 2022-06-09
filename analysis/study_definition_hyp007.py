@@ -7,7 +7,7 @@ from config import start_date, end_date, demographic_breakdowns, hyp_exclusions
 from dict_hyp_variables import (
     hyp_ind_variables,
     hyp_reg_variables,
-    hyp007_denominator_rules_variables,
+    hyp007_business_rules_variables,
 )
 from dict_demo_variables import demographic_variables
 
@@ -38,7 +38,7 @@ study = StudyDefinition(
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
     # Include denominator rules variables for hyp007
-    **hyp007_denominator_rules_variables,
+    **hyp007_business_rules_variables,
     # Include hypertension variables for register
     **hyp_reg_variables,
     # DEFINE COMPOSITE DENOMINATOR
