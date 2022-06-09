@@ -15,7 +15,9 @@ demographic_variables = dict(
         return_expectations={"incidence": 0.1},
     ),
     # Age as of end of NHS financial year (March 31st)
-    # NOTE: For QOF rules we need the age at the end of the financial year
+    # NOTE: This project extracts QOF montly. Therefore
+    # only the March estimates is matching the buisiness
+    # rule definition for age.
     age=patients.age_as_of(
         "last_day_of_month(index_date) + 1 day",
         return_expectations={
