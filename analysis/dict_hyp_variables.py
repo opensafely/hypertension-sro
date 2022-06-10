@@ -293,6 +293,9 @@ hyp003_business_rules_variables = dict(
     # measured on the same day.
     hyp003_denominator_r2=patients.satisfying(
         """
+        bp_sys_val_12m > 0 AND
+        bp_dia_val_12m > 0 AND
+
         bp_sys_val_12m <= 140 AND
         bp_dia_val_12m <= 90
         """
@@ -343,16 +346,20 @@ hyp003_business_rules_variables = dict(
     # measured on the same day.
     hyp003_denominator_r7=patients.satisfying(
         """
-        ((NOT hyp003_denominator_r7_crit1_1) AND
+        (hyp003_denominator_r7_crit1_1 AND
         hyp003_denominator_r7_crit1_2)
         OR
-        ((NOT hyp003_denominator_r7_crit2_1) AND
-        (NOT hyp003_denominator_r7_crit2_2))
+        (hyp003_denominator_r7_crit2_1 AND
+        hyp003_denominator_r7_crit2_2)
         """,
         hyp003_denominator_r7_crit1_1=patients.satisfying(
             """
             # Criterion 1.1
-            bp_sys_val_12m > 140 OR bp_dia_val_12m > 90
+            (bp_sys_val_12m < 500 AND
+            bp_dia_val_12m < 500) AND
+            
+            bp_sys_val_12m > 140 OR
+            bp_dia_val_12m > 90
             """
         ),
         hyp003_denominator_r7_crit1_2=patients.satisfying(
@@ -409,15 +416,22 @@ hyp003_business_rules_variables = dict(
         NOT hyp003_denominator_r1
         """
     ),
+    hyp003_denominator_r2_select=patients.satisfying(
+        """
+        hyp003_denominator_r2
+        """
+    ),
     hyp003_denominator_r3_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         ht_max_12m
         """
     ),
     hyp003_denominator_r4_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp_pca_pu_12m
         """
@@ -425,6 +439,7 @@ hyp003_business_rules_variables = dict(
     hyp003_denominator_r5_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp003_denominator_r4 AND
         bp_dec_12m
@@ -433,6 +448,7 @@ hyp003_business_rules_variables = dict(
     hyp003_denominator_r6_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
@@ -442,6 +458,7 @@ hyp003_business_rules_variables = dict(
     hyp003_denominator_r7_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
@@ -452,6 +469,7 @@ hyp003_business_rules_variables = dict(
     hyp003_denominator_r8_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
@@ -463,6 +481,7 @@ hyp003_business_rules_variables = dict(
     hyp003_denominator_r9_excl=patients.satisfying(
         """
         hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
         hyp003_denominator_r3 AND
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
