@@ -2,10 +2,8 @@ from cohortextractor import StudyDefinition, patients, Measure
 
 import json
 import pandas as pd
-
 from config import start_date, end_date, demographic_breakdowns
 from codelists import hyp_codes, hyp_res_codes
-
 from dict_hyp_variables import hyp_reg_variables
 from dict_demo_variables import demographic_variables
 
@@ -31,7 +29,7 @@ study = StudyDefinition(
         gms_reg_status
 
         # Define list size type:
-        # TOTAL for HYP so no further exclusions
+        # TOTAL for hypertension register so no further exclusions
         """,
     ),
     # Include variable dictionaries
@@ -41,7 +39,7 @@ study = StudyDefinition(
     **hyp_reg_variables,
 )
 
-# Create default measures
+# Create measures for total population and breakdown by practice
 measures = [
     Measure(
         id="hyp001_prevalence_population_rate",
@@ -51,7 +49,7 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
-        id="hyp001_prevalence_practice_rate",
+        id="hyp001_prevalence_practice_breakdown_rate",
         numerator="hyp_reg",
         denominator="population",
         group_by=["practice"],
@@ -59,7 +57,7 @@ measures = [
     ),
 ]
 
-# Create blood pressure exclusion measures (3) for total population
+# Create hypertension measures for total population
 for breakdown in demographic_breakdowns:
     m = Measure(
         id=f"hyp001_prevalence_{breakdown}_breakdown_rate",
