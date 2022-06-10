@@ -357,7 +357,7 @@ hyp003_business_rules_variables = dict(
             # Criterion 1.1
             (bp_sys_val_12m < 500 AND
             bp_dia_val_12m < 500) AND
-            
+
             bp_sys_val_12m > 140 OR
             bp_dia_val_12m > 90
             """
@@ -666,7 +666,7 @@ hyp007_business_rules_variables = dict(
         hyp007_denominator_r4 AND
         hyp007_denominator_r5 AND
         hyp007_denominator_r6 AND
-        NOT hyp007_denominator_r7
+        hyp007_denominator_r7
         """
     ),
     hyp007_denominator_r8_excl=patients.satisfying(
@@ -676,7 +676,7 @@ hyp007_business_rules_variables = dict(
         hyp007_denominator_r4 AND
         hyp007_denominator_r5 AND
         hyp007_denominator_r6 AND
-        hyp007_denominator_r7 AND
+        (NOT hyp007_denominator_r7) AND
         hyp_9m
         """
     ),
@@ -687,7 +687,7 @@ hyp007_business_rules_variables = dict(
         hyp007_denominator_r4 AND
         hyp007_denominator_r5 AND
         hyp007_denominator_r6 AND
-        hyp007_denominator_r7 AND
+        (NOT hyp007_denominator_r7) AND
         hyp007_denominator_r8 AND
         NOT reg_9m
         """
