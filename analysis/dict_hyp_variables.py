@@ -475,7 +475,7 @@ hyp003_business_rules_variables = dict(
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
         hyp003_denominator_r6 AND
-        (NOT hyp007_denominator_r7) AND
+        (NOT hyp003_denominator_r7) AND
         hyp_9m
         """
     ),
@@ -487,7 +487,7 @@ hyp003_business_rules_variables = dict(
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
         hyp003_denominator_r6 AND
-        (NOT hyp007_denominator_r7) AND
+        (NOT hyp003_denominator_r7) AND
         hyp003_denominator_r8 AND
         NOT reg_9m
         """
