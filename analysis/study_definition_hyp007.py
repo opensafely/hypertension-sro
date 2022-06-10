@@ -10,6 +10,7 @@ from config import (
     end_date,
     demographic_breakdowns,
     hyp_exclusions,
+    hyp_flowchart,
     hyp_data_check,
 )
 from dict_demo_variables import demographic_variables
@@ -17,6 +18,7 @@ from dict_hyp_variables import (
     hyp_ind_variables,
     hyp_reg_variables,
     hyp007_business_rules_variables,
+    bp_check_values_variables,
 )
 
 study = StudyDefinition(
@@ -37,7 +39,7 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
         (age_band != 'missing') AND
-
+        # Set population to be hypertension register
         hyp_reg
         """,
     ),
@@ -45,51 +47,53 @@ study = StudyDefinition(
     **demographic_variables,
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
-    # Include denominator rules variables for hyp007
-    **hyp007_business_rules_variables,
+    # Add variables to check blood pressure values
+    **bp_check_values_variables,
     # Include hypertension variables for register
     **hyp_reg_variables,
+    # Include denominator rules variables for hyp007
+    **hyp007_business_rules_variables,
     # DEFINE COMPOSITE DENOMINATOR
-    # NOTE: The individual rules (suffix: _r*) are specified as described
-    # in the rules and the action (reject / select) are defined in the
-    # composite denominator below (hyp007_denominator).
+    # NOTE: The individual rules (suffix: _r*) are specified in the
+    # hypertensin variable dictionary
     hyp007_denominator=patients.satisfying(
         """
-        # Specify denominator select / reject logic
+        # Specify denominator select / reject / next logic
 
-        # Actions in business rules: True: Reject; False: Next
+        # R1: Actions in business rules: True: Reject; False: Next
         # NOTE: This rule is coded reversely. True: Select; False: Next
         hyp007_denominator_r1 AND
 
-        # Actions in business rules: True: Select; False: Next
+        # R2: Actions in business rules: True: Select; False: Next
         (hyp007_denominator_r2 OR
 
             (
-               # Actions in business rules: True: Reject; False: Next
+               # R3: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
                hyp007_denominator_r3 AND
 
-               # Actions in business rules: True: Reject; False: Next
+               # R4: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
                hyp007_denominator_r4 AND
 
-               # Actions in business rules: True: Reject; False: Next
+               # R5: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
                hyp007_denominator_r5 AND
 
-               # Actions in business rules: True: Reject; False: Next
+               # R6: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
                hyp007_denominator_r6 AND
 
-               # Actions in business rules: True: Reject; False: Next
+               # R7: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
-               hyp007_denominator_r7 AND
+               (NOT hyp007_denominator_r7) AND
 
-               # Actions in business rules: True: Reject; False: Next
+               # R8: Actions in business rules: True: Reject; False: Next
                # NOTE: This rule is coded reversely. True: Select; False: Next
                hyp007_denominator_r8 AND
 
-               # Actions in business rules: True: Reject; False: Select
+               # R9: Actions in business rules: True: Reject; False: Select
+               # NOTE: This rule is coded reversely. True: Select; False: Reject
                hyp007_denominator_r9
             )
         )
@@ -110,7 +114,7 @@ study = StudyDefinition(
     ),
 )
 
-# Create default measures
+# Create measures for total population and breakdown by practice
 measures = [
     Measure(
         id="hyp007_achievem_population_rate",
@@ -120,14 +124,7 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
-        id="hyp007_incl_denominator_r2_population_rate",
-        numerator="hyp007_denominator_r2",
-        denominator="population",
-        group_by=["population"],
-        small_number_suppression=True,
-    ),
-    Measure(
-        id="hyp007_achievem_practice_rate",
+        id="hyp007_achievem_practice_breakdown_rate",
         numerator="hyp007_numerator",
         denominator="hyp007_denominator",
         group_by=["practice"],
@@ -135,7 +132,7 @@ measures = [
     ),
 ]
 
-# Create blood pressure exclusion measures (3) for total population
+# Create hypertension breakdown measures
 for breakdown in demographic_breakdowns:
     m = Measure(
         id=f"hyp007_achievem_{breakdown}_breakdown_rate",
@@ -146,7 +143,7 @@ for breakdown in demographic_breakdowns:
     )
     measures.append(m)
 
-# Create hypertension exclusion measures (3) for total population
+# Create hypertension exclusion count measures
 for exclusion in hyp_exclusions:
     m = Measure(
         id=f"""hyp007_excl_{exclusion.lstrip("hyp007_")}_population_rate""",
@@ -157,7 +154,18 @@ for exclusion in hyp_exclusions:
     )
     measures.append(m)
 
-# Create hypertension exclusion measures (3) for total population
+# Create hypertension flowchart count measures
+for select_reject in hyp_flowchart:
+    m = Measure(
+        id=f"hyp007_flow_{select_reject}_population_rate",
+        numerator=f"hyp007_{select_reject}",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create data check measures
 for data_check in hyp_data_check:
     m = Measure(
         id=f"hyp007_check_{data_check}_population_rate",
