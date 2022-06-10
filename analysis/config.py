@@ -31,10 +31,23 @@ hyp_exclusions = [
     "denominator_r9",
 ]
 
+hyp_flowchart = [
+    "denominator_r1_reject",
+    "denominator_r2_select",
+    "denominator_r3_reject",
+    "denominator_r4_reject",
+    "denominator_r5_reject",
+    "denominator_r6_reject",
+    "denominator_r7_reject",
+    "denominator_r8_reject",
+    "denominator_r9_reject",
+]
+
 # Define list of variables for checking data quality
 hyp_data_check = [
-    "valid_bp_sys_dia_values",
-    "invalid_bp_sys_dia_values",
-    "missing_bp_sys_dia_values",
-    "available_bp_sys_dia_values",
+    "bp_sys_dia_min_cutoff",
+    "bp_sys_dia_max_cutoff",
+    "bp_sys_dia_date_missing",
+    "bp_sys_dia_date_available",
+    "bp_sys_dia_date_equal",
 ]
