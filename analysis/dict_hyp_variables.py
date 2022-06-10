@@ -418,6 +418,7 @@ hyp003_business_rules_variables = dict(
     ),
     hyp003_denominator_r2_select=patients.satisfying(
         """
+        hyp003_denominator_r1 AND
         hyp003_denominator_r2
         """
     ),
@@ -474,7 +475,7 @@ hyp003_business_rules_variables = dict(
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
         hyp003_denominator_r6 AND
-        hyp003_denominator_r7 AND
+        (NOT hyp007_denominator_r7) AND
         hyp_9m
         """
     ),
@@ -486,7 +487,7 @@ hyp003_business_rules_variables = dict(
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
         hyp003_denominator_r6 AND
-        hyp003_denominator_r7 AND
+        (NOT hyp007_denominator_r7) AND
         hyp003_denominator_r8 AND
         NOT reg_9m
         """
@@ -513,6 +514,9 @@ hyp007_business_rules_variables = dict(
     # measured on the same day.
     hyp007_denominator_r2=patients.satisfying(
         """
+        # Require valid blood pressure values
+        valid_bp_sys_dia_values AND
+
         bp_sys_val_12m <= 150 AND
         bp_dia_val_12m <= 90
         """
@@ -571,6 +575,9 @@ hyp007_business_rules_variables = dict(
         """,
         hyp007_denominator_r7_crit1_1=patients.satisfying(
             """
+            # Require valid blood pressure values
+            valid_bp_sys_dia_values AND
+
             # Criterion 1.1
             bp_sys_val_12m > 150 OR bp_dia_val_12m > 90
             """
@@ -629,6 +636,12 @@ hyp007_business_rules_variables = dict(
         NOT hyp007_denominator_r1
         """
     ),
+    hyp007_denominator_r2_select=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r2
+        """
+    ),
     hyp007_denominator_r3_excl=patients.satisfying(
         """
         hyp007_denominator_r1 AND
@@ -676,7 +689,7 @@ hyp007_business_rules_variables = dict(
         hyp007_denominator_r4 AND
         hyp007_denominator_r5 AND
         hyp007_denominator_r6 AND
-        (NOT hyp007_denominator_r7) AND
+        hyp007_denominator_r7 AND
         hyp_9m
         """
     ),
@@ -687,7 +700,7 @@ hyp007_business_rules_variables = dict(
         hyp007_denominator_r4 AND
         hyp007_denominator_r5 AND
         hyp007_denominator_r6 AND
-        (NOT hyp007_denominator_r7) AND
+        hyp007_denominator_r7 AND
         hyp007_denominator_r8 AND
         NOT reg_9m
         """
