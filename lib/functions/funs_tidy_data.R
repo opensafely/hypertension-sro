@@ -32,8 +32,14 @@ tidy_category_names <- function(df,
   
   if (!is.null(population)) {
     df <- df %>% 
-      mutate({{ category }} := case_when({{ group }} == {{ population }} ~ 
-                                           as.character("Total"),
+      mutate({{ category }} := case_when({{ group }} == {{ population }} & indicator == "bp002" ~
+                                         as.character("Total (Age >= 45)"),
+                                         {{ group }} == {{ population }} & indicator == "hyp001" ~
+                                         as.character("Total"),
+                                         {{ group }} == {{ population }} & indicator == "hyp003" ~
+                                         as.character("Total (Age <= 79)"),
+                                         {{ group }} == {{ population }} & indicator == "hyp007" ~
+                                         as.character("Total (Age >= 80)"),
                                          TRUE ~ {{ category }}))
   }
   
@@ -71,6 +77,7 @@ tidy_category_names <- function(df,
                                                                  labels = c("Yes",
                                                                             "No"))),
                                            TRUE ~ {{ category }}))
+
     }
     
     if (!is.null(learning_disability)) {
@@ -82,7 +89,7 @@ tidy_category_names <- function(df,
                                                                             "No"))),
                                            TRUE ~ {{ category }}))
     }
-    
+
   }
   
   

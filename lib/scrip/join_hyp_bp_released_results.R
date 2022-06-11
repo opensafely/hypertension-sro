@@ -1,8 +1,9 @@
 library(readr)
 library(dplyr)
 library(here)
-library(tindicatoryr)
+library(tidyr)
 library(stringr)
+source(here::here("lib", "functions", "funs_tidy_data.R"))
 
 # Deciles tables ----
 ## Read csv
@@ -27,39 +28,43 @@ df_measures_hyp001 <- read_csv(here("released_outputs/measures/measures_hyp001.c
 df_measures_hyp003 <- read_csv(here("released_outputs/measures/measures_hyp003.csv"))
 df_measures_hyp007 <- read_csv(here("released_outputs/measures/measures_hyp007.csv"))
 
+
+df_measures_bp002 <- df_measures_bp002 |>
+  mutate(category = case_when(group == "learning_disability" | group == "care_home" ~ as.character(as.logical(as.integer(category))),
+                              TRUE ~ category))
 # Read all measures files and pivot into indicatorentical structure
 df_measures_bp002_long <- df_measures_bp002 |>
-  pivot_longer(cols = c(bp002_numerator, bp002_denominator, population),
-               values_to = "count", names_to = "variable") |>
+  rename(pct = value) |>
+  pivot_longer(cols = c(bp002_numerator, bp002_denominator, population, pct),
+               values_to = "value", names_to = "variable") |>
   mutate(indicator = "bp002",
          variable = str_remove(variable, "bp002_")) |>
-  rename(pct = value) |>
-  relocate(indicator, date, variable, group, category, count)
+  relocate(indicator, date, variable, group, category, value)
 
 df_measures_hyp001_long <- df_measures_hyp001 |>
-  pivot_longer(cols = c(hyp_reg, population),
-               values_to = "count", names_to = "variable") |>
+  rename(pct = value) |>
+  pivot_longer(cols = c(hyp_reg, population, pct),
+               values_to = "value", names_to = "variable") |>
   mutate(indicator = "hyp001",
          variable = case_when(variable == "hyp_reg" ~ "register",
                               TRUE ~ variable)) |>
-  rename(pct = value) |>
-  relocate(indicator, date, variable, group, category, count)
+  relocate(indicator, date, variable, group, category, value)
 
 df_measures_hyp003_long <- df_measures_hyp003 |>
-  pivot_longer(cols = c(hyp003_numerator, hyp003_denominator, population),
-               values_to = "count", names_to = "variable") |>
+  rename(pct = value) |>
+  pivot_longer(cols = c(hyp003_numerator, hyp003_denominator, population, pct),
+               values_to = "value", names_to = "variable") |>
   mutate(indicator = "hyp003",
          variable = str_remove(variable, "hyp003_")) |>
-  rename(pct = value) |>
-  relocate(indicator, date, variable, group, category, count)
+  relocate(indicator, date, variable, group, category, value)
 
 df_measures_hyp007_long <- df_measures_hyp007 |>
-  pivot_longer(cols = c(hyp007_numerator, hyp007_denominator, population),
-               values_to = "count", names_to = "variable") |>
+  rename(pct = value) |>
+  pivot_longer(cols = c(hyp007_numerator, hyp007_denominator, population, pct),
+               values_to = "value", names_to = "variable") |>
   mutate(indicator = "hyp007",
          variable = str_remove(variable, "hyp007_")) |>
-  rename(pct = value) |>
-  relocate(indicator, date, variable, group, category, count)
+  relocate(indicator, date, variable, group, category, value)
 
 # Join measures files
 df_measures_bp_hyp <- df_measures_bp002_long |>
@@ -67,5 +72,15 @@ df_measures_bp_hyp <- df_measures_bp002_long |>
            df_measures_hyp003_long,
            df_measures_hyp007_long)
 
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  tidy_category_names(group = group,
+                      category = category,
+                      learning_disability = "learning_disability",
+                      imd = "imd",
+                      sex = "sex",
+                      care_home = "care_home",
+                      population = "population",
+                      long_labels = TRUE,
+                      imd_explicit_na = FALSE)
 # Write measures files
 write_csv(df_measures_bp_hyp, here("released_outputs/measures/df_measures_bp_hyp.csv"))

@@ -112,31 +112,31 @@ actions:
     needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/indicators/joined/deciles_chart_*_*_practice_rate.png
-        deciles_tables: output/indicators/joined/deciles_table_*_*_practice_rate.csv
+        deciles_charts: output/indicators/joined/deciles_chart_*_*_practice_breakdown_rate.png
+        deciles_tables: output/indicators/joined/deciles_table_*_*_practice_breakdown_rate.csv
   
-  check_data:
-    run: r:latest analysis/check_bp_recording_values_dates.R
-    needs: [join_ethnicity]
-    outputs:
-      moderately_sensitive:
-        table_count_csv: output/indicators/joined/data_check/tab_hyp*_*_2020_10_01.csv
-        skim_txt: output/indicators/joined/data_check/skim_df_hyp*_2020_10_01.txt
-        table_date_diff_csv: output/indicators/joined/data_check/tab_hyp*_num_bp_date_diff_2020_10_01.csv
-        plot_date_diff: output/indicators/joined/data_check/plot_hyp*_num_bp_date_diff_2020_10_01.png
+  # check_data:
+  #   run: r:latest analysis/check_bp_recording_values_dates.R
+  #   needs: [join_ethnicity]
+  #   outputs:
+  #     moderately_sensitive:
+  #       table_count_csv: output/indicators/joined/data_check/tab_hyp*_*_2020_03_01.csv
+  #       skim_txt: output/indicators/joined/data_check/skim_df_hyp*_2020_03_01.txt
+  #       table_date_diff_csv: output/indicators/joined/data_check/tab_hyp*_num_bp_date_diff_2020_03_01.csv
+  #       plot_date_diff: output/indicators/joined/data_check/plot_hyp*_num_bp_date_diff_2020_03_01.png
 
-  # Join all measure files for each indicator
-  join_measures:
-    run: r:latest analysis/join_measures.R
-    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
-    outputs:
-      moderately_sensitive:
-        measure_csv: output/indicators/joined/measures/measures_hyp*.csv
+  # # Join all measure files for each indicator
+  # join_measures:
+  #   run: r:latest analysis/join_measures.R
+  #   needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
+  #   outputs:
+  #     moderately_sensitive:
+  #       measure_csv: output/indicators/joined/measures/measures_hyp*.csv
 
-  # Join all deciles (by practice) files for each indicator
-  join_deciles:
-    run: r:latest analysis/join_deciles.R
-    needs: [generate_deciles]
-    outputs:
-      moderately_sensitive:
-        measure_csv: output/indicators/joined/deciles/deciles_hyp_practice.csv
+  # # Join all deciles (by practice) files for each indicator
+  # join_deciles:
+  #   run: r:latest analysis/join_deciles.R
+  #   needs: [generate_deciles]
+  #   outputs:
+  #     moderately_sensitive:
+  #       measure_csv: output/indicators/joined/deciles/deciles_hyp_practice.csv

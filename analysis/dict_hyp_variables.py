@@ -1,6 +1,5 @@
 # Define common variables needed across indicators here
 # See https://docs.opensafely.org/study-def-tricks/
-
 import pandas as pd
 from config import start_date, end_date
 from cohortextractor import patients
@@ -233,19 +232,571 @@ hyp_ind_variables = dict(
         end_date="last_day_of_month(index_date)",
         return_expectations={"incidence": 0.1},
     ),
+)
+
+hyp003_business_rules_variables = dict(
+    # Reject patients from the specified population who are aged greater
+    # than 79 years old.
+    # NOTE: This is a select rule, so "Select patients from the
+    # specified population who are aged 79 years or less."
+    hyp003_denominator_r1=patients.satisfying(
+        """
+        age <= 79
+        """
+    ),
+    # Select patients passed to this rule who meet all of the criteria
+    # below:
+    # - Systolic blood pressure value was 140 mmHg or less.
+    # - Diastolic blood pressure value was 90 mmHg or less.
+    # Most recent blood pressure recording was in the 12 months leading up
+    # to and including the payment period end date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp003_denominator_r2=patients.satisfying(
+        """
+        # Set min cutoff for valid bp values
+        bp_sys_dia_min_cutoff AND
+
+        bp_sys_val_12m <= 140 AND
+        bp_dia_val_12m <= 90
+        """
+    ),
+    # Reject patients passed to this rule who are receiving maximal blood
+    # pressure therapy in the 12 months leading up to and including the
+    # payment period end date.
+    hyp003_denominator_r3=patients.satisfying(
+        """
+        NOT ht_max_12m
+        """
+    ),
+    # Reject patients passed to this rule for whom hypertension quality
+    # indicator care was unsuitable in the 12 months leading up to and
+    # including the payment period end date.
+    hyp003_denominator_r4=patients.satisfying(
+        """
+        NOT hyp_pca_pu_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to have their
+    # blood pressure recorded in the 12 months leading up to and including
+    # the payment period end date.
+    hyp003_denominator_r5=patients.satisfying(
+        """
+        NOT bp_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to receive
+    # hypertension quality indicator care in the 12 months leading up to
+    # and including the payment period end date.
+    hyp003_denominator_r6=patients.satisfying(
+        """
+        NOT hyp_pca_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who meet either of the criteria
+    # below:
+    # - Latest blood pressure reading in the 12 months leading up to
+    # and including the payment period end date was (crit1_1) above target
+    # levels (systolic value of over 140 mmHg and/or a diastolic value of over
+    # 90 mmHg), and (crit1_2) was followed by two invitations for hypertension
+    # monitoring.
+    # - (crit2_1) Received two invitations for hypertension monitoring and
+    # (crit2_2) had no blood pressure recordings during the 12 months leading
+    # up to and including the achievement date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp003_denominator_r7=patients.satisfying(
+        """
+        (hyp003_denominator_r7_crit1_1 AND
+        hyp003_denominator_r7_crit1_2)
+        OR
+        (hyp003_denominator_r7_crit2_1 AND
+        hyp003_denominator_r7_crit2_2)
+        """,
+        hyp003_denominator_r7_crit1_1=patients.satisfying(
+            """
+            # Set max cutoff for valid bp values
+            bp_sys_dia_max_cutoff AND
+
+            # Criterion 1.1
+            bp_sys_val_12m > 140 OR
+            bp_dia_val_12m > 90
+            """
+        ),
+        hyp003_denominator_r7_crit1_2=patients.satisfying(
+            """
+            # Criterion 1.2
+            (hyp_invite_1 AND hyp_invite_2) AND
+            (hyp_invite_1_date > bp_sys_val_12m_date_measured) AND
+            (hyp_invite_1_date > bp_dia_val_12m_date_measured)
+            """
+        ),
+        hyp003_denominator_r7_crit2_1=patients.satisfying(
+            """
+            # Criterion 2.1
+            hyp_invite_1 AND hyp_invite_2
+            """
+        ),
+        hyp003_denominator_r7_crit2_2=patients.satisfying(
+            """
+            # Criterion 2.2
+            (NOT bp_sys_val_12m_date_measured) AND
+            (NOT bp_dia_val_12m_date_measured)
+            """
+        ),
+    ),
+    # Reject patients passed to this rule whose earliest hypertension
+    # diagnosis was in the 9 months leading up to and including the
+    # payment period end date.
+    hyp003_denominator_r8=patients.satisfying(
+        """
+        NOT hyp_9m
+        """
+    ),
+    # Reject patients passed to this rule who were recently registered at
+    # the practice (patient registered in the 9 month period leading up to
+    # and including the payment period end date).
+    # NOTE: This variable selects patients that were registered with one
+    # practice in the last 9 months. Therefore, this variable (reg_9m)
+    # specifies the patients that need to be selected for in the
+    # denominator.
+    hyp003_denominator_r9=patients.satisfying(
+        """
+        reg_9m
+        """
+    ),
+    # Add flowchart counts for each select / reject rule
+    # NOTE: Some of these variables are coded as "select" variables
+    # and not "reject" as specified in the business rules:
+    # - hyp003_denominator_r1 (special case, this is a select variable
+    # but needs to be reversed for counting exclusions)
+    # - hyp003_denominator_r7 (specified as reject in business rules)
+    # - reg_9m (specified as reject in business rules)
+    hyp003_denominator_r1_reject=patients.satisfying(
+        """
+        NOT hyp003_denominator_r1
+        """
+    ),
+    hyp003_denominator_r2_select=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        hyp003_denominator_r2
+        """
+    ),
+    hyp003_denominator_r3_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        ht_max_12m
+        """
+    ),
+    hyp003_denominator_r4_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp003_denominator_r5_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        bp_dec_12m
+        """
+    ),
+    hyp003_denominator_r6_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp003_denominator_r7_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
+        hyp003_denominator_r7
+        """
+    ),
+    hyp003_denominator_r8_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
+        (NOT hyp003_denominator_r7) AND
+        hyp_9m
+        """
+    ),
+    hyp003_denominator_r9_reject=patients.satisfying(
+        """
+        hyp003_denominator_r1 AND
+        (NOT hyp003_denominator_r2) AND
+        hyp003_denominator_r3 AND
+        hyp003_denominator_r4 AND
+        hyp003_denominator_r5 AND
+        hyp003_denominator_r6 AND
+        (NOT hyp003_denominator_r7) AND
+        hyp003_denominator_r8 AND
+        NOT reg_9m
+        """
+    ),
+    # Add total exclusions for each reject rule
+    hyp003_denominator_r1_excl=patients.satisfying(
+        """
+        NOT hyp003_denominator_r1
+        """
+    ),
+    hyp003_denominator_r3_excl=patients.satisfying(
+        """
+        ht_max_12m
+        """
+    ),
+    hyp003_denominator_r4_excl=patients.satisfying(
+        """
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp003_denominator_r5_excl=patients.satisfying(
+        """
+        bp_dec_12m
+        """
+    ),
+    hyp003_denominator_r6_excl=patients.satisfying(
+        """
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp003_denominator_r7_excl=patients.satisfying(
+        """
+        hyp003_denominator_r7
+        """
+    ),
+    hyp003_denominator_r8_excl=patients.satisfying(
+        """
+        hyp_9m
+        """
+    ),
+    hyp003_denominator_r9_excl=patients.satisfying(
+        """
+        NOT reg_9m
+        """
+    ),
+)
+
+# Rules for indicator HYP007
+hyp007_business_rules_variables = dict(
+    # Reject patients from the specified population who are aged less
+    # than 80 years old.
+    # NOTE: This rule is defined reversely as a select variable
+    hyp007_denominator_r1=patients.satisfying(
+        """
+        age >= 80
+        """
+    ),
+    # Select patients passed to this rule who meet all of the criteria
+    # below:
+    # - Systolic blood pressure value was 150 mmHg or less.
+    # - Diastolic blood pressure value was 90 mmHg or less.
+    # Most recent blood pressure recording was in the 12 months leading up
+    # to and including the payment period end date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp007_denominator_r2=patients.satisfying(
+        """
+        # Set min cutoff for valid bp values
+        bp_sys_dia_min_cutoff AND
+
+        bp_sys_val_12m <= 150 AND
+        bp_dia_val_12m <= 90
+        """
+    ),
+    # Reject patients passed to this rule who are receiving maximal blood
+    # pressure therapy in the 12 months leading up to and including the
+    # payment period end date.
+    hyp007_denominator_r3=patients.satisfying(
+        """
+        NOT ht_max_12m
+        """
+    ),
+    # Reject patients passed to this rule for whom hypertension quality
+    # indicator care was unsuitable in the 12 months leading up to and
+    # including the payment period end date.
+    hyp007_denominator_r4=patients.satisfying(
+        """
+        NOT hyp_pca_pu_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to have their
+    # blood pressure recorded in the 12 months leading up to and including
+    # the payment period end date.
+    hyp007_denominator_r5=patients.satisfying(
+        """
+        NOT bp_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who chose not to receive
+    # hypertension quality indicator care in the 12 months leading up to
+    # and including the payment period end date.
+    hyp007_denominator_r6=patients.satisfying(
+        """
+        NOT hyp_pca_dec_12m
+        """
+    ),
+    # Reject patients passed to this rule who meet either of the criteria
+    # below:
+    # - Latest blood pressure reading in the 12 months leading up to
+    # and including the payment period end date was above target levels
+    # (systolic value of over 150 mmHg and/or a diastolic value of over 90
+    # mmHg), and was followed by two invitations for hypertension
+    # monitoring.
+    # - Received two invitations for hypertension monitoring and
+    # had no blood pressure recordings during the 12 months leading up to
+    # and including the achievement date.
+    # NOTE: This implementation assumes that both values (sys, dia) were
+    # measured on the same day.
+    hyp007_denominator_r7=patients.satisfying(
+        """
+        (hyp007_denominator_r7_crit1_1 AND
+        hyp007_denominator_r7_crit1_2)
+        OR
+        (hyp007_denominator_r7_crit2_1 AND
+        hyp007_denominator_r7_crit2_2)
+        """,
+        hyp007_denominator_r7_crit1_1=patients.satisfying(
+            """
+            # Set max cutoff for valid bp values
+            bp_sys_dia_max_cutoff AND
+
+            # Criterion 1.1
+            bp_sys_val_12m > 150 OR
+            bp_dia_val_12m > 90
+            """
+        ),
+        hyp007_denominator_r7_crit1_2=patients.satisfying(
+            """
+            # Criterion 1.2
+            (hyp_invite_1 AND hyp_invite_2) AND
+            (hyp_invite_1_date > bp_sys_val_12m_date_measured) AND
+            (hyp_invite_1_date > bp_dia_val_12m_date_measured)
+            """
+        ),
+        hyp007_denominator_r7_crit2_1=patients.satisfying(
+            """
+            # Criterion 2.1
+            hyp_invite_1 AND hyp_invite_2
+            """
+        ),
+        hyp007_denominator_r7_crit2_2=patients.satisfying(
+            """
+            # Criterion 2.2
+            (NOT bp_sys_val_12m_date_measured) AND
+            (NOT bp_dia_val_12m_date_measured)
+            """
+        ),
+    ),
+    # Reject patients passed to this rule whose earliest hypertension
+    # diagnosis was in the 9 months leading up to and including the
+    # payment period end date.
+    hyp007_denominator_r8=patients.satisfying(
+        """
+        NOT hyp_9m
+        """
+    ),
+    # Reject patients passed to this rule who were recently registered at
+    # the practice (registered in the 9 month period leading up to
+    # and including the payment period end date).
+    # NOTE: This variable selects patients that were registered with one
+    # practice in the last 9 months. Therefore, this variable (reg_9m)
+    # specifies the patients that need to be selected for in the
+    # denominator.
+    hyp007_denominator_r9=patients.satisfying(
+        """
+        reg_9m
+        """
+    ),
+    # Add exclusion variables to be used in measures
+    # NOTE: Some of these variables are coded as "select" variables
+    # and not "reject" as specified in the business rules:
+    # - hyp007_denominator_r1 (special case, this is a select variable
+    # but needs to be reversed for counting exclusions)
+    # - hyp007_denominator_r7 (specified as reject in business rules)
+    # - reg_9m (specified as reject in business rules)
+    hyp007_denominator_r1_reject=patients.satisfying(
+        """
+        NOT hyp007_denominator_r1
+        """
+    ),
+    hyp007_denominator_r2_select=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        hyp007_denominator_r2
+        """
+    ),
+    hyp007_denominator_r3_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        ht_max_12m
+        """
+    ),
+    hyp007_denominator_r4_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp007_denominator_r5_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        bp_dec_12m
+        """
+    ),
+    hyp007_denominator_r6_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp007_denominator_r7_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        hyp007_denominator_r7
+        """
+    ),
+    hyp007_denominator_r8_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        (NOT hyp007_denominator_r7) AND
+        hyp_9m
+        """
+    ),
+    hyp007_denominator_r9_reject=patients.satisfying(
+        """
+        hyp007_denominator_r1 AND
+        (NOT hyp007_denominator_r2) AND
+        hyp007_denominator_r3 AND
+        hyp007_denominator_r4 AND
+        hyp007_denominator_r5 AND
+        hyp007_denominator_r6 AND
+        (NOT hyp007_denominator_r7) AND
+        hyp007_denominator_r8 AND
+        NOT reg_9m
+        """
+    ),
+    # Add total exclusions for each reject rule
+    hyp007_denominator_r1_excl=patients.satisfying(
+        """
+        NOT hyp007_denominator_r1
+        """
+    ),
+    hyp007_denominator_r3_excl=patients.satisfying(
+        """
+        ht_max_12m
+        """
+    ),
+    hyp007_denominator_r4_excl=patients.satisfying(
+        """
+        hyp_pca_pu_12m
+        """
+    ),
+    hyp007_denominator_r5_excl=patients.satisfying(
+        """
+        bp_dec_12m
+        """
+    ),
+    hyp007_denominator_r6_excl=patients.satisfying(
+        """
+        hyp_pca_dec_12m
+        """
+    ),
+    hyp007_denominator_r7_excl=patients.satisfying(
+        """
+        hyp007_denominator_r7
+        """
+    ),
+    hyp007_denominator_r8_excl=patients.satisfying(
+        """
+        hyp_9m
+        """
+    ),
+    hyp007_denominator_r9_excl=patients.satisfying(
+        """
+        NOT reg_9m
+        """
+    ),
+)
+
+
+bp_check_values_variables = dict(
     # Define variable to check for blood pressure values within a
     # prespecified range.
     # NOTE: This is not part of the QOF business rules but a first step at
     # tidying the underlying data.
     # TODO: This approach and the cutoff values both need to be reviewed.
-    valid_bp_sys_dia_values=patients.satisfying(
+    bp_sys_dia_min_cutoff=patients.satisfying(
         """
         # Set min cutoff values
         (bp_sys_val_12m > 0) AND
-        (bp_dia_val_12m > 0) AND
+        (bp_dia_val_12m > 0)
+        """
+    ),
+    bp_sys_dia_max_cutoff=patients.satisfying(
+        """
         # Set max cutoff values
         (bp_sys_val_12m < 500) AND
         (bp_dia_val_12m < 500)
+        """
+    ),
+    bp_sys_dia_date_missing=patients.satisfying(
+        """
+        # No measurement dates for bp values
+        (NOT bp_sys_val_12m_date_measured) AND
+        (NOT bp_dia_val_12m_date_measured)
+        """
+    ),
+    bp_sys_dia_date_available=patients.satisfying(
+        """
+        # Available measurement dates for bp values
+        bp_sys_val_12m_date_measured AND
+        bp_dia_val_12m_date_measured
+        """
+    ),
+    bp_sys_dia_date_equal=patients.satisfying(
+        """
+        # Dates for bp sys value is equal bp dia value
+        bp_sys_val_12m_date_measured = bp_dia_val_12m_date_measured
         """
     ),
 )

@@ -1,11 +1,25 @@
-from cohortextractor import StudyDefinition, patients, Measure
-
+from cohortextractor import (
+    StudyDefinition,
+    patients,
+    Measure,
+)
 import json
 import pandas as pd
-
-from config import start_date, end_date, demographic_breakdowns
-from dict_hyp_variables import hyp_ind_variables, hyp_reg_variables
+from config import (
+    start_date,
+    end_date,
+    demographic_breakdowns,
+    hyp_exclusions,
+    hyp_data_check,
+    hyp_flowchart,
+)
 from dict_demo_variables import demographic_variables
+from dict_hyp_variables import (
+    hyp_ind_variables,
+    hyp_reg_variables,
+    hyp003_business_rules_variables,
+    bp_check_values_variables,
+)
 
 study = StudyDefinition(
     # Set index date to start date
@@ -25,7 +39,7 @@ study = StudyDefinition(
         (NOT died) AND
         (sex = 'F' OR sex = 'M') AND
         (age_band != 'missing') AND
-
+        # Set population to be hypertension register
         hyp_reg
         """,
     ),
@@ -33,177 +47,56 @@ study = StudyDefinition(
     **demographic_variables,
     # Include hypertension variables for denominator and numerator rules
     **hyp_ind_variables,
+    # Add variables to check blood pressure values
+    **bp_check_values_variables,
     # Include hypertension variables for register
     **hyp_reg_variables,
+    # Include denominator rules variables for hyp007
+    **hyp003_business_rules_variables,
     # Define composite denominator
-    # NOTE: The individual rules (suffix: _r*) are specified as described
-    # in the rules and the actions (reject / select) are defined in the
-    # composite denominator below (hyp003_denominator).
+    # NOTE: The individual rules (suffix: _r*) are specified in the
+    # hypertensin variable dictionary
     hyp003_denominator=patients.satisfying(
         """
-        # Require valid blood pressure values
-        valid_bp_sys_dia_values AND
-
         # Specify denominator select / reject logic:
 
-        # Actions in business rules: True: Select; False: Reject
+        # R1: Actions in business rules: True: Reject; False: Next
+        # NOTE: This rule is coded reversely. True: Select; False: Next
         hyp003_denominator_r1 AND
 
-        # Actions in business rules: True: Select; False: Next
+        # R2: Actions in business rules: True: Select; False: Next
         (hyp003_denominator_r2 OR
 
             (
-                (
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r3 OR
+                # R3: Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r3 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r4 OR
+                # R4: Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r4 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r5 OR
+                # R5: Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r5 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r6 OR
+                # R6: Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r6 AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r7 OR
+                # R7: Actions in business rules: True: Reject; False: Next
+                (NOT hyp003_denominator_r7) AND
 
-                    # Actions in business rules: True: Reject; False: Next
-                    hyp003_denominator_r8
-                ) AND
+                # R8: Actions in business rules: True: Reject; False: Next
+                # NOTE: This rule is coded reversely. True: Select; False: Next
+                hyp003_denominator_r8 AND
 
-                # Actions in business rules: True: Reject; False: Select
-                # NOTE: This rule is coded reversely so that:
-                # - True: Select
-                # - False: Reject
+                # R9: Actions in business rules: True: Reject; False: Select
+                # NOTE: This rule is coded reversely. True: Select; False: Reject
                 hyp003_denominator_r9
             )
         )
         """,
-        # Reject patients from the specified population who are aged greater
-        # than 79 years old.
-        hyp003_denominator_r1=patients.satisfying(
-            """
-            age <= 79
-            """
-        ),
-        # Select patients passed to this rule who meet all of the criteria
-        # below:
-        # - Systolic blood pressure value was 140 mmHg or less.
-        # - Diastolic blood pressure value was 90 mmHg or less.
-        # Most recent blood pressure recording was in the 12 months leading up
-        # to and including the payment period end date.
-        # NOTE: This implementation assumes that both values (sys, dia) were
-        # measured on the same day.
-        hyp003_denominator_r2=patients.satisfying(
-            """
-            bp_sys_val_12m <= 140 AND
-            bp_dia_val_12m <= 90
-            """
-        ),
-        # Reject patients passed to this rule who are receiving maximal blood
-        # pressure therapy in the 12 months leading up to and including the
-        # payment period end date.
-        hyp003_denominator_r3=patients.satisfying(
-            """
-            NOT ht_max_12m
-            """
-        ),
-        # Reject patients passed to this rule for whom hypertension quality
-        # indicator care was unsuitable in the 12 months leading up to and
-        # including the payment period end date.
-        hyp003_denominator_r4=patients.satisfying(
-            """
-            NOT hyp_pca_pu_12m
-            """
-        ),
-        # Reject patients passed to this rule who chose not to have their
-        # blood pressure recorded in the 12 months leading up to and including
-        # the payment period end date.
-        hyp003_denominator_r5=patients.satisfying(
-            """
-            NOT bp_dec_12m
-            """
-        ),
-        # Reject patients passed to this rule who chose not to receive
-        # hypertension quality indicator care in the 12 months leading up to
-        # and including the payment period end date.
-        hyp003_denominator_r6=patients.satisfying(
-            """
-            NOT hyp_pca_dec_12m
-            """
-        ),
-        # Reject patients passed to this rule who meet either of the criteria
-        # below:
-        # - Latest blood pressure reading in the 12 months leading up to
-        # and including the payment period end date was above target levels
-        # (systolic value of over 140 mmHg and/or a diastolic value of over 90
-        # mmHg), and was followed by two invitations for hypertension
-        # monitoring.
-        # - Received two invitations for hypertension monitoring and
-        # had no blood pressure recordings during the 12 months leading up to
-        # and including the achievement date.
-        # NOTE: This implementation assumes that both values (sys, dia) were
-        # measured on the same day.
-        hyp003_denominator_r7=patients.satisfying(
-            """
-            ((NOT hyp003_denominator_r7_crit1_1) AND
-            hyp003_denominator_r7_crit1_2)
-
-            OR
-
-            ((NOT hyp003_denominator_r7_crit2_1) AND
-            (NOT hyp003_denominator_r7_crit2_2))
-            """,
-            hyp003_denominator_r7_crit1_1=patients.satisfying(
-                """
-                # Criterion 1.1
-                bp_sys_val_12m > 140 OR bp_dia_val_12m > 90
-                """
-            ),
-            hyp003_denominator_r7_crit1_2=patients.satisfying(
-                """
-                # Criterion 1.2
-                (hyp_invite_1 AND hyp_invite_2) AND
-                (hyp_invite_1_date > bp_sys_val_12m_date_measured) AND
-                (hyp_invite_1_date > bp_dia_val_12m_date_measured)
-                """
-            ),
-            hyp003_denominator_r7_crit2_1=patients.satisfying(
-                """
-                # Criterion 2.1
-                hyp_invite_1 AND hyp_invite_2
-                """
-            ),
-            hyp003_denominator_r7_crit2_2=patients.satisfying(
-                """
-                # Criterion 2.2
-                (NOT bp_sys_val_12m_date_measured) AND
-                (NOT bp_dia_val_12m_date_measured)
-                """
-            ),
-        ),
-        # Reject patients passed to this rule whose earliest hypertension
-        # diagnosis was in the 9 months leading up to and including the
-        # payment period end date.
-        hyp003_denominator_r8=patients.satisfying(
-            """
-            NOT hyp_9m
-            """
-        ),
-        # Reject patients passed to this rule who were recently registered at
-        # the practice (patient registered in the 9 month period leading up to
-        # and including the payment period end date).
-        # NOTE: This variable selects patients that were registered with one
-        # practice in the last 9 months. Therefore, this variable (reg_9m)
-        # specifies the patients that need to be selected for in the
-        # denominator.
-        hyp003_denominator_r9=patients.satisfying(
-            """
-            reg_9m
-            """
-        ),
     ),
     # Define composite numerator
     # Select patients from the denominator who meet all of the criteria below:
@@ -220,7 +113,7 @@ study = StudyDefinition(
     ),
 )
 
-# Create default measures
+# Create measures for total population and breakdown by practice
 measures = [
     Measure(
         id="hyp003_achievem_population_rate",
@@ -230,7 +123,7 @@ measures = [
         small_number_suppression=True,
     ),
     Measure(
-        id="hyp003_achievem_practice_rate",
+        id="hyp003_achievem_practice_breakdown_rate",
         numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=["practice"],
@@ -245,6 +138,39 @@ for breakdown in demographic_breakdowns:
         numerator="hyp003_numerator",
         denominator="hyp003_denominator",
         group_by=[breakdown],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create hypertension exclusion measures (3) for total population
+for exclusion in hyp_exclusions:
+    m = Measure(
+        id=f"""hyp003_excl_{exclusion.lstrip("hyp003_")}_population_rate""",
+        numerator=f"hyp003_{exclusion}_excl",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create hypertension flowchart count measures
+for select_reject in hyp_flowchart:
+    m = Measure(
+        id=f"hyp003_flow_{select_reject}_population_rate",
+        numerator=f"hyp003_{select_reject}",
+        denominator="population",
+        group_by=["population"],
+        small_number_suppression=True,
+    )
+    measures.append(m)
+
+# Create data check measures
+for data_check in hyp_data_check:
+    m = Measure(
+        id=f"hyp003_check_{data_check}_population_rate",
+        numerator=data_check,
+        denominator="population",
+        group_by=["population"],
         small_number_suppression=True,
     )
     measures.append(m)
