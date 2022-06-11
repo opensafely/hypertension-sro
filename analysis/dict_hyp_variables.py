@@ -425,7 +425,7 @@ hyp003_business_rules_variables = dict(
         hyp003_denominator_r4 AND
         hyp003_denominator_r5 AND
         hyp003_denominator_r6 AND
-        NOT hyp003_denominator_r7
+        hyp003_denominator_r7
         """
     ),
     hyp003_denominator_r8_reject=patients.satisfying(
