@@ -124,7 +124,7 @@ demographic_variables = dict(
         learning_disability_codes,
         on_or_before="last_day_of_month(index_date)",
         returning="binary_flag",
-        return_expectations={"incidence": 0.01,},
+        return_expectations={"incidence": 0.01},
     ),
     care_home=patients.with_these_clinical_events(
         nhse_care_homes_codes,
