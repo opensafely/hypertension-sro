@@ -16,10 +16,11 @@ dir_hyp_deciles_practice <- fs::dir_ls(path = "output/indicators/joined",
                                        glob = "*deciles_table_hyp*_*_practice_rate.csv$")
 
 # Read all data
-df_hyp_deciles_practice <- purrr::map_dfr(dir_hyp_deciles_practice,
-                                          readr::read_csv,
-                                          .id = "id") %>%
-                           dplyr::mutate(id = stringr::str_extract(id, "hyp\\d+"))
+df_hyp_deciles_practice <- purrr::map(dir_hyp_deciles_practice,
+                                          readr::read_csv) %>%
+                           bind_rows(.id = "id") %>%
+                           mutate(id = str_extract(id, "hyp\\d+")) %>%
+                           rename(indicator = id)
 
 fs::dir_create(here::here("output", "indicators", "joined", "deciles"))
 
