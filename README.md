@@ -88,10 +88,15 @@ Variables that are shared by multiple QOF indicators are specified in dictionari
 
 The main results (montly percentage achievement per incicator) are calculated using the `Measure()` framework (see [OpenSAFELY documentation](https://docs.opensafely.org/measures/)).
 The following results are calculated for each measure:
-- Percentage achievement of:
+- **Percentage achievement** of:
   - the total target population: `measure_<condition_tag>_achievem_population_rate.csv`
   - different demographic and clinical breakdowns (see demographic_breakdowns list in [analysis/config.py](analysis/config.py)): `measure_<condition_tag>_achievem_<breakdown_tag>_breakdown_rate.csv`
   - individual GP practices; this data is only used to generate deciles using the reusable action [deciles-charts](https://github.com/opensafely-actions/deciles-charts)
+- Total **exclusion counts**:
+  - describe the total count of exclusions for each "reject" rule, not taking into account whether people were already excluded before (this means that patients could be counted more than once here). Note that "select" rules are not included.
+- Flowchart **select/reject counts**:
+  - describe the exact number of patients that get selected / rejected (here each count is unique, patients can only get rejected / selected once). Note that these measures included "reject" as well as "select rules.
+
 
 ### Actions
 
@@ -100,6 +105,9 @@ All scripted and reusable actions are defined in the [project.yaml](project.yaml
 * Each indicator has the following actions:
   * `generate_study_population_<condition_tag>`: Extracts study population
   * `generate_measures_<condition_tag>`: Generates measures using the `Measure()` framework (see [OpenSAFELY documentation](https://docs.opensafely.org/measures/))
+  * `generate_deciles`: Generates deciles charts for percentage achievement for each practice
+  * `join_measures`: Joins all measures into one dataframe per indicator
+  * `join_deciles`: Joins all deciles tables into one dataframe that includes all indicators
 
 # About the OpenSAFELY framework
 
