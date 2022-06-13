@@ -11,16 +11,18 @@ library(fs)
 library(purrr)
 library(stringr)
 
-# Get file names and path
-dir_hyp_deciles_practice <- fs::dir_ls(path = "output/indicators/joined",
-                                       glob = "*deciles_table_hyp*_*_practice_rate.csv$")
 
-# Read all data
-df_hyp_deciles_practice <- purrr::map(dir_hyp_deciles_practice,
-                                          readr::read_csv) %>%
-                           bind_rows(.id = "id") %>%
-                           mutate(id = str_extract(id, "hyp\\d+")) %>%
-                           rename(indicator = id)
+df_hyp001_deciles <- read_csv("output/indicators/joined/deciles_table_hyp001_prevalence_practice_rate.csv") %>%
+  mutate(indicator = "hyp001")
+
+df_hyp003_deciles <- read_csv("output/indicators/joined/deciles_table_hyp003_achievem_practice_rate.csv") %>%
+  mutate(indicator = "hyp007")
+
+df_hyp007_deciles <- read_csv("output/indicators/joined/deciles_table_hyp007_achievem_practice_rate.csv") %>%
+  mutate(indicator = "hyp007")
+
+df_hyp_deciles_practice <- bind_rows(df_hyp001_deciles, df_hyp003_deciles, df_hyp007_deciles) %>%
+  relocate(indicator)
 
 fs::dir_create(here::here("output", "indicators", "joined", "deciles"))
 
