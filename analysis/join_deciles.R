@@ -12,13 +12,13 @@ library(purrr)
 library(stringr)
 
 
-df_hyp001_deciles <- read_csv("output/indicators/joined/deciles_table_hyp001_prevalence_practice_rate.csv") %>%
+df_hyp001_deciles <- read_csv("output/indicators/joined/deciles_table_hyp001_prevalence_practice_breakdown_rate.csv") %>%
   mutate(indicator = "hyp001")
 
-df_hyp003_deciles <- read_csv("output/indicators/joined/deciles_table_hyp003_achievem_practice_rate.csv") %>%
+df_hyp003_deciles <- read_csv("output/indicators/joined/deciles_table_hyp003_achievem_practice_breakdown_rate.csv") %>%
   mutate(indicator = "hyp007")
 
-df_hyp007_deciles <- read_csv("output/indicators/joined/deciles_table_hyp007_achievem_practice_rate.csv") %>%
+df_hyp007_deciles <- read_csv("output/indicators/joined/deciles_table_hyp007_achievem_practice_breakdown_rate.csv") %>%
   mutate(indicator = "hyp007")
 
 df_hyp_deciles_practice <- bind_rows(df_hyp001_deciles, df_hyp003_deciles, df_hyp007_deciles) %>%
