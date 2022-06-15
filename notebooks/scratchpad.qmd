@@ -13,7 +13,7 @@ source(here::here("lib", "functions", "funs_report_results.R"))
 ```
 
 
-## Deciles
+# Deciles
 ```{r}
 df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
 
@@ -26,7 +26,50 @@ df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
                             labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
 ```
 
-# Deciles plot
+## Register
+
+```{r}
+
+plot_reg_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  ggplot(aes(x = date, 
+             y = value, 
+             colour = percentile, 
+             group = percentile,
+            #  linetype = percentile,
+             size = percentile)) +
+  geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                               "2021-04-01", "2022-04-01")),
+           linetype = "dotted",
+           colour = "orange",
+           size = .5) +
+  geom_point(alpha = 1) +
+  geom_line(alpha = 1) +
+  scale_size_manual(values = c(.4, .4, .5, .6, .8, .6, .5, .4, .4)) +
+  # scale_linetype_manual(values = c("dashed", "dashed", "dashed", "dashed",
+  #                                  "solid",
+  #                                  "dashed", "dashed", "dashed", "dashed")) +
+  scale_y_continuous(labels = scales::label_percent(),
+                     limits = c(0, .4), 
+                     breaks = seq(0, 1, .1)) +
+  scale_x_date(date_breaks = "5 months",
+               labels = scales::label_date_short()) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, linetype = NULL, size = NULL) +
+  theme(legend.position = "top") +
+  facet_wrap(~indicator, ncol = 4) +
+  scale_colour_manual(values = c("#9ecae1", "#6baed6", "#4292c6", "#2171b5", 
+                                 "#084594",
+                                 "#2171b5", "#4292c6", "#6baed6", "#9ecae1")) +
+  theme(text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1),
+         group = guide_legend(nrow = 1),
+         size = guide_legend(nrow = 1))
+
+plot_reg_deciles_bp_hyp_practice
+
+```
+
+## Indicators
 
 ```{r}
 
@@ -50,39 +93,69 @@ plot_ind_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
   #                                  "solid",
   #                                  "dashed", "dashed", "dashed", "dashed")) +
   scale_y_continuous(labels = scales::label_percent(),
-                     limits = c(.55, 1), 
+                     limits = c(.6, 1), 
                      breaks = seq(0, 1, .1)) +
   scale_x_date(date_breaks = "5 months",
                labels = scales::label_date_short()) +
-  labs(x = NULL, y = NULL, colour = "Decile", linetype = "Decile", size = "Decile") +
-  theme(legend.position = "right") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, linetype = NULL, size = NULL) +
+  theme(legend.position = "top") +
   facet_wrap(~indicator, ncol = 4) +
   scale_colour_manual(values = c("#9ecae1", "#6baed6", "#4292c6", "#2171b5", 
                                  "#084594",
                                  "#2171b5", "#4292c6", "#6baed6", "#9ecae1")) +
-  theme(text = element_text(size = 12))
-
-ggsave(filename = here("released_outputs", "figures", "deciles_ind_bp_hyp_practice.png"),
-       plot = plot_ind_deciles_bp_hyp_practice, width = 12, height = 4)
+  theme(text = element_text(size = 12))  +
+  guides(colour = guide_legend(nrow = 1),
+         group = guide_legend(nrow = 1),
+         size = guide_legend(nrow = 1))
 
 plot_ind_deciles_bp_hyp_practice
+
 ```
 
-## Achievement
+
+# Achievement
+
 ```{r}
+
 df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
          mutate(indicator = factor(indicator, 
                                    levels = c("hyp001", "hyp003", "hyp007", "bp002"),
                                    labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
 ```
 
+## Register
 
-
-```{r}
-df_measures_bp_hyp
-```
+## Indicators
 
 ```{r}
+
+plot_ind_population <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  filter(category != "missing") |>
+  mutate(category = na_if(category, "missing")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = "#440154FF")) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0,1)) +
+  ggplot2::scale_colour_viridis_d() +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
+  theme(legend.position = "none", text = element_text(size = 12))
+
+plot_ind_population
 
 plot_ind_imd <- df_measures_bp_hyp |>
   filter(variable == "pct")  |>
@@ -104,11 +177,12 @@ plot_ind_imd <- df_measures_bp_hyp |>
   scale_x_date(date_breaks = "5 months",
                  labels = scales::label_date_short()) +
   scale_y_continuous(labels = scales::label_percent()) +
-                                ggplot2::scale_colour_viridis_d(direction = -1, end = .8) +
+                                ggplot2::scale_colour_viridis_d(direction = -1, end = 1) +
   facet_wrap(~indicator, ncol = 3) +
-  labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "A. IMD quintiles") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12))
 
+plot_ind_imd
 
 plot_ind_age_band <- df_measures_bp_hyp |>
     filter(variable == "pct") |>
@@ -130,11 +204,13 @@ plot_ind_age_band <- df_measures_bp_hyp |>
     scale_x_date(date_breaks = "5 months",
                   labels = scales::label_date_short()) +
     scale_y_continuous(labels = scales::label_percent()) +
-                                  ggplot2::scale_colour_viridis_d(direction = -1, end = .8) +
+                                  ggplot2::scale_colour_viridis_d(direction = -1, end = 1) +
     facet_wrap(~indicator, ncol = 3) +
-    labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "A. Age band") +
+    labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
+
+plot_ind_age_band
 
 plot_ind_eth <- df_measures_bp_hyp |>
   filter(variable == "pct")  |>
@@ -156,10 +232,11 @@ plot_ind_eth <- df_measures_bp_hyp |>
   scale_y_continuous(labels = scales::label_percent()) +
   ggplot2::scale_colour_brewer(palette = "Set1") +
   facet_wrap(~indicator, ncol = 3) +
-  labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "C. Ethnicity") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
 
+plot_ind_eth
 
 plot_ind_region <- df_measures_bp_hyp |>
     filter(variable == "pct")  |>
@@ -184,10 +261,11 @@ plot_ind_region <- df_measures_bp_hyp |>
                                    "#ff7f00",
                                    "#ffff33", "#a65628", "#f781bf", "#999999")) +
     facet_wrap(~indicator, ncol = 3) +
-    labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "B. Region") +
+    labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
 
+plot_ind_region
 
 plot_ind_sex <- df_measures_bp_hyp |>
   filter(variable == "pct")  |>
@@ -209,10 +287,11 @@ plot_ind_sex <- df_measures_bp_hyp |>
   scale_y_continuous(labels = scales::label_percent()) +
   ggplot2::scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~indicator, ncol = 3) +
-  labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "B. Sex") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
 
+plot_ind_sex
 
 plot_ind_care_home <- df_measures_bp_hyp |>
   filter(variable == "pct")  |>
@@ -234,9 +313,11 @@ plot_ind_care_home <- df_measures_bp_hyp |>
   scale_y_continuous(labels = scales::label_percent()) +
   ggplot2::scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~indicator, ncol = 3) +
-  labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "A. Care home") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
+
+plot_ind_care_home
 
 plot_ind_learning_disability <- df_measures_bp_hyp |>
   filter(variable == "pct")  |>
@@ -258,31 +339,27 @@ plot_ind_learning_disability <- df_measures_bp_hyp |>
   scale_y_continuous(labels = scales::label_percent()) +
   ggplot2::scale_colour_brewer(palette = "Dark2") +
   facet_wrap(~indicator, ncol = 3) +
-  labs(x = NULL, y = "Percentage achievement", colour = NULL, title = "B. Learning disability") +
+  labs(x = NULL, y = "% Achievement", colour = NULL, title = NULL) +
   theme(legend.position = "top", text = element_text(size = 12)) +
   guides(colour = guide_legend(nrow = 1))
 
+plot_ind_learning_disability
+```
+
+
+
+```{r}
+# plot_ind_region_imd <- plot_ind_imd / plot_ind_region
+
+# ggsave(filename = here("released_outputs", "figures", "achievement_plot_ind_region_imd.png"),
+#        plot = plot_ind_region_imd, width = 12, height = 9)
 ```
 
 ```{r}
-plot_ind_patient_demo <- plot_ind_age_band / plot_ind_sex / plot_ind_eth
+# plot_ind_patient_record <- plot_ind_care_home / plot_ind_learning_disability
 
-ggsave(filename = here("released_outputs", "figures", "achievement_plot_ind_patient_demo.png"),
-       plot = plot_ind_patient_demo, width = 12, height = 13.5)
-```
-
-```{r}
-plot_ind_region_imd <- plot_ind_imd / plot_ind_region
-
-ggsave(filename = here("released_outputs", "figures", "achievement_plot_ind_region_imd.png"),
-       plot = plot_ind_region_imd, width = 12, height = 9)
-```
-
-```{r}
-plot_ind_patient_record <- plot_ind_care_home / plot_ind_learning_disability
-
-ggsave(filename = here("released_outputs", "figures", "achievement_plot_ind_patient_record.png"),
-       plot = plot_ind_patient_record, width = 12, height = 9)
+# ggsave(filename = here("released_outputs", "figures", "achievement_plot_ind_patient_record.png"),
+#        plot = plot_ind_patient_record, width = 12, height = 9)
 ```
 
 ```{r}
@@ -292,3 +369,274 @@ unique(df_measures_bp_hyp$group)
 # [6] "learning_disability" "region"              "sex"     
 ```
 
+
+# Register HYP001
+
+```{r}
+
+plot_reg_population <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  filter(category != "missing") |>
+  mutate(category = na_if(category, "missing")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = "#440154FF")) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0,1)) +
+  ggplot2::scale_colour_viridis_d() +
+    facet_wrap(~indicator) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "none", text = element_text(size = 12))
+
+plot_reg_imd <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "imd") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  filter(category != "missing") |>
+  mutate(category = na_if(category, "missing")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+                                ggplot2::scale_colour_viridis_d(direction = -1, end = 1) +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12))
+
+plot_reg_imd
+
+plot_reg_age_band <- df_measures_bp_hyp |>
+    filter(variable == "pct") |>
+    filter(group == "age_band") |>
+    filter(indicator %in% c("HYP001 (Total population)")) |>
+    # filter(category != "missing") |>
+    # mutate(category = na_if(category, "missing")) |>
+    ggplot(aes(x = date, 
+              y = value,
+              colour = category)) +
+      geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                  "2021-04-01", "2022-04-01")),
+                linetype = "dotted",
+                colour = "orange",
+                size = .5) +
+    geom_point(size = 1) +
+    geom_line(size = .5,
+              alpha = 0.3) +
+    scale_x_date(date_breaks = "5 months",
+                  labels = scales::label_date_short()) +
+    scale_y_continuous(labels = scales::label_percent()) +
+                                  ggplot2::scale_colour_viridis_d(direction = -1, end = 1) +
+    facet_wrap(~indicator, ncol = 3) +
+    labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_age_band
+
+plot_reg_eth <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "ethnicity") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  ggplot2::scale_colour_brewer(palette = "Set1") +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_eth
+
+plot_reg_region <- df_measures_bp_hyp |>
+    filter(variable == "pct")  |>
+    filter(group == "region") |>
+    filter(indicator %in% c("HYP001 (Total population)")) |>
+    drop_na(category) |>
+    ggplot(aes(x = date, 
+              y = value,
+              colour = category)) +
+      geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                  "2021-04-01", "2022-04-01")),
+                linetype = "dotted",
+                colour = "orange",
+                size = .5) +
+    geom_point(size = 1) +
+    geom_line(size = .5,
+              alpha = 0.3) +
+    scale_x_date(date_breaks = "5 months",
+                  labels = scales::label_date_short()) +
+    scale_y_continuous(labels = scales::label_percent()) +
+    scale_colour_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", 
+                                   "#ff7f00",
+                                   "#ffff33", "#a65628", "#f781bf", "#999999")) +
+    facet_wrap(~indicator, ncol = 3) +
+    labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_region
+
+plot_reg_sex <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "sex") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  ggplot2::scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_sex
+
+plot_reg_care_home <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "care_home") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  ggplot2::scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_care_home
+
+plot_reg_learning_disability <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "learning_disability") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  ggplot(aes(x = date, 
+             y = value,
+             colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+  geom_point(size = 1) +
+  geom_line(size = .5,
+            alpha = 0.3) +
+  scale_x_date(date_breaks = "5 months",
+                 labels = scales::label_date_short()) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  ggplot2::scale_colour_brewer(palette = "Dark2") +
+  facet_wrap(~indicator, ncol = 3) +
+  labs(x = NULL, y = "Prevalence", colour = NULL, title = NULL) +
+  theme(legend.position = "top", text = element_text(size = 12)) +
+  guides(colour = guide_legend(nrow = 1))
+
+plot_reg_learning_disability
+```
+
+```{r}
+
+# Set layout for plots
+layout <- "ABBB"
+
+# Combine plots
+
+plot_reg_ind_population <- ((plot_reg_population + plot_ind_population) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "none") & guides(colour = guide_legend(nrow = 1)))
+plot_reg_ind_deciles <- ((plot_reg_deciles_bp_hyp_practice + plot_ind_deciles_bp_hyp_practice) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top") & guides(colour = guide_legend(nrow = 1)))
+
+plot_reg_ind_population_deciles <-  (wrap_elements(plot_reg_ind_population) / wrap_elements(plot_reg_ind_deciles)) + 
+    plot_annotation(tag_levels = 'A') +
+    plot_layout(height = c(.95, 1))
+
+
+plot_reg_ind_age_band <- ((plot_reg_age_band + plot_ind_age_band) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_sex <- ((plot_reg_sex + plot_ind_sex) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_eth <- ((plot_reg_eth + plot_ind_eth) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_imd <- ((plot_reg_imd + plot_ind_imd) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_region <- ((plot_reg_region + plot_ind_region) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_care_home <- ((plot_reg_care_home + plot_ind_care_home) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_learning_disability <- ((plot_reg_learning_disability + plot_ind_learning_disability) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+
+```
+
+```{r}
+
+
+
+ggsave(filename = here("released_outputs", "figures", "deciles_plot_reg_ind_deciles.png"),
+       plot = plot_reg_ind_deciles, width = 14, height = 4)
+
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
+       plot = plot_reg_ind_population_deciles, width = 14, height = 8)
+
+
+plot_reg_ind_age_band_sex_eth <- (plot_reg_ind_age_band / plot_reg_ind_sex / plot_reg_ind_eth)
+plot_reg_ind_imd_region <- (plot_reg_ind_imd / plot_reg_ind_region)
+plot_reg_ind_care_home_learning_disability <- (plot_reg_ind_care_home / plot_reg_ind_learning_disability)
+
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_age_band_sex_eth.png"),
+       plot = plot_reg_ind_age_band_sex_eth, width = 14, height = 12)
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_imd_region.png"),
+       plot = plot_reg_ind_imd_region, width = 14, height = 8)
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_care_home_learning_disability.png"),
+       plot = plot_reg_ind_care_home_learning_disability, width = 14, height = 8)
+
+```
