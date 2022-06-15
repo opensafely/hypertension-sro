@@ -164,7 +164,8 @@ plot_qof_values <- function(df,
                             date_breaks = "5 months", 
                             ylab = c("Prevalence", "% Achievement"), 
                             legend_position = "top", 
-                            text_size = 12) {
+                            text_size = 14,
+                            axis_x_text_size = 10) {
   df |>
     ggplot(aes(x = date, 
                y = value,
@@ -173,7 +174,7 @@ plot_qof_values <- function(df,
                                                  "2021-04-01", "2022-04-01")),
                linetype = "dotted",
                colour = "orange",
-               size = 1) +
+               size = .7) +
     geom_point(size = point_size) +
     geom_line(size = line_size,
               alpha = line_alpha) +
@@ -183,7 +184,7 @@ plot_qof_values <- function(df,
     scale_colour_viridis_d(direction = -1) +
     facet_wrap(~indicator, ncol = 3) +
     labs(x = NULL, y = ylab, colour = NULL, title = NULL) +
-    theme(legend.position = legend_position, text = element_text(size = text_size))  +
+    theme(legend.position = legend_position, text = element_text(size = text_size), axis.text.x = element_text(size = axis_x_text_size))  +
     guides(colour = guide_legend(nrow = 1),
            group = guide_legend(nrow = 1),
            size = guide_legend(nrow = 1),
@@ -195,7 +196,8 @@ plot_qof_deciles <- function(df,
                              date_breaks = "5 months", 
                              ylab = c("Prevalence", "% Achievement"),
                              scale_size_manual = c(.4, .4, .5, .6, .8, .6, .5, .4, .4),
-                             text_size = 12) {
+                             text_size = 14,
+                             axis_x_text_size = 10) {
   df |>
     ggplot(aes(x = date, 
                y = value, 
@@ -206,7 +208,7 @@ plot_qof_deciles <- function(df,
                                                  "2021-04-01", "2022-04-01")),
                linetype = "dotted",
                colour = "orange",
-               size = .5) +
+               size = .7) +
     geom_point(alpha = 1) +
     geom_line(alpha = 1) +
     scale_size_manual(values = scale_size_manual) +
@@ -221,7 +223,7 @@ plot_qof_deciles <- function(df,
     scale_colour_manual(values = c("#9ecae1", "#6baed6", "#4292c6", "#2171b5", 
                                    "#084594",
                                    "#2171b5", "#4292c6", "#6baed6", "#9ecae1")) +
-    theme(text = element_text(size = text_size))  +
+    theme(text = element_text(size = text_size), axis.text.x = element_text(size = axis_x_text_size))  +
     guides(colour = guide_legend(nrow = 1),
            group = guide_legend(nrow = 1),
            size = guide_legend(nrow = 1),

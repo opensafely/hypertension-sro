@@ -1,3 +1,5 @@
+# Load packages and function
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -13,8 +15,8 @@ source(here::here("lib", "functions", "funs_plot_measures.R"))
 source(here::here("lib", "functions", "funs_report_results.R"))
 ```
 
+# Load data
 
-# Deciles
 ```{r}
 
 df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
@@ -30,6 +32,28 @@ df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
 df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
   filter(date > "2019-03-01")
 ```
+
+```{r}
+
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
+         mutate(indicator = factor(indicator, 
+                                   levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                                   labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
+# Start with end of FY
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  filter(date > "2019-03-01")
+
+# Change age band group for BP002 so plot legends can be combined
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "45-49" ~ "40-49",
+                              TRUE ~ category))
+
+df_measures_bp_hyp
+
+```
+
+# Deciles
 
 ## Register
 
@@ -58,18 +82,6 @@ plot_ind_deciles_bp_hyp_practice
 
 # Achievement
 
-```{r}
-
-df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
-         mutate(indicator = factor(indicator, 
-                                   levels = c("hyp001", "hyp003", "hyp007", "bp002"),
-                                   labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
-
-df_measures_bp_hyp <- df_measures_bp_hyp |>
-  filter(date > "2019-03-01")
-
-```
-
 ## Register
 
 # Register HYP001
@@ -82,7 +94,8 @@ plot_reg_population <- df_measures_bp_hyp |>
   filter(indicator %in% c("HYP001 (Total population)")) |>
   filter(category != "missing") |>
   plot_qof_values(legend_position = "none") +
-  scale_colour_viridis_d()
+  scale_colour_viridis_d() +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1))
 
 plot_reg_population
 
@@ -164,7 +177,8 @@ plot_ind_population <- df_measures_bp_hyp |>
   filter(category != "missing") |>
   mutate(category = na_if(category, "missing")) |>
   plot_qof_values(ylab = "% Achievement", legend_position = "none") +
-  scale_colour_manual(values = c("#440154FF", "#440154FF", "#440154FF"))
+  scale_colour_manual(values = c("#440154FF", "#440154FF", "#440154FF")) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1))
 
 plot_ind_population
 
@@ -248,6 +262,8 @@ plot_reg_ind_population <- wrap_elements((plot_reg_population + plot_ind_populat
 plot_reg_ind_deciles <- wrap_elements((plot_reg_deciles_bp_hyp_practice + plot_ind_deciles_bp_hyp_practice) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top") & guides(colour = guide_legend(nrow = 1))) +     plot_annotation(tag_levels = list(c('B. Practice level deciles'))) & theme(plot.tag.position  = c(.02, .99), plot.tag = element_text(hjust = 0))
 plot_reg_ind_population_deciles <-  wrap_elements(plot_reg_ind_population) / wrap_elements(plot_reg_ind_deciles) + plot_layout(heights = c(.9, 1))
 
+plot_reg_ind_population_deciles
+
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
        plot = plot_reg_ind_population_deciles, width = 12, height = 8)
 
@@ -259,8 +275,10 @@ plot_reg_ind_eth <- ((plot_reg_eth + plot_ind_eth) + plot_layout(design = layout
 plot_reg_ind_age_band_sex_eth <- (wrap_elements(plot_reg_ind_age_band) / wrap_elements(plot_reg_ind_sex) / wrap_elements(plot_reg_ind_eth)) + 
     plot_annotation(tag_levels = list(c('A. Age', 'B. Sex', 'C. Ethnicity'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
 
+plot_reg_ind_age_band_sex_eth
+
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_age_band_sex_eth.png"),
-       plot = plot_reg_ind_age_band_sex_eth, width = 14, height = 12)
+       plot = plot_reg_ind_age_band_sex_eth, width = 12, height = 12)
 
 plot_reg_ind_imd <- ((plot_reg_imd + plot_ind_imd) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
 plot_reg_ind_region <- ((plot_reg_region + plot_ind_region) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
@@ -268,8 +286,10 @@ plot_reg_ind_region <- ((plot_reg_region + plot_ind_region) + plot_layout(design
 plot_reg_ind_imd_region <- (wrap_elements(plot_reg_ind_imd) / wrap_elements(plot_reg_ind_region)) + 
     plot_annotation(tag_levels = list(c('A. IMD', 'B. Region'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
 
+plot_reg_ind_imd_region
+
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_imd_region.png"),
-       plot = plot_reg_ind_imd_region, width = 14, height = 8)
+       plot = plot_reg_ind_imd_region, width = 12, height = 8)
 
 # Care home and learning diability
 plot_reg_ind_care_home <- ((plot_reg_care_home + plot_ind_care_home) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
@@ -278,6 +298,8 @@ plot_reg_ind_learning_disability <- ((plot_reg_learning_disability + plot_ind_le
 plot_reg_ind_care_home_learning_disability <- (wrap_elements(plot_reg_ind_care_home) / wrap_elements(plot_reg_ind_learning_disability)) + 
     plot_annotation(tag_levels = list(c('A. Care home', 'B. Learning disability'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
 
+plot_reg_ind_care_home_learning_disability
+
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_care_home_learning_disability.png"),
-       plot = plot_reg_ind_care_home_learning_disability, width = 14, height = 8)
+       plot = plot_reg_ind_care_home_learning_disability, width = 12, height = 8)
 ```
