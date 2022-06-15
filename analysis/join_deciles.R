@@ -16,7 +16,7 @@ df_hyp001_deciles <- read_csv("output/indicators/joined/deciles_table_hyp001_pre
   mutate(indicator = "hyp001")
 
 df_hyp003_deciles <- read_csv("output/indicators/joined/deciles_table_hyp003_achievem_practice_breakdown_rate.csv") %>%
-  mutate(indicator = "hyp007")
+  mutate(indicator = "hyp003")
 
 df_hyp007_deciles <- read_csv("output/indicators/joined/deciles_table_hyp007_achievem_practice_breakdown_rate.csv") %>%
   mutate(indicator = "hyp007")
