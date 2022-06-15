@@ -155,3 +155,75 @@ plot_qof_indicator <- function(df,
   # Return plot
   return(plot)
 }
+
+
+plot_qof_values <- function(df, 
+                            point_size = .7,
+                            line_size = .5, 
+                            line_alpha = 1, 
+                            date_breaks = "5 months", 
+                            ylab = c("Prevalence", "% Achievement"), 
+                            legend_position = "top", 
+                            text_size = 12) {
+  df |>
+    ggplot(aes(x = date, 
+               y = value,
+               colour = category)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = 1) +
+    geom_point(size = point_size) +
+    geom_line(size = line_size,
+              alpha = line_alpha) +
+    scale_x_date(date_breaks = date_breaks,
+                 labels = scales::label_date_short()) +
+    scale_y_continuous(labels = scales::label_percent()) +
+    scale_colour_viridis_d(direction = -1) +
+    facet_wrap(~indicator, ncol = 3) +
+    labs(x = NULL, y = ylab, colour = NULL, title = NULL) +
+    theme(legend.position = legend_position, text = element_text(size = text_size))  +
+    guides(colour = guide_legend(nrow = 1),
+           group = guide_legend(nrow = 1),
+           size = guide_legend(nrow = 1),
+           linetype = guide_legend(nrow = 1))
+}
+
+
+plot_qof_deciles <- function(df, 
+                             date_breaks = "5 months", 
+                             ylab = c("Prevalence", "% Achievement"),
+                             scale_size_manual = c(.4, .4, .5, .6, .8, .6, .5, .4, .4),
+                             text_size = 12) {
+  df |>
+    ggplot(aes(x = date, 
+               y = value, 
+               colour = percentile, 
+               group = percentile,
+               size = percentile)) +
+    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
+                                                 "2021-04-01", "2022-04-01")),
+               linetype = "dotted",
+               colour = "orange",
+               size = .5) +
+    geom_point(alpha = 1) +
+    geom_line(alpha = 1) +
+    scale_size_manual(values = scale_size_manual) +
+    scale_y_continuous(labels = scales::label_percent(),
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, .25)) +
+    scale_x_date(date_breaks = date_breaks,
+                 labels = scales::label_date_short()) +
+    labs(x = NULL, y = ylab, colour = NULL, linetype = NULL, size = NULL) +
+    theme(legend.position = "top") +
+    facet_wrap(~indicator, ncol = 3) +
+    scale_colour_manual(values = c("#9ecae1", "#6baed6", "#4292c6", "#2171b5", 
+                                   "#084594",
+                                   "#2171b5", "#4292c6", "#6baed6", "#9ecae1")) +
+    theme(text = element_text(size = text_size))  +
+    guides(colour = guide_legend(nrow = 1),
+           group = guide_legend(nrow = 1),
+           size = guide_legend(nrow = 1),
+           linetype = guide_legend(nrow = 1))
+}
