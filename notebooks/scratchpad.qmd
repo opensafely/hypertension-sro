@@ -616,18 +616,20 @@ plot_reg_ind_learning_disability <- ((plot_reg_learning_disability + plot_ind_le
 ```{r}
 
 
-
-ggsave(filename = here("released_outputs", "figures", "deciles_plot_reg_ind_deciles.png"),
-       plot = plot_reg_ind_deciles, width = 14, height = 4)
-
-
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
        plot = plot_reg_ind_population_deciles, width = 14, height = 8)
 
 
-plot_reg_ind_age_band_sex_eth <- (plot_reg_ind_age_band / plot_reg_ind_sex / plot_reg_ind_eth)
-plot_reg_ind_imd_region <- (plot_reg_ind_imd / plot_reg_ind_region)
-plot_reg_ind_care_home_learning_disability <- (plot_reg_ind_care_home / plot_reg_ind_learning_disability)
+plot_reg_ind_age_band_sex_eth <- (wrap_elements(plot_reg_ind_age_band) / wrap_elements(plot_reg_ind_sex) / wrap_elements(plot_reg_ind_eth)) + 
+    plot_annotation(tag_levels = list(c('A. Age', 'B. Sex', 'C. Ethnicity'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
+
+plot_reg_ind_age_band_sex_eth
+
+plot_reg_ind_imd_region <- (wrap_elements(plot_reg_ind_imd) / wrap_elements(plot_reg_ind_region)) + 
+    plot_annotation(tag_levels = list(c('A. IMD', 'B. Region')))
+
+plot_reg_ind_care_home_learning_disability <- (wrap_elements(plot_reg_ind_care_home) / wrap_elements(plot_reg_ind_learning_disability)) + 
+    plot_annotation(tag_levels = list(c('A. Care home', 'B. Learning disability')))
 
 
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_age_band_sex_eth.png"),
