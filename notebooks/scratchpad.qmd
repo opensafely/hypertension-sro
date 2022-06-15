@@ -595,13 +595,15 @@ layout <- "ABBB"
 
 # Combine plots
 
-plot_reg_ind_population <- ((plot_reg_population + plot_ind_population) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "none") & guides(colour = guide_legend(nrow = 1)))
-plot_reg_ind_deciles <- ((plot_reg_deciles_bp_hyp_practice + plot_ind_deciles_bp_hyp_practice) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top") & guides(colour = guide_legend(nrow = 1)))
+plot_reg_ind_population <- wrap_elements((plot_reg_population + plot_ind_population) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "none") & guides(colour = guide_legend(nrow = 1))) + plot_annotation(tag_levels = list(c('A. Total population'))) & theme(plot.tag.position  = c(.02, 1), plot.tag = element_text(hjust = 0))
+plot_reg_ind_deciles <- wrap_elements((plot_reg_deciles_bp_hyp_practice + plot_ind_deciles_bp_hyp_practice) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top") & guides(colour = guide_legend(nrow = 1))) +     plot_annotation(tag_levels = list(c('B. Practice level deciles'))) & theme(plot.tag.position  = c(.02, .99), plot.tag = element_text(hjust = 0))
 
-plot_reg_ind_population_deciles <-  (wrap_elements(plot_reg_ind_population) / wrap_elements(plot_reg_ind_deciles)) + 
-    plot_annotation(tag_levels = 'A') +
-    plot_layout(height = c(.95, 1))
 
+plot_reg_ind_population_deciles <-  wrap_elements(plot_reg_ind_population) / wrap_elements(plot_reg_ind_deciles)
+plot_reg_ind_population_deciles
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
+       plot = plot_reg_ind_population_deciles, width = 14, height = 8)
 
 plot_reg_ind_age_band <- ((plot_reg_age_band + plot_ind_age_band) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
 plot_reg_ind_sex <- ((plot_reg_sex + plot_ind_sex) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
@@ -616,8 +618,7 @@ plot_reg_ind_learning_disability <- ((plot_reg_learning_disability + plot_ind_le
 ```{r}
 
 
-ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
-       plot = plot_reg_ind_population_deciles, width = 14, height = 8)
+
 
 
 plot_reg_ind_age_band_sex_eth <- (wrap_elements(plot_reg_ind_age_band) / wrap_elements(plot_reg_ind_sex) / wrap_elements(plot_reg_ind_eth)) + 
@@ -626,10 +627,10 @@ plot_reg_ind_age_band_sex_eth <- (wrap_elements(plot_reg_ind_age_band) / wrap_el
 plot_reg_ind_age_band_sex_eth
 
 plot_reg_ind_imd_region <- (wrap_elements(plot_reg_ind_imd) / wrap_elements(plot_reg_ind_region)) + 
-    plot_annotation(tag_levels = list(c('A. IMD', 'B. Region')))
+    plot_annotation(tag_levels = list(c('A. IMD', 'B. Region'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
 
 plot_reg_ind_care_home_learning_disability <- (wrap_elements(plot_reg_ind_care_home) / wrap_elements(plot_reg_ind_learning_disability)) + 
-    plot_annotation(tag_levels = list(c('A. Care home', 'B. Learning disability')))
+    plot_annotation(tag_levels = list(c('A. Care home', 'B. Learning disability'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
 
 
 ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_age_band_sex_eth.png"),
