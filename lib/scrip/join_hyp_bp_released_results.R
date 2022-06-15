@@ -7,10 +7,9 @@ source(here::here("lib", "functions", "funs_tidy_data.R"))
 
 # Deciles tables ----
 ## Read csv
-df_defiles_hyp <- read_csv(here("released_outputs/deciles/deciles_hyp_practice.csv")) |>
-  rename(indicator = id)
+df_defiles_hyp <- read_csv(here("released_outputs/deciles/deciles_hyp_practice.csv"))
 
-df_defiles_bp <- read_csv(here("released_outputs/deciles/deciles_table_bp002_achievem_practice_rate.csv")) |>
+df_defiles_bp <- read_csv(here("released_outputs/deciles/deciles_table_bp002_achievem_practice_breakdown_rate.csv")) |>
   mutate(indicator = "bp002") |>
   relocate(indicator)
 
@@ -76,7 +75,7 @@ df_measures_bp_hyp <- df_measures_bp_hyp |>
   tidy_category_names(group = group,
                       category = category,
                       learning_disability = "learning_disability",
-                      imd = "imd",
+                      imd = "imd_q5",
                       sex = "sex",
                       care_home = "care_home",
                       population = "population",
