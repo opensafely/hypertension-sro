@@ -162,13 +162,14 @@ plot_qof_values <- function(df,
                             line_size = .5, 
                             line_alpha = 1, 
                             date_breaks = "5 months", 
-                            ylab = c("Prevalence", "% Achievement"), 
-                            legend_position = "top", 
+                            ylab = c("Prevalence", "% Achievement"),
+                            legend_position = "top",
+                            legend_label = NULL,
                             text_size = 14,
                             facet_wrap_indicator = TRUE,
                             axis_x_text_size = 10) {
   plot <- df |>
-    ggplot(aes(x = date, 
+    ggplot(aes(x = date,
                y = value,
                colour = category)) +
     geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
@@ -183,7 +184,7 @@ plot_qof_values <- function(df,
                  labels = scales::label_date_short()) +
     scale_y_continuous(labels = scales::label_percent()) +
     scale_colour_viridis_d(direction = -1) +
-    labs(x = NULL, y = ylab, colour = NULL, title = NULL) +
+    labs(x = NULL, y = ylab, colour = legend_label, title = legend_label) +
     theme(legend.position = legend_position, text = element_text(size = text_size), axis.text.x = element_text(size = axis_x_text_size))  +
     guides(colour = guide_legend(nrow = 1),
            group = guide_legend(nrow = 1),
@@ -205,6 +206,7 @@ plot_qof_deciles <- function(df,
                              ybreaks =  seq(0, 1, .25),
                              scale_size_manual = c(.4, .4, .5, .6, .8, .6, .5, .4, .4),
                              text_size = 14,
+                             legend_label = NULL,
                              axis_x_text_size = 10,
                              facet_wrap_indicator = TRUE) {
   plot <- df |>
@@ -226,7 +228,7 @@ plot_qof_deciles <- function(df,
                        breaks = ybreaks) +
     scale_x_date(date_breaks = date_breaks,
                  labels = scales::label_date_short()) +
-    labs(x = NULL, y = ylab, colour = NULL, linetype = NULL, size = NULL) +
+    labs(x = NULL, y = ylab, colour = legend_label, linetype = legend_label, size = legend_label) +
     theme(legend.position = "top") +
     scale_colour_manual(values = c("#9ecae1", "#6baed6", "#4292c6", "#2171b5", 
                                    "#084594",
