@@ -1,0 +1,1004 @@
+This notebook creates the figures and tables for the manuscript.
+
+# Load packages and function
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(here)
+library(scales)
+library(janitor)
+library(patchwork)
+library(gt)
+```
+
+
+```{r}
+# Load plotting function
+source(here::here("lib", "functions", "funs_plot_measures.R"))
+source(here::here("lib", "functions", "funs_report_results.R"))
+```
+
+# Load data
+
+```{r}
+
+df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
+
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  mutate(percentile = factor(percentile,
+                             levels = seq(10, 90, 10),
+                             labels = c(seq(1, 4, 1), "5 - Median", seq(6, 9, 1))),
+         indicator = factor(indicator, 
+                            levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                            labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  filter(date > "2019-03-01")
+```
+
+```{r}
+
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
+         mutate(indicator = factor(indicator, 
+                                   levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                                   labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
+# Start with end of FY
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  filter(date > "2019-03-01")
+
+# Change age band group for BP002 so plot legends can be combined
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "45-49" ~ "40-49",
+                              TRUE ~ category))
+
+df_measures_bp_hyp
+
+```
+
+# Deciles
+
+## HYP001
+
+```{r}
+
+plot_deciles_hyp001_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  plot_qof_deciles(facet_wrap_indicator = FALSE,
+                   ylimits =  NULL,
+                   ybreaks =  seq(0, 1, .02),
+                   legend_position = "top",
+                   legend_top_nrow = 2)
+
+plot_deciles_hyp001_practice
+```
+
+
+## HYP003
+
+```{r}
+plot_deciles_hyp001_practice
+
+plot_deciles_hyp003_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator %in% c("HYP003 (Age <= 79)")) |>
+  plot_qof_deciles(facet_wrap_indicator = FALSE,
+                   ylimits =  NULL,
+                   ybreaks =  seq(0, 1, .05),
+                   legend_position = "right",
+                   legend_label = "Deciles")
+
+plot_deciles_hyp003_practice
+```
+
+## HYP007
+
+```{r}
+
+plot_deciles_hyp007_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator %in% c("HYP007 (Age >= 80)")) |>
+  plot_qof_deciles(facet_wrap_indicator = FALSE,
+                   ylimits =  NULL,
+                   ybreaks =  seq(0, 1, .05),
+                   legend_position = "right",
+                   legend_label = "Deciles")
+
+plot_deciles_hyp007_practice
+
+```
+
+## BP002
+
+```{r}
+
+plot_deciles_bp002_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator %in% c("BP002 (Age >= 45)")) |>
+  plot_qof_deciles(facet_wrap_indicator = FALSE,
+                   ylimits =  NULL,
+                   ybreaks =  seq(0, 1, .02),
+                   legend_position = "right",
+                   legend_label = "Deciles")
+
+plot_deciles_bp002_practice
+
+```
+
+# Achievement
+
+## HYP001
+
+```{r}
+
+plot_hyp001_population <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  filter(category != "missing") |>
+  plot_qof_values(legend_position = "none") +
+  scale_colour_viridis_d() +
+  scale_y_continuous(labels = scales::label_percent(), 
+                     limits = c(.14, .15))
+
+plot_hyp001_population
+
+plot_hyp001_imd <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "imd_q5") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  filter(category != "missing") |>
+  mutate(category = na_if(category, "missing")) |>
+  plot_qof_values(legend_position = "top", 
+                  legend_top_nrow = 2)
+
+plot_hyp001_imd
+
+plot_hyp001_age_band <- df_measures_bp_hyp |>
+    filter(variable == "pct") |>
+    filter(group == "age_band") |>
+    filter(indicator %in% c("HYP001 (Total population)")) |>
+    plot_qof_values(legend_position = "top", 
+                    legend_top_nrow = 2)
+
+plot_hyp001_age_band
+
+plot_hyp001_eth <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "ethnicity") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  plot_qof_values(legend_position = "top", 
+                  legend_top_nrow = 2) +
+  scale_colour_brewer(palette = "Set1")
+
+plot_hyp001_eth
+
+plot_hyp001_region <- df_measures_bp_hyp |>
+    filter(variable == "pct")  |>
+    filter(group == "region") |>
+    filter(indicator %in% c("HYP001 (Total population)")) |>
+    drop_na(category) |>
+    plot_qof_values(legend_position = "top", 
+                    legend_top_nrow = 2) +
+    scale_colour_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", 
+                                   "#ff7f00",
+                                   "#ffff33", "#a65628", "#f781bf", "#999999"))
+
+plot_hyp001_region
+
+plot_hyp001_sex <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "sex") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  plot_qof_values(legend_position = "top", 
+                  legend_top_nrow = 1) +
+  scale_colour_brewer(palette = "Dark2")
+
+plot_hyp001_sex
+
+plot_hyp001_care_home <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "care_home") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  plot_qof_values(legend_position = "top", 
+                  legend_top_nrow = 1) +
+  scale_colour_brewer(palette = "Dark2")
+
+plot_hyp001_care_home
+
+plot_hyp001_learning_disability <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "learning_disability") |>
+  filter(indicator %in% c("HYP001 (Total population)")) |>
+  plot_qof_values(legend_position = "top", 
+                  legend_top_nrow = 1) +
+  scale_colour_brewer(palette = "Dark2")
+
+plot_hyp001_learning_disability
+```
+
+```{r}
+
+(plot_deciles_hyp001_practice + plot_hyp001_population) /
+(plot_hyp001_sex + plot_hyp001_age_band) 
+
+```
+
+## Indicators
+
+```{r}
+
+plot_ind_population <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  filter(category != "missing") |>
+  mutate(category = na_if(category, "missing")) |>
+  plot_qof_values(ylab = "% Achievement", legend_position = "none") +
+  scale_colour_manual(values = c("#440154FF", "#440154FF", "#440154FF")) +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1))
+
+plot_ind_population
+
+plot_ind_imd <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "imd_q5") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  filter(category != "missing") |>
+  plot_qof_values(ylab = "% Achievement")
+
+plot_ind_imd
+
+plot_ind_age_band <- df_measures_bp_hyp |>
+    filter(variable == "pct") |>
+    filter(group == "age_band") |>
+    filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+    plot_qof_values(ylab = "% Achievement")
+
+plot_ind_age_band
+
+plot_ind_eth <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "ethnicity") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  plot_qof_values(ylab = "% Achievement") + 
+  ggplot2::scale_colour_brewer(palette = "Set1")
+
+plot_ind_eth
+
+plot_ind_region <- df_measures_bp_hyp |>
+    filter(variable == "pct")  |>
+    filter(group == "region") |>
+    filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+    drop_na(category) |>
+    plot_qof_values(ylab = "% Achievement") +
+    scale_colour_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", 
+                                   "#ff7f00",
+                                   "#ffff33", "#a65628", "#f781bf", "#999999"))
+
+plot_ind_region
+
+plot_ind_sex <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "sex") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  plot_qof_values(ylab = "% Achievement") +
+  ggplot2::scale_colour_brewer(palette = "Dark2")
+
+plot_ind_sex
+
+plot_ind_care_home <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "care_home") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  plot_qof_values(ylab = "% Achievement") +
+  ggplot2::scale_colour_brewer(palette = "Dark2")
+
+plot_ind_care_home
+
+plot_ind_learning_disability <- df_measures_bp_hyp |>
+  filter(variable == "pct")  |>
+  filter(group == "learning_disability") |>
+  filter(indicator %in% c("HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")) |>
+  plot_qof_values(ylab = "% Achievement") +
+  ggplot2::scale_colour_brewer(palette = "Dark2")
+
+plot_ind_learning_disability
+```
+
+# Combine plots
+
+```{r}
+
+# Set layout for plots
+layout <- "ABBB"
+
+# Combine plots
+
+## Population and deciles
+plot_reg_ind_population <- wrap_elements((plot_reg_population + plot_ind_population) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "none") & guides(colour = guide_legend(nrow = 1))) + plot_annotation(tag_levels = list(c('A. Total population'))) & theme(plot.tag.position  = c(.02, 1), plot.tag = element_text(hjust = 0))
+plot_reg_ind_deciles <- wrap_elements((plot_reg_deciles_bp_hyp_practice + plot_ind_deciles_bp_hyp_practice) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top") & guides(colour = guide_legend(nrow = 1))) +     plot_annotation(tag_levels = list(c('B. Practice level deciles'))) & theme(plot.tag.position  = c(.02, .99), plot.tag = element_text(hjust = 0))
+plot_reg_ind_population_deciles <-  wrap_elements(plot_reg_ind_population) / wrap_elements(plot_reg_ind_deciles) + plot_layout(heights = c(.9, 1))
+
+plot_reg_ind_population_deciles
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_population_deciles.png"),
+       plot = plot_reg_ind_population_deciles, width = 12, height = 8)
+
+# Age sex eth
+plot_reg_ind_age_band <- ((plot_reg_age_band + plot_ind_age_band) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_sex <- ((plot_reg_sex + plot_ind_sex) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_eth <- ((plot_reg_eth + plot_ind_eth) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+
+plot_reg_ind_age_band_sex_eth <- (wrap_elements(plot_reg_ind_age_band) / wrap_elements(plot_reg_ind_sex) / wrap_elements(plot_reg_ind_eth)) + 
+    plot_annotation(tag_levels = list(c('A. Age', 'B. Sex', 'C. Ethnicity'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
+
+plot_reg_ind_age_band_sex_eth
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_age_band_sex_eth.png"),
+       plot = plot_reg_ind_age_band_sex_eth, width = 12, height = 12)
+
+plot_reg_ind_imd <- ((plot_reg_imd + plot_ind_imd) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_region <- ((plot_reg_region + plot_ind_region) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+
+plot_reg_ind_imd_region <- (wrap_elements(plot_reg_ind_imd) / wrap_elements(plot_reg_ind_region)) + 
+    plot_annotation(tag_levels = list(c('A. IMD', 'B. Region'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
+
+plot_reg_ind_imd_region
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_imd_region.png"),
+       plot = plot_reg_ind_imd_region, width = 12, height = 8)
+
+# Care home and learning diability
+plot_reg_ind_care_home <- ((plot_reg_care_home + plot_ind_care_home) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+plot_reg_ind_learning_disability <- ((plot_reg_learning_disability + plot_ind_learning_disability) + plot_layout(design = layout, guides = "collect") & theme(legend.position = "top"))
+
+plot_reg_ind_care_home_learning_disability <- (wrap_elements(plot_reg_ind_care_home) / wrap_elements(plot_reg_ind_learning_disability)) + 
+    plot_annotation(tag_levels = list(c('A. Care home', 'B. Learning disability'))) & theme(plot.tag.position  = c(.02, .96), plot.tag = element_text(hjust = 0))
+
+plot_reg_ind_care_home_learning_disability
+
+ggsave(filename = here("released_outputs", "figures", "achievement_plot_reg_ind_care_home_learning_disability.png"),
+       plot = plot_reg_ind_care_home_learning_disability, width = 12, height = 8)
+```
+
+
+# Table 1
+
+## BP002
+
+```{r}
+
+df_tab_bp002 <- df_measures_bp_hyp |>
+  filter(date > "2019-03-01") |>
+  filter(month(date) == 3) |>
+  filter(variable %in% c("numerator", "denominator", "pct")) |>
+  filter(indicator == "BP002 (Age >= 45)") |>
+  mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "40-49" ~ "45-49",
+                              TRUE ~ category)) |>
+  mutate(date = paste0("fy", str_sub(year(date) -1, -2, -1), str_sub(year(date), -2, -1))) |>
+  pivot_wider(id_cols = c(indicator, group, category), 
+              names_from = c(date, variable),
+              values_from = c(value)) |> 
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")),
+          category = case_when(category == "No record of positive care home status" ~ "No",
+                               category == "Record of positive care home status" ~ "Yes",
+                               category == "No record of learning disability" ~ "No",
+                               category == "Record of learning disability" ~ "Yes",
+                               TRUE ~ category)) |>
+  arrange(group, category)
+
+df_tab_bp002
+```
+
+## HYP001
+
+```{r}
+
+df_tab_hyp001 <- df_measures_bp_hyp |>
+  filter(indicator == "HYP001 (Total population)") |>
+  filter(date > "2019-03-01") |>
+  filter(month(date) == 3) |>
+  filter(variable %in% c("register", "population", "pct")) |>
+  mutate(date = paste0("fy", str_sub(year(date) -1, -2, -1), str_sub(year(date), -2, -1))) |>
+  pivot_wider(id_cols = c(indicator, group, category), 
+              names_from = c(date, variable),
+              values_from = c(value)) |> 
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")),
+          category = case_when(category == "No record of positive care home status" ~ "No",
+                               category == "Record of positive care home status" ~ "Yes",
+                               category == "No record of learning disability" ~ "No",
+                               category == "Record of learning disability" ~ "Yes",
+                               TRUE ~ category)) |>
+  arrange(group, category)
+
+df_tab_hyp001
+
+```
+
+## HYP003
+
+```{r}
+
+df_tab_hyp003 <- df_measures_bp_hyp |>
+  filter(indicator == "HYP003 (Age <= 79)") |>
+  filter(date > "2019-03-01") |>
+  filter(month(date) == 3) |>
+  filter(variable %in% c("numerator", "denominator", "pct")) |>
+  mutate(date = paste0("fy", str_sub(year(date) -1, -2, -1), str_sub(year(date), -2, -1))) |>
+  pivot_wider(id_cols = c(indicator, group, category), 
+              names_from = c(date, variable),
+              values_from = c(value)) |> 
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")),
+          category = case_when(category == "No record of positive care home status" ~ "No",
+                               category == "Record of positive care home status" ~ "Yes",
+                               category == "No record of learning disability" ~ "No",
+                               category == "Record of learning disability" ~ "Yes",
+                               TRUE ~ category)) |>
+  arrange(group, category)
+
+df_tab_hyp003 <- df_tab_hyp003 |>
+  filter(category != "80+")
+
+```
+
+## HYP007
+
+```{r}
+
+df_tab_hyp007 <- df_measures_bp_hyp |>
+  filter(indicator == "HYP007 (Age >= 80)") |>
+  filter(date > "2019-03-01") |>
+  filter(month(date) == 3) |>
+  filter(variable %in% c("numerator", "denominator", "pct")) |>
+  mutate(date = paste0("fy", str_sub(year(date) -1, -2, -1), str_sub(year(date), -2, -1))) |>
+  pivot_wider(id_cols = c(indicator, group, category), 
+              names_from = c(date, variable),
+              values_from = c(value)) |> 
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")),
+          category = case_when(category == "No record of positive care home status" ~ "No",
+                               category == "Record of positive care home status" ~ "Yes",
+                               category == "No record of learning disability" ~ "No",
+                               category == "Record of learning disability" ~ "Yes",
+                               TRUE ~ category)) |>
+  arrange(group, category)
+
+# Remove age band here as only 80+ in this indicator
+df_tab_hyp007 <- df_tab_hyp007 |>
+  filter(group != "Age band")
+
+df_tab_hyp007
+
+```
+
+
+```{r}
+df_tab_hyp001
+
+gt_tab_hyp001 <- df_tab_hyp001 |>
+  select(-indicator) |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  tab_header(title = "Demographic breakdowns for QOF indicator HYP001") |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "FY 19-20",
+    columns = c(fy1920_register, fy1920_population, fy1920_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 20-21",
+    columns = c(fy2021_register, fy2021_population, fy2021_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 21-22",
+    columns = c(fy2122_register, fy2122_population, fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(fy1920_register, fy1920_population,
+                fy2021_register, fy2021_population,
+                fy2122_register, fy2122_population),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(fy1920_pct, fy2021_pct, fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>
+  cols_label(
+    fy1920_register = "Register",
+    fy1920_population = "List size",
+    fy1920_pct = "Achievement",
+    fy2021_register = "Register",
+    fy2021_population = "List size",
+    fy2021_pct = "Achievement",
+    fy2122_register = "Register",
+    fy2122_population = "List size",
+    fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(3)
+  ) |>
+  tab_footnote(
+    footnote = "The values of the last month of yeach NHS financial year (March) are presented as a summary for each financial year.",
+    locations = cells_column_spanners(spanners = everything())
+  ) |>
+  tab_footnote(
+    footnote = "This sample was restricted to 'Female' and 'Male'.",
+    locations = cells_row_groups(groups = "Sex")
+  )
+
+gt_tab_hyp001
+
+gtsave(gt_tab_hyp001, here("released_outputs", "tables", "tab_hyp001.png"))
+```
+
+```{r}
+
+
+gt_tab_hyp003 <- df_tab_hyp003 |>
+  select(-indicator) |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  tab_header(title = "Demographic breakdowns for QOF indicator HYP003")  |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "FY 19-20",
+    columns = c(fy1920_numerator, fy1920_denominator, fy1920_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 20-21",
+    columns = c(fy2021_numerator, fy2021_denominator, fy2021_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 21-22",
+    columns = c(fy2122_numerator, fy2122_denominator, fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(fy1920_numerator, fy1920_denominator,
+                fy2021_numerator, fy2021_denominator,
+                fy2122_numerator, fy2122_denominator),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(fy1920_pct, fy2021_pct, fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>
+  cols_label(
+    fy1920_numerator = "Numerator",
+    fy1920_denominator = "Denominator",
+    fy1920_pct = "Achievement",
+    fy2021_numerator = "Numerator",
+    fy2021_denominator = "Denominator",
+    fy2021_pct = "Achievement",
+    fy2122_numerator = "Numerator",
+    fy2122_denominator = "Denominator",
+    fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(3)
+  ) |>
+  tab_footnote(
+    footnote = "The values of the last month of yeach NHS financial year (March) are presented as a summary for each financial year.",
+    locations = cells_column_spanners(spanners = everything())
+  ) |>
+  tab_footnote(
+    footnote = "This sample was restricted to 'Female' and 'Male'.",
+    locations = cells_row_groups(groups = "Sex")
+  )
+
+gt_tab_hyp003
+
+gtsave(gt_tab_hyp003, here("released_outputs", "tables", "tab_hyp003.png"))
+
+```
+
+```{r}
+
+gt_tab_hyp007 <- df_tab_hyp007 |>
+  select(-indicator) |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  tab_header(title = "Demographic breakdowns for QOF indicator HYP007")  |>
+  row_group_order(groups = c("Population", "Sex", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "FY 19-20",
+    columns = c(fy1920_numerator, fy1920_denominator, fy1920_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 20-21",
+    columns = c(fy2021_numerator, fy2021_denominator, fy2021_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 21-22",
+    columns = c(fy2122_numerator, fy2122_denominator, fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(fy1920_numerator, fy1920_denominator,
+                fy2021_numerator, fy2021_denominator,
+                fy2122_numerator, fy2122_denominator),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(fy1920_pct, fy2021_pct, fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>
+  cols_label(
+    fy1920_numerator = "Numerator",
+    fy1920_denominator = "Denominator",
+    fy1920_pct = "Achievement",
+    fy2021_numerator = "Numerator",
+    fy2021_denominator = "Denominator",
+    fy2021_pct = "Achievement",
+    fy2122_numerator = "Numerator",
+    fy2122_denominator = "Denominator",
+    fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(3)
+  ) |>
+  tab_footnote(
+    footnote = "The values of the last month of yeach NHS financial year (March) are presented as a summary for each financial year.",
+    locations = cells_column_spanners(spanners = everything())
+  ) |>
+  tab_footnote(
+    footnote = "This sample was restricted to 'Female' and 'Male'.",
+    locations = cells_row_groups(groups = "Sex")
+  )
+
+gt_tab_hyp007
+
+gtsave(gt_tab_hyp007, here("released_outputs", "tables", "tab_hyp007.png"))
+
+```
+
+```{r}
+
+gt_tab_bp002 <- df_tab_bp002 |>
+  select(-indicator) |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  tab_header(title = "Demographic breakdowns for QOF indicator BP002")  |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "FY 19-20",
+    columns = c(fy1920_numerator, fy1920_denominator, fy1920_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 20-21",
+    columns = c(fy2021_numerator, fy2021_denominator, fy2021_pct)
+  ) |>
+  tab_spanner(
+    label = "FY 21-22",
+    columns = c(fy2122_numerator, fy2122_denominator, fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(fy1920_numerator, fy1920_denominator,
+                fy2021_numerator, fy2021_denominator,
+                fy2122_numerator, fy2122_denominator),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(fy1920_pct, fy2021_pct, fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>
+  cols_label(
+    fy1920_numerator = "Numerator",
+    fy1920_denominator = "Denominator",
+    fy1920_pct = "Achievement",
+    fy2021_numerator = "Numerator",
+    fy2021_denominator = "Denominator",
+    fy2021_pct = "Achievement",
+    fy2122_numerator = "Numerator",
+    fy2122_denominator = "Denominator",
+    fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(3)
+  ) |>
+  tab_footnote(
+    footnote = "The values of the last month of yeach NHS financial year (March) are presented as a summary for each financial year.",
+    locations = cells_column_spanners(spanners = everything())
+  ) |>
+  tab_footnote(
+    footnote = "This sample was restricted to 'Female' and 'Male'.",
+    locations = cells_row_groups(groups = "Sex")
+  )
+
+gt_tab_bp002
+
+gtsave(gt_tab_bp002, here("released_outputs", "tables", "tab_bp002.png"))
+
+```
+
+
+# Results
+
+```{r}
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  filter(variable == "pct") |>
+  group_by(indicator) |>
+  summarise(min = min(value, na.rm = T),
+            max = max(value, na.rm = T))
+  
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  filter(variable == "pct") |>
+  group_by(indicator) |>
+  slice_min(order_by = value)
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  filter(variable == "pct") |>
+  group_by(indicator) |>
+  slice_max(order_by = value)
+```
+
+
+
+
+
+```{r}
+
+
+df_tab_fy2122 <- df_measures_bp_hyp |>
+  mutate(indicator = factor(indicator, 
+                            levels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)"),
+                            labels = c("hyp001", "hyp003", "hyp007", "bp002"))) |>
+  mutate(variable = case_when(indicator == "hyp001" & variable == "register" ~ "numerator",
+                              indicator == "hyp001" & variable == "population" ~ "denominator",
+                              TRUE ~ variable)) |>
+  filter(variable %in% c("numerator", "denominator", "pct")) |>
+
+  filter(date == "2022-03-01") |>
+  mutate(value = na_if(value , 0)) |>
+  filter(month(date) == 3) |>
+  mutate(category = case_when(group == "population" ~ "",
+                              is.na(category) ~ "Unknown",
+                              TRUE ~ category)) |>
+  arrange(indicator) |>
+  mutate(date = paste0("fy", str_sub(year(date) -1, -2, -1), str_sub(year(date), -2, -1))) |>
+  pivot_wider(id_cols = c(group, category), 
+              names_from = c(indicator, date, variable),
+              values_from = c(value)) |>
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")),
+          category = case_when(category == "No record of positive care home status" ~ "No",
+                               category == "Record of positive care home status" ~ "Yes",
+                               category == "No record of learning disability" ~ "No",
+                               category == "Record of learning disability" ~ "Yes",
+                               TRUE ~ category)) |>
+  arrange(group, category)
+
+df_tab_hyp_fy2122 <- df_tab_fy2122 |>
+  select(1:10)
+
+df_tab_bp_fy2122 <- df_tab_fy2122 |>
+  select(1:2, 11:13)
+
+# gt_tab_fy2122 <- df_tab_fy2122 |>
+#   gt(rowname_col = "category",
+#      groupname_col = "group")  |>
+#   row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+#   tab_spanner(
+#     label = "HYP001",
+#     columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct)
+#   ) |>
+#   tab_spanner(
+#     label = "HYP003",
+#     columns = c(hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct)
+#   ) |>
+#   tab_spanner(
+#     label = "HYP007",
+#     columns = c(hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct)
+#   ) |>
+#   tab_spanner(
+#     label = "BP002",
+#     columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)
+#   ) |>
+#   fmt_number(
+#     columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator,
+#                 hyp003_fy2122_numerator, hyp003_fy2122_denominator,
+#                 hyp007_fy2122_numerator, hyp007_fy2122_denominator,
+#                 bp002_fy2122_numerator, bp002_fy2122_denominator),
+#     decimals = 0,
+#     use_seps = TRUE
+#   ) |>
+#   fmt_percent(
+#     columns = c(hyp001_fy2122_pct, hyp003_fy2122_pct, hyp007_fy2122_pct, bp002_fy2122_pct),
+#     decimals = 2,
+#     use_seps = TRUE
+#   ) |>  
+#   cols_label(
+#     hyp001_fy2122_numerator = "Register",
+#     hyp001_fy2122_denominator = "List size",
+#     hyp001_fy2122_pct = "Prevalence",
+#     hyp003_fy2122_numerator = "Numerator",
+#     hyp003_fy2122_denominator = "Denominator",
+#     hyp003_fy2122_pct = "Achievement",
+#     hyp007_fy2122_numerator = "Numerator",
+#     hyp007_fy2122_denominator = "Denominator",
+#     hyp007_fy2122_pct = "Achievement",
+#     bp002_fy2122_numerator = "Numerator",
+#     bp002_fy2122_denominator = "Denominator",
+#     bp002_fy2122_pct = "Achievement"
+#   ) |>
+#   tab_options(
+#     column_labels.font.size = "small",
+#     table.font.size = "small",
+#     row_group.font.size = "small",
+#     data_row.padding = px(2)
+#   )  |>
+#   text_transform(
+#     locations = cells_body(
+#       columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct, 
+#                   hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct, 
+#                   hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct, 
+#                   bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)),
+#     fn = function(x){
+#       case_when(x == "NA" ~ "-",
+#                 TRUE ~ x)
+#     }
+#   )
+
+# gt_tab_fy2122
+# gtsave(gt_tab_fy2122, here("released_outputs", "tables", "tab_fy2122.png"))
+```
+
+
+
+```{r}
+
+df_tab_hyp_fy2122 <- df_tab_fy2122 |>
+  select(1:11)
+
+gt_tab_hyp_fy2122 <- df_tab_hyp_fy2122 |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "HYP001",
+    columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct)
+  ) |>
+  tab_spanner(
+    label = "HYP003",
+    columns = c(hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct)
+  ) |>
+  tab_spanner(
+    label = "HYP007",
+    columns = c(hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct)
+  ) |>
+  # tab_spanner(
+  #   label = "BP002",
+  #   columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)
+  # ) |>
+  fmt_number(
+    columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator,
+                hyp003_fy2122_numerator, hyp003_fy2122_denominator,
+                hyp007_fy2122_numerator, hyp007_fy2122_denominator
+                # bp002_fy2122_numerator, bp002_fy2122_denominator
+                ),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(hyp001_fy2122_pct, hyp003_fy2122_pct, hyp007_fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>  
+  cols_label(
+    hyp001_fy2122_numerator = "Register",
+    hyp001_fy2122_denominator = "List size",
+    hyp001_fy2122_pct = "Prevalence",
+    hyp003_fy2122_numerator = "Numerator",
+    hyp003_fy2122_denominator = "Denominator",
+    hyp003_fy2122_pct = "Achievement",
+    hyp007_fy2122_numerator = "Numerator",
+    hyp007_fy2122_denominator = "Denominator",
+    hyp007_fy2122_pct = "Achievement"
+    # bp002_fy2122_numerator = "Numerator",
+    # bp002_fy2122_denominator = "Denominator",
+    # bp002_fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(2)
+  )  |>
+  text_transform(
+    locations = cells_body(
+      columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct, 
+                  hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct, 
+                  hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct
+                  # bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct
+                  )),
+    fn = function(x){
+      case_when(x == "NA" ~ "-",
+                TRUE ~ x)
+    }
+  )
+
+gt_tab_hyp_fy2122
+gtsave(gt_tab_hyp_fy2122, here("released_outputs", "tables", "gt_tab_hyp_fy2122.png"))
+
+```
+
+
+
+```{r}
+
+df_tab_bp_fy2122 <- df_tab_fy2122 |>
+  select(1:2, 12:14)
+
+df_tab_bp_fy2122 <- df_tab_bp_fy2122 |>
+  drop_na()
+
+df_tab_bp_fy2122 <- df_tab_bp_fy2122  |>
+  mutate(category = case_when(category == "40-49" ~ "45-49",
+                              TRUE ~ category))
+
+gt_tab_bp_fy2122 <- df_tab_bp_fy2122 |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "BP002",
+    columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(bp002_fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>  
+  cols_label(
+    bp002_fy2122_numerator = "Numerator",
+    bp002_fy2122_denominator = "Denominator",
+    bp002_fy2122_pct = "Achievement"
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(2)
+  )  |>
+  text_transform(
+    locations = cells_body(
+      columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)),
+    fn = function(x){
+      case_when(x == "NA" ~ "-",
+                TRUE ~ x)
+    }
+  )
+
+gt_tab_bp_fy2122
+gtsave(gt_tab_bp_fy2122, here("released_outputs", "tables", "gt_tab_bp_fy2122.png"))
+
+```
