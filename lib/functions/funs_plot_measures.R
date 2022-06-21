@@ -169,6 +169,7 @@ plot_qof_values <- function(df,
                             text_size = 14,
                             facet_wrap = TRUE,
                             facet_wrap_var = indicator,
+                            facet_wrap_ncol = 3,
                             axis_x_text_size = 10) {
   plot <- df |>
     ggplot(aes(x = date,
@@ -200,7 +201,7 @@ plot_qof_values <- function(df,
 
 
     if (facet_wrap) {
-      plot + facet_wrap(vars({{facet_wrap_var}}), ncol = 3)
+      plot + facet_wrap(vars({{facet_wrap_var}}), ncol = facet_wrap_ncol)
     } else {
       plot
     }
