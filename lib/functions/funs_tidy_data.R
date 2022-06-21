@@ -51,8 +51,8 @@ tidy_category_names <- function(df,
         mutate({{ category }} := case_when({{ group }} == {{ care_home }} ~ 
                                              as.character(factor({{ category }},
                                                                  levels = c(TRUE, FALSE),
-                                                                 labels = c("Record of positive care home status",
-                                                                            "No record of positive care home status"))),
+                                                                 labels = c("Record of care home status",
+                                                                            "No record of care home status"))),
                                            TRUE ~ {{ category }}))
     }
     
