@@ -193,7 +193,7 @@ plot_hyp001_breakdowns <- plot_hyp001_breakdowns &
 
 ggsave(filename = here("released_outputs", "figures", "plot_hyp001_breakdowns.png"),
        plot = plot_hyp001_breakdowns,
-       width = 12.5, 
+       width = 12.8, 
        height = 15)
 
 ```
