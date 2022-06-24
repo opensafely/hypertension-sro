@@ -1,0 +1,15 @@
+
+```{r message=FALSE}
+library(arrow)
+library(here)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+```
+
+```{r}
+
+df <- read_feather(here("output/indicators/input_hyp001_2019-03-01.feather"))
+df %>% names()
+
+```
