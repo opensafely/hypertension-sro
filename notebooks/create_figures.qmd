@@ -36,7 +36,7 @@ df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
                             labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
 
 df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
-  filter(date > "2019-03-01") |>
+  filter(date < "2022-04-01") |>
   mutate(variable = "Practice level deciles")
 
 df_deciles_bp_hyp_practice |>
@@ -53,7 +53,7 @@ df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hy
 
 # Start with end of FY
 df_measures_bp_hyp <- df_measures_bp_hyp |>
-  filter(date > "2019-03-01")
+  filter(date < "2022-04-01")
 
 # Change age band group for BP002 so plot legends can be combined
 df_plot_measures_bp_hyp <- df_measures_bp_hyp |>

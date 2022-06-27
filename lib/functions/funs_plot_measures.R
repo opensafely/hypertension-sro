@@ -175,8 +175,8 @@ plot_qof_values <- function(df,
     ggplot(aes(x = date,
                y = value,
                colour = category)) +
-    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
-                                                 "2021-04-01", "2022-04-01")),
+    geom_vline(xintercept = lubridate::as_date(c("2019-03-01", "2020-03-01",
+                                                 "2021-03-01", "2022-03-01")),
                linetype = "dotted",
                colour = "orange",
                size = .7) +
@@ -227,8 +227,8 @@ plot_qof_deciles <- function(df,
                colour = percentile, 
                group = percentile,
                size = percentile)) +
-    geom_vline(xintercept = lubridate::as_date(c("2019-04-01", "2020-04-01",
-                                                 "2021-04-01", "2022-04-01")),
+    geom_vline(xintercept = lubridate::as_date(c("2019-03-01", "2020-03-01",
+                                                 "2021-03-01", "2022-03-01")),
                linetype = "dotted",
                colour = "orange",
                size = .7) +

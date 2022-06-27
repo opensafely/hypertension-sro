@@ -28,10 +28,6 @@ df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hy
                                    levels = c("hyp001", "hyp003", "hyp007", "bp002"),
                                    labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
 
-# Start with end of FY
-df_measures_bp_hyp <- df_measures_bp_hyp |>
-  filter(date > "2019-03-01")
-
 # Change age band group for BP002 so plot legends can be combined
 df_measures_bp_hyp <- df_measures_bp_hyp |>
   mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "45-49" ~ "40-49",

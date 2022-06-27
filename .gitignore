@@ -21,3 +21,5 @@ lib/qof_nhsd_data/QOF2021_v2/*
 notebooks/scratchpad.rmarkdown
 notebooks/manuscript-figures-tables.html
 notebooks/manuscript-figures-tables_files/*
+notebooks/create_figures_files/*
+notebooks/create_figures.html
