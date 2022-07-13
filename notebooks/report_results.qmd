@@ -68,9 +68,60 @@ df_plot_measures_bp_hyp
 
 ```{r}
 
+summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", "numerator", "denominator", "population", "decile")) {
+
+  df_min <- df |>
+    filter(group == {{filter_group}}) |>
+    filter(variable == {{filter_variable}}) |>
+    group_by(indicator, variable) |>
+    slice_min(value, n = 1)
+
+  df_max <- df |>
+    filter(group == {{filter_group}}) |>
+    filter(variable == {{filter_variable}}) |>
+    group_by(indicator, variable) |>
+    slice_max(value, n = 1)
+
+  df_diff <- bind_rows(df_min, df_max) |>
+    arrange(indicator, date, variable) |>
+    group_by(indicator, variable) |>
+    mutate(diff = value - lag(value))
+
+  df_diff
+
+}
+
+df <- summary_report_min_max(df = df_measures_bp_hyp,
+                       filter_group = "population",
+                       filter_variable = "pct")
+
+df
+
 
 df_measures_bp_hyp |>
-  filter(month(date) == 3)
+  # filter(month(date) == 3) |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_max(value, n = 2) |>
+  filter(variable == "pct")
 
-month(df_measures_bp_hyp$date)
+df_measures_bp_hyp
+```
+
+
+```{r}
+
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_min(date, n = 1) |>
+  filter(variable == "pct")
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_max(date, n = 1) |>
+  filter(variable == "pct")
+
 ```
