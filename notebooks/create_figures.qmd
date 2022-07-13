@@ -16,9 +16,11 @@ library(gt)
 
 
 ```{r}
+
 # Load plotting function
 source(here::here("lib", "functions", "funs_plot_measures.R"))
 source(here::here("lib", "functions", "funs_report_results.R"))
+
 ```
 
 # Load data
@@ -206,7 +208,7 @@ ggsave(filename = here("released_outputs", "figures", "plot_hyp001_breakdowns.pn
 plot_hyp003_deciles_practice <- df_deciles_bp_hyp_practice |>
   filter(indicator %in% c("HYP003 (Age <= 79)")) |>
   plot_qof_deciles(facet_wrap = TRUE,
-                   facet_wrap_var = variable,
+                   facet_wrap_var = indicator,
                    date_breaks = "3 months",
                    ylimits =  NULL,
                    ybreaks =  seq(0, 1, .15),
@@ -225,7 +227,7 @@ plot_hyp003_imd <- df_plot_measures_bp_hyp |>
                   date_breaks = "3 months",
                   legend_top_nrow = 1,
                   facet_wrap = TRUE,
-                  facet_wrap_var = group)
+                  facet_wrap_var = indicator)
 
 # plot_hyp003_imd
 
@@ -236,7 +238,7 @@ plot_hyp003_age_band <- df_plot_measures_bp_hyp |>
     plot_qof_values(legend_position = "top", 
                     legend_top_nrow = 2,
                     date_breaks = "3 months",
-                    facet_wrap_var = group)
+                    facet_wrap_var = indicator)
 
 # plot_hyp003_age_band
 
@@ -247,7 +249,7 @@ plot_hyp003_eth <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Set1")
 
 # plot_hyp003_eth
@@ -258,9 +260,9 @@ plot_hyp003_region <- df_plot_measures_bp_hyp |>
     filter(indicator %in% c("HYP003 (Age <= 79)")) |>
     drop_na(category) |>
     plot_qof_values(legend_position = "top", 
-                    legend_top_nrow = 3,
+                    legend_top_nrow = 2,
                     date_breaks = "3 months",
-                    facet_wrap_var = group) +
+                    facet_wrap_var = indicator) +
     scale_colour_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", 
                                    "#ff7f00",
                                    "#ffff33", "#a65628", "#f781bf", "#999999"))
@@ -274,7 +276,7 @@ plot_hyp003_sex <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp003_sex
@@ -286,7 +288,7 @@ plot_hyp003_care_home <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp003_care_home
@@ -298,7 +300,7 @@ plot_hyp003_learning_disability <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp003_learning_disability
@@ -322,6 +324,11 @@ plot_hyp003_breakdowns <- plot_hyp003_breakdowns &
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
 
+plot_hyp003_breakdowns & scale_y_continuous(
+          labels = scales::percent,
+          limits = c(.3, .82)
+        )
+
 ggsave(filename = here("released_outputs", "figures", "plot_hyp003_breakdowns.png"),
        plot = plot_hyp003_breakdowns,
        width = 12.5, 
@@ -338,7 +345,7 @@ ggsave(filename = here("released_outputs", "figures", "plot_hyp003_breakdowns.pn
 plot_hyp007_deciles_practice <- df_deciles_bp_hyp_practice |>
   filter(indicator %in% c("HYP007 (Age >= 80)")) |>
   plot_qof_deciles(facet_wrap = TRUE,
-                   facet_wrap_var = variable,
+                   facet_wrap_var = indicator,
                    date_breaks = "3 months",
                    ylimits =  NULL,
                    ybreaks =  seq(0, 1, .15),
@@ -357,7 +364,7 @@ plot_hyp007_imd <- df_plot_measures_bp_hyp |>
                   date_breaks = "3 months",
                   legend_top_nrow = 1,
                   facet_wrap = TRUE,
-                  facet_wrap_var = group)
+                  facet_wrap_var = indicator)
 
 # plot_hyp007_imd
 
@@ -368,7 +375,7 @@ plot_hyp007_age_band <- df_plot_measures_bp_hyp |>
     plot_qof_values(legend_position = "top", 
                     legend_top_nrow = 2,
                     date_breaks = "3 months",
-                    facet_wrap_var = group)
+                    facet_wrap_var = indicator)
 
 # plot_hyp007_age_band
 
@@ -379,7 +386,7 @@ plot_hyp007_eth <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Set1")
 
 # plot_hyp007_eth
@@ -390,9 +397,9 @@ plot_hyp007_region <- df_plot_measures_bp_hyp |>
     filter(indicator %in% c("HYP007 (Age >= 80)")) |>
     drop_na(category) |>
     plot_qof_values(legend_position = "top", 
-                    legend_top_nrow = 3,
+                    legend_top_nrow = 2,
                     date_breaks = "3 months",
-                    facet_wrap_var = group) +
+                    facet_wrap_var = indicator) +
     scale_colour_manual(values = c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", 
                                    "#ff7f00",
                                    "#ffff33", "#a65628", "#f781bf", "#999999"))
@@ -406,7 +413,7 @@ plot_hyp007_sex <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp007_sex
@@ -418,7 +425,7 @@ plot_hyp007_care_home <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp007_care_home
@@ -430,7 +437,7 @@ plot_hyp007_learning_disability <- df_plot_measures_bp_hyp |>
   plot_qof_values(legend_position = "top", 
                   legend_top_nrow = 1,
                   date_breaks = "3 months",
-                  facet_wrap_var = group) +
+                  facet_wrap_var = indicator) +
   scale_colour_brewer(palette = "Dark2")
 
 # plot_hyp007_learning_disability
@@ -453,6 +460,10 @@ plot_hyp007_breakdowns <- plot_hyp007_breakdowns &
         text = element_text(size = 15),
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
+
+plot_hyp007_breakdowns & scale_y_continuous(
+          labels = scales::percent,
+          limits = c(.4, .92))
 
 ggsave(filename = here("released_outputs", "figures", "plot_hyp007_breakdowns.png"),
        plot = plot_hyp007_breakdowns,
@@ -488,6 +499,9 @@ plot_bp002_imd <- df_plot_measures_bp_hyp |>
                   legend_top_nrow = 1,
                   facet_wrap = TRUE,
                   facet_wrap_var = group)
+
+
+
 
 # plot_bp002_imd
 
@@ -566,12 +580,14 @@ plot_bp002_learning_disability <- df_plot_measures_bp_hyp |>
 # plot_bp002_learning_disability
 ```
 
+
+
 ```{r}
 
-plot_bp002_breakdowns <- (plot_bp002_deciles_practice + plot_bp002_sex) /
+plot_bp002_breakdowns <- ((plot_bp002_deciles_practice + plot_bp002_sex) & scale_y_continuous(labels = scales::percent, limits = c(.8, .95))) /
   (plot_bp002_age_band + plot_bp002_region) /
   (plot_bp002_eth + plot_bp002_imd ) /
-  (plot_bp002_learning_disability + plot_bp002_care_home) 
+  ((plot_bp002_learning_disability + plot_bp002_care_home) & scale_y_continuous(labels = scales::percent, limits = c(.8, 1))) 
 
 plot_bp002_breakdowns <- plot_bp002_breakdowns & ylab(NULL) & theme(legend.position = "top")
 
@@ -600,7 +616,7 @@ ggsave(filename = here("released_outputs", "figures", "plot_bp002_breakdowns.png
 ```{r}
 
 plot_hyp001_population <- df_measures_bp_hyp |>
-  filter(indicator %in% c("HYP001 (Total population)")) |>
+  filter(indicator == c("HYP001 (Total population)")) |>
   filter(variable == "pct")  |>
   filter(group == "population") |>
   filter(category != "missing") |>
@@ -611,13 +627,34 @@ plot_hyp001_population <- df_measures_bp_hyp |>
 
 # plot_hyp001_population
 
-plot_hyp003_hyp007_bp002_population <- df_measures_bp_hyp |>
-  filter(indicator != "HYP001 (Total population)") |>
+plot_hyp003_population <- df_measures_bp_hyp |>
+  filter(indicator == "HYP003 (Age <= 79)") |>
   filter(variable == "pct")  |>
   filter(group == "population") |>
   filter(category != "missing") |>
-  plot_qof_values(legend_position = "none",
-                  facet_wrap_ncol = 3,
+  plot_qof_values(legend_position = "none", facet_wrap_ncol = 1,
+                  ylab = "Patients receiving indicated care") +
+  scale_colour_viridis_d() +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1)) +
+  scale_colour_manual(values = c("#440154FF", "#440154FF", "#440154FF", "#440154FF"))
+
+plot_hyp007_population <- df_measures_bp_hyp |>
+  filter(indicator == "HYP007 (Age >= 80)") |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(category != "missing") |>
+  plot_qof_values(legend_position = "none", facet_wrap_ncol = 1,
+                  ylab = "Patients receiving indicated care") +
+  scale_colour_viridis_d() +
+  scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1)) +
+  scale_colour_manual(values = c("#440154FF", "#440154FF", "#440154FF", "#440154FF"))
+
+plot_bp002_population <- df_measures_bp_hyp |>
+  filter(indicator == "BP002 (Age >= 45)") |>
+  filter(variable == "pct")  |>
+  filter(group == "population") |>
+  filter(category != "missing") |>
+  plot_qof_values(legend_position = "none", facet_wrap_ncol = 1,
                   ylab = "Patients receiving indicated care") +
   scale_colour_viridis_d() +
   scale_y_continuous(labels = scales::label_percent(), limits = c(0, 1)) +
@@ -625,26 +662,68 @@ plot_hyp003_hyp007_bp002_population <- df_measures_bp_hyp |>
 
 # plot_hyp003_hyp007_bp002_population
 
-plot_reg_ind_population <- (plot_hyp001_population + plot_hyp003_hyp007_bp002_population) +
-  plot_layout(design = "ABBB")
-  
-  #  & 
-  # theme(legend.position = "none") & 
-  # guides(colour = guide_legend(nrow = 1))) +
-  # plot_annotation(tag_levels = list(c('A. Total population'))) &
-  # theme(plot.tag.position  = c(.02, 1), plot.tag = element_text(hjust = 0))
-
-plot_reg_ind_population <- plot_reg_ind_population & 
+plot_reg_ind_population <- (plot_bp002_population + plot_hyp001_population) / (plot_hyp003_population + plot_hyp007_population) +  plot_annotation(tag_levels = 'A') & 
   theme_classic() &
   theme(legend.position = "none",
         text = element_text(size = 14),
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
 
-
 plot_reg_ind_population
 
 ggsave(filename = here("released_outputs", "figures", "plot_reg_ind_population.png"),
-       plot = plot_reg_ind_population, width = 12.5, height = 3.5)
+       plot = plot_reg_ind_population, width = 11, height = 7)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+ggtheme_qof <- theme_classic() &
+  theme(legend.position = "bottom",
+        text = element_text(size = 15),
+        strip.background = element_rect(size = 0),
+        strip.text.x = element_text(size = 13, face = "bold"))
+
+breakdown1_hyp003_hyp007 <- (plot_hyp003_deciles_practice + plot_hyp007_deciles_practice + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.29, .95))) /
+  (plot_hyp003_sex + plot_hyp007_sex + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_age_band + plot_hyp007_age_band + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_eth + plot_hyp007_eth + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90)))
+
+breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 & ylab(NULL)
+breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
+
+ggsave(filename = here("released_outputs", "figures", "plot_breakdown1_hyp003_hyp007.png"),
+       plot = breakdown1_hyp003_hyp007,
+       width = 12.5, 
+       height = 15)
+
+breakdown2_hyp003_hyp007 <- (plot_hyp003_region + plot_hyp007_region + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_imd + plot_hyp007_imd + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.44, .88))) /
+  (plot_hyp003_learning_disability + plot_hyp007_learning_disability + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_care_home + plot_hyp007_care_home + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.45, .90)))
+
+breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 & ylab(NULL)
+breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
+
+
+ggsave(filename = here("released_outputs", "figures", "breakdown2_hyp003_hyp007.png"),
+       plot = breakdown2_hyp003_hyp007,
+       width = 12.5, 
+       height = 15)
 
 ```

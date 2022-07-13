@@ -223,3 +223,79 @@ gt_tab_bp_fy2122
 gtsave(gt_tab_bp_fy2122, here("released_outputs", "tables", "gt_tab_bp_fy2122.png"))
 
 ```
+
+
+
+```{r}
+
+gt_tab_hyp_bp_fy2122 <- df_tab_fy2122 |>
+  relocate(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct, .after = category) |>
+  gt(rowname_col = "category",
+     groupname_col = "group")  |>
+  row_group_order(groups = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home status", "Record or learning disability")) %>% 
+  tab_spanner(
+    label = "BP002 (Age >= 45)",
+    columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct)
+  ) |>
+  tab_spanner(
+    label = "HYP001 (Total population)",
+    columns = c(hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct)
+  ) |>
+  tab_spanner(
+    label = "HYP003 (Age <= 79)",
+    columns = c(hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct)
+  ) |>
+  tab_spanner(
+    label = "HYP007 (Age >= 80)",
+    columns = c(hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct)
+  ) |>
+  fmt_number(
+    columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator,
+                hyp001_fy2122_numerator, hyp001_fy2122_denominator,
+                hyp003_fy2122_numerator, hyp003_fy2122_denominator,
+                hyp007_fy2122_numerator, hyp007_fy2122_denominator
+                ),
+    decimals = 0,
+    use_seps = TRUE
+  ) |>
+  fmt_percent(
+    columns = c(bp002_fy2122_pct, hyp001_fy2122_pct, hyp003_fy2122_pct, hyp007_fy2122_pct),
+    decimals = 2,
+    use_seps = TRUE
+  ) |>  
+  cols_label(
+    bp002_fy2122_numerator = "Numerator",
+    bp002_fy2122_denominator = "Denominator",
+    bp002_fy2122_pct = md("Receiving<br>indicated care"),
+    hyp001_fy2122_numerator = "Register",
+    hyp001_fy2122_denominator = "List size",
+    hyp001_fy2122_pct = "Prevalence",
+    hyp003_fy2122_numerator = "Numerator",
+    hyp003_fy2122_denominator = "Denominator",
+    hyp003_fy2122_pct = md("Receiving<br>indicated care"),
+    hyp007_fy2122_numerator = "Numerator",
+    hyp007_fy2122_denominator = "Denominator",
+    hyp007_fy2122_pct = md("Receiving<br>indicated care")
+  ) |>
+  tab_options(
+    column_labels.font.size = "small",
+    table.font.size = "small",
+    row_group.font.size = "small",
+    data_row.padding = px(2)
+  )  |>
+  text_transform(
+    locations = cells_body(
+      columns = c(bp002_fy2122_numerator, bp002_fy2122_denominator, bp002_fy2122_pct, 
+                  hyp001_fy2122_numerator, hyp001_fy2122_denominator, hyp001_fy2122_pct, 
+                  hyp003_fy2122_numerator, hyp003_fy2122_denominator, hyp003_fy2122_pct, 
+                  hyp007_fy2122_numerator, hyp007_fy2122_denominator, hyp007_fy2122_pct
+                  )),
+    fn = function(x){
+      case_when(x == "NA" ~ "-",
+                TRUE ~ x)
+    }
+  )
+
+gtsave(gt_tab_hyp_bp_fy2122, here("released_outputs", "tables", "gt_tab_hyp_bp_fy2122.png"), expand = 10)
+
+```
