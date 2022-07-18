@@ -51,8 +51,8 @@ tidy_category_names <- function(df,
         mutate({{ category }} := case_when({{ group }} == {{ care_home }} ~ 
                                              as.character(factor({{ category }},
                                                                  levels = c(TRUE, FALSE),
-                                                                 labels = c("Record of positive care home status",
-                                                                            "No record of positive care home status"))),
+                                                                 labels = c("Record of care home status",
+                                                                            "No record of care home status"))),
                                            TRUE ~ {{ category }}))
     }
     
@@ -95,18 +95,11 @@ tidy_category_names <- function(df,
   
   if (!is.null(imd)) {
     
-    if (imd_explicit_na) {
-      imd_levels <- c(0:5)
-      imd_labels <- c("(Missing)",
-                      "1 - Most deprived",
-                      "2", "3", "4",
-                      "5 - Least deprived")
-    } else {
-      imd_levels <- c(1:5)
+      imd_levels <- c(1:5, "Unknown")
       imd_labels <- c("1 - Most deprived",
                       "2", "3", "4",
-                      "5 - Least deprived")
-    }
+                      "5 - Least deprived",
+                      "(Missing)")
     
     df <- df %>%
       mutate({{ category }} := case_when({{ group }} == {{ imd }} ~ 

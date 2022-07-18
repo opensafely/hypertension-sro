@@ -1,0 +1,127 @@
+This notebook creates the figures and tables for the manuscript.
+
+# Load packages and function
+
+```{r}
+
+library(tidyverse)
+library(lubridate)
+library(here)
+library(scales)
+library(janitor)
+library(patchwork)
+library(gt)
+
+```
+
+
+```{r}
+# Load plotting function
+source(here::here("lib", "functions", "funs_report_results.R"))
+```
+
+# Load data
+
+```{r}
+
+df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
+
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  mutate(percentile = factor(percentile,
+                             levels = seq(10, 90, 10),
+                             labels = c(seq(1, 4, 1), "5 - Median", seq(6, 9, 1))),
+         indicator = factor(indicator, 
+                            levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                            labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  filter(date < "2022-04-01") |>
+  mutate(variable = "Practice level deciles")
+
+df_deciles_bp_hyp_practice |>
+  group_by(indicator) |>
+  count()
+```
+
+```{r}
+
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
+         mutate(indicator = factor(indicator, 
+                                   levels = c("hyp001", "hyp003", "hyp007", "bp002"),
+                                   labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+
+# Start with end of FY
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  filter(date < "2022-04-01")
+
+# Change age band group for BP002 so plot legends can be combined
+df_plot_measures_bp_hyp <- df_measures_bp_hyp |>
+  # mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "45-49" ~ "40-49",
+  #                             TRUE ~ category)) |>
+  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
+                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home", "Learning disability")))
+
+
+df_plot_measures_bp_hyp
+
+```
+
+```{r}
+
+summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", "numerator", "denominator", "population", "decile")) {
+
+  df_min <- df |>
+    filter(group == {{filter_group}}) |>
+    filter(variable == {{filter_variable}}) |>
+    group_by(indicator, variable) |>
+    slice_min(value, n = 1)
+
+  df_max <- df |>
+    filter(group == {{filter_group}}) |>
+    filter(variable == {{filter_variable}}) |>
+    group_by(indicator, variable) |>
+    slice_max(value, n = 1)
+
+  df_diff <- bind_rows(df_min, df_max) |>
+    arrange(indicator, date, variable) |>
+    group_by(indicator, variable) |>
+    mutate(diff = value - lag(value))
+
+  df_diff
+
+}
+
+df <- summary_report_min_max(df = df_measures_bp_hyp,
+                       filter_group = "population",
+                       filter_variable = "pct")
+
+df
+
+
+df_measures_bp_hyp |>
+  # filter(month(date) == 3) |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_max(value, n = 2) |>
+  filter(variable == "pct")
+
+df_measures_bp_hyp
+```
+
+
+```{r}
+
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_min(date, n = 1) |>
+  filter(variable == "pct")
+
+df_measures_bp_hyp |>
+  filter(group == "population") |>
+  group_by(indicator, variable) |>
+  slice_max(date, n = 1) |>
+  filter(variable == "pct")
+
+```

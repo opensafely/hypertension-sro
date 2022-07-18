@@ -18,3 +18,17 @@ manuscript/qof_bp_hyp_covid.html
 notebooks/scratchpad.html
 notebooks/scratchpad_files/*
 lib/qof_nhsd_data/QOF2021_v2/*
+notebooks/scratchpad.rmarkdown
+notebooks/manuscript-figures-tables.html
+notebooks/manuscript-figures-tables_files/*
+notebooks/create_figures_files/*
+notebooks/create_figures.html
+.idea/.gitignore
+.idea/hypertension-sro.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/rGraphicsSettings.xml
+.idea/rSettings.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/inspectionProfiles/profiles_settings.xml
