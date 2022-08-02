@@ -16,7 +16,7 @@ library(gt)
 
 
 ```{r}
-# Load plotting function
+# Load reporting function
 source(here::here("lib", "functions", "funs_report_results.R"))
 ```
 
@@ -25,46 +25,29 @@ source(here::here("lib", "functions", "funs_report_results.R"))
 ```{r}
 
 df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
+df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv"))
 
 df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
-  mutate(percentile = factor(percentile,
-                             levels = seq(10, 90, 10),
-                             labels = c(seq(1, 4, 1), "5 - Median", seq(6, 9, 1))),
-         indicator = factor(indicator, 
-                            levels = c("hyp001", "hyp003", "hyp007", "bp002"),
-                            labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
+  rename(category = percentile) |>
+  mutate(variable = "decile",
+         group = "practice_level_decile",
+         category = as.character(category)) |>
+  relocate(indicator, date, variable, group, category, value)
 
-df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
-  filter(date < "2022-04-01") |>
-  mutate(variable = "Practice level deciles")
+df_measures_bp_hyp <- df_measures_bp_hyp |> bind_rows(df_deciles_bp_hyp_practice)|>
+  arrange(indicator, date, variable, group, category)
 
 df_deciles_bp_hyp_practice |>
   group_by(indicator) |>
   count()
-```
 
-```{r}
+df_measures_bp_hyp 
 
-df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv")) |>
-         mutate(indicator = factor(indicator, 
-                                   levels = c("hyp001", "hyp003", "hyp007", "bp002"),
-                                   labels = c("HYP001 (Total population)", "HYP003 (Age <= 79)", "HYP007 (Age >= 80)", "BP002 (Age >= 45)")))
-
-# Start with end of FY
 df_measures_bp_hyp <- df_measures_bp_hyp |>
   filter(date < "2022-04-01")
-
-# Change age band group for BP002 so plot legends can be combined
-df_plot_measures_bp_hyp <- df_measures_bp_hyp |>
-  # mutate(category = case_when(indicator == "BP002 (Age >= 45)" & group == "age_band" & category == "45-49" ~ "40-49",
-  #                             TRUE ~ category)) |>
-  mutate(group = factor(group, levels = c("population", "sex", "age_band", "ethnicity", "imd_q5", "region", "care_home", "learning_disability"), 
-                               labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home", "Learning disability")))
-
-
-df_plot_measures_bp_hyp
-
 ```
+
+
 
 ```{r}
 
@@ -92,11 +75,11 @@ summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", 
 }
 
 df <- summary_report_min_max(df = df_measures_bp_hyp,
-                       filter_group = "population",
-                       filter_variable = "pct")
+                             filter_group = "population",
+                             filter_variable = "pct")
 
 df
-
+      
 
 df_measures_bp_hyp |>
   # filter(month(date) == 3) |>
@@ -123,5 +106,16 @@ df_measures_bp_hyp |>
   group_by(indicator, variable) |>
   slice_max(date, n = 1) |>
   filter(variable == "pct")
+
+```
+
+```{r}
+
+df_measures_bp_hyp |>
+  filter(variable == "decile") |>
+  filter(category == "50")
+
+df_measures_bp_hyp |>
+  filter(variable == "decile")
 
 ```
