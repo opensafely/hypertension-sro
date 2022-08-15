@@ -748,9 +748,9 @@ plot_hyp_management_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Patients receiving\nindicated care (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Numerator / Denominator") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),
@@ -774,9 +774,9 @@ plot_bp_management_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Patients receiving\nindicated care (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Numerator / Denominator") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),
@@ -799,9 +799,9 @@ plot_hyp_records_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Hypertension register (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Register / Population") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),

@@ -111,11 +111,49 @@ df_measures_bp_hyp |>
 
 ```{r}
 
-df_measures_bp_hyp |>
-  filter(variable == "decile") |>
-  filter(category == "50")
+report_national_median <- function(df, filter_date = NULL) {
 
-df_measures_bp_hyp |>
-  filter(variable == "decile")
+  df <- df |>
+    filter(variable == "decile") |>
+    filter(category == "50") |>
+    pivot_wider(names_from = indicator, values_from = value)
 
+  if (is.null(filter_date)) {
+    df
+  } else {
+    df |>
+      filter(date == filter_date)
+  }
+  }
+
+report_national_median(df_measures_bp_hyp, filter_date = "2021-03-01")
+
+
+report_group_pct <- function(df, filter_group, filter_category = NULL, filter_date = NULL) {
+
+  df <- df |>
+    filter(variable == "pct") |>
+    filter(group == filter_group) |>
+    pivot_wider(names_from = indicator, values_from = value)
+
+
+  if (!is.null(filter_category)) {
+    df <- df |>
+      filter(category == filter_category)
+  }
+
+  if (is.null(filter_date)) {
+    df
+  } else {
+    df |>
+      filter(date == filter_date)
+  }
+  }
+
+report_category_pct(df_measures_bp_hyp, filter_group = "region", filter_category = NULL, filter_date = "2021-03-01")
+
+unique(df_measures_bp_hyp$variable)
+unique(df_measures_bp_hyp$group)
+unique(df_measures_bp_hyp$category)
 ```
+
