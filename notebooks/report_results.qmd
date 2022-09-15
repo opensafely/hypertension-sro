@@ -45,41 +45,18 @@ df_measures_bp_hyp
 
 df_measures_bp_hyp <- df_measures_bp_hyp |>
   filter(date < "2022-04-01")
+
 ```
 
-
+# Minimum & maximum value
 
 ```{r}
-
-summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", "numerator", "denominator", "population", "decile")) {
-
-  df_min <- df |>
-    filter(group == {{filter_group}}) |>
-    filter(variable == {{filter_variable}}) |>
-    group_by(indicator, variable) |>
-    slice_min(value, n = 1)
-
-  df_max <- df |>
-    filter(group == {{filter_group}}) |>
-    filter(variable == {{filter_variable}}) |>
-    group_by(indicator, variable) |>
-    slice_max(value, n = 1)
-
-  df_diff <- bind_rows(df_min, df_max) |>
-    arrange(indicator, date, variable) |>
-    group_by(indicator, variable) |>
-    mutate(diff = value - lag(value))
-
-  df_diff
-
-}
 
 df <- summary_report_min_max(df = df_measures_bp_hyp,
                              filter_group = "population",
                              filter_variable = "pct")
 
-df
-      
+df      
 
 df_measures_bp_hyp |>
   # filter(month(date) == 3) |>
@@ -91,9 +68,9 @@ df_measures_bp_hyp |>
 df_measures_bp_hyp
 ```
 
+# First & last date
 
 ```{r}
-
 
 df_measures_bp_hyp |>
   filter(group == "population") |>
@@ -109,51 +86,33 @@ df_measures_bp_hyp |>
 
 ```
 
+# Report national median
 ```{r}
-
-report_national_median <- function(df, filter_date = NULL) {
-
-  df <- df |>
-    filter(variable == "decile") |>
-    filter(category == "50") |>
-    pivot_wider(names_from = indicator, values_from = value)
-
-  if (is.null(filter_date)) {
-    df
-  } else {
-    df |>
-      filter(date == filter_date)
-  }
-  }
 
 report_national_median(df_measures_bp_hyp, filter_date = "2021-03-01")
 
+```
 
-report_group_pct <- function(df, filter_group, filter_category = NULL, filter_date = NULL) {
+# Report values for all categories in one group at particulat date
 
-  df <- df |>
-    filter(variable == "pct") |>
-    filter(group == filter_group) |>
-    pivot_wider(names_from = indicator, values_from = value)
-
-
-  if (!is.null(filter_category)) {
-    df <- df |>
-      filter(category == filter_category)
-  }
-
-  if (is.null(filter_date)) {
-    df
-  } else {
-    df |>
-      filter(date == filter_date)
-  }
-  }
-
-report_category_pct(df_measures_bp_hyp, filter_group = "region", filter_category = NULL, filter_date = "2021-03-01")
+```{r}
 
 unique(df_measures_bp_hyp$variable)
 unique(df_measures_bp_hyp$group)
 unique(df_measures_bp_hyp$category)
+
+report_group_pct(df_measures_bp_hyp, filter_group = "region", filter_category = NULL, filter_date = "2021-03-01")
+
+
 ```
 
+# Report population values at a particular date
+
+```{r}
+
+df_measures_bp_hyp |>
+  filter(date == "2021-03-01") |>
+  filter(variable == "pct") |>
+  filter(group == "population")
+
+```
