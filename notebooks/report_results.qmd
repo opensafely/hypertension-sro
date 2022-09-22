@@ -116,3 +116,16 @@ df_measures_bp_hyp |>
   filter(group == "population")
 
 ```
+
+# Compare groups with each other and national median
+
+```{r}
+
+compare_groups(df = df_measures_bp_hyp, 
+               variable = "pct",  
+               group_var_name = "group", category_var_name = "category",
+               group_a = "age_band", category_a = "50-59",
+               group_b = "age_band", category_b = "80+")
+
+
+```
