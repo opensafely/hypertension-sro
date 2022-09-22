@@ -89,3 +89,73 @@ report_group_pct <- function(df, filter_group, filter_category = NULL, filter_da
       filter(date == filter_date)
   }
 }
+
+compare_groups <- function(df,
+                           variable = c("pct", "numerator", "denominator"),
+                           group_var_name, category_var_name,
+                           group_a, category_a,
+                           group_b, category_b,
+                           add_national_median = TRUE) {
+
+                           filter_variable <- match.arg(variable)
+
+                           # Check variables exist in data
+                           if (group_var_name %in% names(df) == FALSE | category_var_name %in% names(df) == FALSE) {
+                             stop("Variables specified in 'group_var_name' or 'category_var_name' must exist in 'df'")
+                           }
+
+                           if (group_var_name == category_var_name) {
+                             stop("Two different variables need to be specified for 'group_var_name' and 'category_var_name'.")
+                           }
+
+                           # Check categories and groups exist
+                           unique_groups <- unique(pull(df, group_var_name))
+                           unique_categories <- unique(pull(df, category_var_name))
+
+                           if ((group_a %in% unique_groups & group_b %in% unique_groups) == FALSE) {
+                            stop(paste0("'group_a' and 'group_b must exist in 'unique_groups'. Options are: ", paste0(unique_groups, collapse = ", "), "."))
+                           }
+
+                           if ((category_a %in% unique_categories & category_b %in% unique_categories) == FALSE) {
+                            stop(paste0("'category_a' and 'category_b' must exist in 'category_var_name'. Options are: ", paste0(unique_categories, collapse = ", "), "."))
+                           }
+
+                           if (category_a == category_b) {
+                             stop("Two different categories need to be specified in 'category_a' and 'category_b'.")
+                           }
+
+                           str_var_name_a <- janitor::make_clean_names(paste(group_a, category_a, sep = "_"))
+                           str_var_name_b <- janitor::make_clean_names(paste(group_b, category_b, sep = "_"))
+
+                           group_01 <- df |>
+                             filter(variable == filter_variable) |>
+                             filter(group == group_a) |>
+                             filter(category == category_a) |>
+                             select(indicator, date, !!str_var_name_a := value)
+
+                           group_02 <- df |>
+                             filter(variable == filter_variable) |>
+                             filter(group == group_b) |>
+                             filter(category == category_b) |>
+                             select(indicator, date, !!str_var_name_b := value)
+                           
+                           group_comparisons <- left_join(group_01, group_02) |>
+                             mutate(diff_groups := !!rlang::sym(str_var_name_a) - !!rlang::sym(str_var_name_b))
+
+                           if (variable == "pct" & add_national_median == TRUE) {
+
+                           national_median <- df_measures_bp_hyp |>
+                             filter(variable == "decile") |>
+                             filter(category == "50") |>
+                             select(indicator, date, national_median = value)
+
+                           group_comparisons <- group_comparisons |>
+                             left_join(national_median) |>
+                             mutate("diff_median_{str_var_name_a}" := national_median - !!rlang::sym(str_var_name_a),
+                                    "diff_median_{str_var_name_b}" := national_median - !!rlang::sym(str_var_name_b)) |>
+                             relocate(indicator, date, national_median)
+                           }
+
+                           return(group_comparisons)
+
+                           }
