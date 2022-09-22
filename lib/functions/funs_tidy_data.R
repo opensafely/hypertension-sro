@@ -25,11 +25,11 @@ tidy_category_names <- function(df,
                                 sex = NULL,
                                 population = NULL,
                                 long_labels = FALSE) {
-  
+
   # Convert to string 
   df <- df %>% 
     mutate({{ category }} := as.character({{ category }}))
-  
+
   if (!is.null(population)) {
     df <- df %>% 
       mutate({{ category }} := case_when({{ group }} == {{ population }} & indicator == "bp002" ~
@@ -42,11 +42,11 @@ tidy_category_names <- function(df,
                                          as.character("Total (Age >= 80)"),
                                          TRUE ~ {{ category }}))
   }
-  
+
   if (long_labels) {
-    
+
     if (!is.null(care_home)) {
-      
+
       df <- df %>%
         mutate({{ category }} := case_when({{ group }} == {{ care_home }} ~ 
                                              as.character(factor({{ category }},
@@ -55,7 +55,7 @@ tidy_category_names <- function(df,
                                                                             "No record of care home status"))),
                                            TRUE ~ {{ category }}))
     }
-    
+
     if (!is.null(learning_disability)) {
       df <- df %>%
         mutate({{ category }} := case_when({{ group }} == {{ learning_disability }} ~ 
@@ -65,11 +65,11 @@ tidy_category_names <- function(df,
                                                                             "No record of learning disability"))),
                                            TRUE ~ {{ category }}))
     }
-    
+
   } else {
-    
+
     if (!is.null(care_home)) {
-      
+
       df <- df %>%
         mutate({{ category }} := case_when({{ group }} == {{ care_home }} ~ 
                                              as.character(factor({{ category }},
@@ -79,7 +79,7 @@ tidy_category_names <- function(df,
                                            TRUE ~ {{ category }}))
 
     }
-    
+
     if (!is.null(learning_disability)) {
       df <- df %>%
         mutate({{ category }} := case_when({{ group }} == {{ learning_disability }} ~ 
@@ -91,16 +91,16 @@ tidy_category_names <- function(df,
     }
 
   }
-  
-  
+
+
   if (!is.null(imd)) {
-    
+
       imd_levels <- c(1:5, "Unknown")
       imd_labels <- c("1 - Most deprived",
                       "2", "3", "4",
                       "5 - Least deprived",
                       "(Missing)")
-    
+
     df <- df %>%
       mutate({{ category }} := case_when({{ group }} == {{ imd }} ~ 
                                            as.character(factor({{ category }},
@@ -117,7 +117,7 @@ tidy_category_names <- function(df,
                                                                labels = c("Female", "Male"))),
                                          TRUE ~ {{ category }}))
   }
-  
+
   return(df)
-  
+
 }
