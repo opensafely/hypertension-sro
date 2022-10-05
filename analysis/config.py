@@ -16,7 +16,8 @@ demographic_breakdowns = [
     "care_home",
     "learning_disability",
     "imd_q5",
-    "ethnicity",
+    "ethnicity6",
+    "ethnicity16",
 ]
 
 # Define list of rules with exclusion (reject) criteria
