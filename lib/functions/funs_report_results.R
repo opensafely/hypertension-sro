@@ -95,7 +95,8 @@ compare_groups <- function(df,
                            group_var_name, category_var_name,
                            group_a, category_a,
                            group_b, category_b,
-                           add_national_median = TRUE) {
+                           add_national_median = TRUE,
+                           slice_min_max_date = FALSE) {
 
                            filter_variable <- match.arg(variable)
 
@@ -154,6 +155,18 @@ compare_groups <- function(df,
                              mutate("diff_median_{str_var_name_a}" := national_median - !!rlang::sym(str_var_name_a),
                                     "diff_median_{str_var_name_b}" := national_median - !!rlang::sym(str_var_name_b)) |>
                              relocate(indicator, date, national_median)
+                           }
+
+                           if (slice_min_max_date) {
+
+                            group_comparisons  <- group_by(group_comparisons, indicator)
+
+                            group_comparisons_min <- slice_min(group_comparisons, date)
+                            group_comparisons_max <- slice_max(group_comparisons, date)
+
+                            group_comparisons <- bind_rows(group_comparisons_min, group_comparisons_max) |>
+                              arrange(indicator, date)
+
                            }
 
                            return(group_comparisons)
