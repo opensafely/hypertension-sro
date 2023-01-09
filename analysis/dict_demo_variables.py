@@ -7,7 +7,8 @@ from codelists import nhse_care_homes_codes, learning_disability_codes
 demographic_variables = dict(
     # GMS registration status
     gms_reg_status=patients.registered_as_of(
-        "last_day_of_month(index_date)", return_expectations={"incidence": 0.9},
+        "last_day_of_month(index_date)",
+        return_expectations={"incidence": 0.9},
     ),
     died=patients.died_from_any_cause(
         on_or_before="last_day_of_month(index_date)",
@@ -65,11 +66,11 @@ demographic_variables = dict(
     imd_q5=patients.categorised_as(
         {
             "Unknown": "DEFAULT",
-            "1": "imd >= 0 AND imd < 32800*1/5",
-            "2": "imd >= 32800*1/5 AND imd < 32800*2/5",
-            "3": "imd >= 32800*2/5 AND imd < 32800*3/5",
-            "4": "imd >= 32800*3/5 AND imd < 32800*4/5",
-            "5": "imd >= 32800*4/5 AND imd <= 32800",
+            "1 (most deprived)": "imd >= 0 AND imd < 32844*1/5",
+            "2": "imd >= 32844*1/5 AND imd < 32844*2/5",
+            "3": "imd >= 32844*2/5 AND imd < 32844*3/5",
+            "4": "imd >= 32844*3/5 AND imd < 32844*4/5",
+            "5 (least deprived)": "imd >= 32844*4/5 AND imd <= 32844",
         },
         imd=patients.address_as_of(
             "index_date",
