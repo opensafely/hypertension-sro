@@ -1,3 +1,4 @@
+# Load libraries
 
 ```{r message=FALSE}
 library(arrow)
@@ -7,9 +8,22 @@ library(tidyr)
 library(magrittr)
 ```
 
+# Load feather data
+
 ```{r}
-
 df <- read_feather(here("output/indicators/input_hyp001_2019-03-01.feather"))
-df %>% names()
+```
 
+# Explore data
+
+## Check variable names
+
+```{r}
+df %>% names()
+```
+
+## Look at first 5 rows in data
+
+```{r}
+df %>% head()
 ```

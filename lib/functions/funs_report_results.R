@@ -11,27 +11,25 @@
 #' @export
 #'
 #' @examples
-report_measures <- function(df, 
-                            var_value, 
-                            filter_date, filter_group, filter_category, 
+report_measures <- function(df,
+                            var_value,
+                            filter_date, filter_group, filter_category,
                             convert_percent = TRUE) {
-  
-  report_value <- df %>% 
-    filter(date == filter_date) %>% 
-    filter(group == filter_group) %>% 
-    filter(category == filter_category) %>% 
+  report_value <- df %>%
+    filter(date == filter_date) %>%
+    filter(group == filter_group) %>%
+    filter(category == filter_category) %>%
     pull({{ var_value }})
-  
+
   if (convert_percent) {
-    
     if (report_value <= 1) {
-      report_value <-  scales::percent(report_value, accuracy = 0.01)
+      report_value <- scales::percent(report_value, accuracy = 0.01)
     } else {
-        warning(paste0("value is greater than 1 (", report_value, ") and not converted to %."), 
-                call. = FALSE)
-      }
+      warning(paste0("value is greater than 1 (", report_value, ") and not converted to %."),
+        call. = FALSE
+      )
     }
-  
-  return(report_value)
-  
   }
+
+  return(report_value)
+}

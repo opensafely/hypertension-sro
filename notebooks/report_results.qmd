@@ -11,7 +11,6 @@ library(scales)
 library(janitor)
 library(patchwork)
 library(gt)
-
 ```
 
 
@@ -29,19 +28,22 @@ df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hy
 
 df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
   rename(category = percentile) |>
-  mutate(variable = "decile",
-         group = "practice_level_decile",
-         category = as.character(category)) |>
+  mutate(
+    variable = "decile",
+    group = "practice_level_decile",
+    category = as.character(category)
+  ) |>
   relocate(indicator, date, variable, group, category, value)
 
-df_measures_bp_hyp <- df_measures_bp_hyp |> bind_rows(df_deciles_bp_hyp_practice)|>
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  bind_rows(df_deciles_bp_hyp_practice) |>
   arrange(indicator, date, variable, group, category)
 
 df_deciles_bp_hyp_practice |>
   group_by(indicator) |>
   count()
 
-df_measures_bp_hyp 
+df_measures_bp_hyp
 
 df_measures_bp_hyp <- df_measures_bp_hyp |>
   filter(date < "2022-04-01")
@@ -52,16 +54,15 @@ df_measures_bp_hyp <- df_measures_bp_hyp |>
 ```{r}
 
 summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", "numerator", "denominator", "population", "decile")) {
-
   df_min <- df |>
-    filter(group == {{filter_group}}) |>
-    filter(variable == {{filter_variable}}) |>
+    filter(group == {{ filter_group }}) |>
+    filter(variable == {{ filter_variable }}) |>
     group_by(indicator, variable) |>
     slice_min(value, n = 1)
 
   df_max <- df |>
-    filter(group == {{filter_group}}) |>
-    filter(variable == {{filter_variable}}) |>
+    filter(group == {{ filter_group }}) |>
+    filter(variable == {{ filter_variable }}) |>
     group_by(indicator, variable) |>
     slice_max(value, n = 1)
 
@@ -71,15 +72,16 @@ summary_report_min_max <- function(df, filter_group, filter_variable = c("pct", 
     mutate(diff = value - lag(value))
 
   df_diff
-
 }
 
-df <- summary_report_min_max(df = df_measures_bp_hyp,
-                             filter_group = "population",
-                             filter_variable = "pct")
+df <- summary_report_min_max(
+  df = df_measures_bp_hyp,
+  filter_group = "population",
+  filter_variable = "pct"
+)
 
 df
-      
+
 
 df_measures_bp_hyp |>
   # filter(month(date) == 3) |>
@@ -106,7 +108,6 @@ df_measures_bp_hyp |>
   group_by(indicator, variable) |>
   slice_max(date, n = 1) |>
   filter(variable == "pct")
-
 ```
 
 ```{r}
@@ -117,5 +118,4 @@ df_measures_bp_hyp |>
 
 df_measures_bp_hyp |>
   filter(variable == "decile")
-
 ```
