@@ -22,7 +22,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp001 
-      --index-date-range "2019-03-01 to 2022-10-01 by month" 
+      --index-date-range "2019-03-01 to 2022-12-01 by month" 
       --output-dir=output/indicators
       --output-format=feather
     outputs:
@@ -34,7 +34,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp003 
-      --index-date-range "2019-03-01 to 2022-10-01 by month" 
+      --index-date-range "2019-03-01 to 2022-12-01 by month" 
       --output-dir=output/indicators  
       --output-format=feather
     outputs:
@@ -46,7 +46,7 @@ actions:
     run: > 
       cohortextractor:latest generate_cohort 
       --study-definition study_definition_hyp007 
-      --index-date-range "2019-03-01 to 2022-10-01 by month" 
+      --index-date-range "2019-03-01 to 2022-12-01 by month" 
       --output-dir=output/indicators  
       --output-format=feather
     outputs:
