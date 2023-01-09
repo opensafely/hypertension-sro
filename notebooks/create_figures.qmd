@@ -65,11 +65,17 @@ df_plot_measures_bp_hyp <- df_measures_bp_hyp |>
                                labels = c("Population", "Sex", "Age band", "Ethnicity", "IMD", "Region", "Care home", "Learning disability")))
 
 
-df_plot_measures_bp_hyp
+# Remove unknown ethniciyt from plots
+df_plot_measures_bp_hyp <- df_plot_measures_bp_hyp |>
+  filter(!(group == "Ethnicity" & category == "Unknown"))
 
 ```
 
+# Hypertension
+
 ## HYP001
+
+### Individual plots
 
 ```{r}
 
@@ -174,6 +180,8 @@ plot_hyp001_learning_disability <- df_plot_measures_bp_hyp |>
 # plot_hyp001_learning_disability
 ```
 
+### Combine plots
+
 ```{r}
 
 plot_hyp001_breakdowns <- (plot_hyp001_deciles_practice + plot_hyp001_sex) /
@@ -193,7 +201,7 @@ plot_hyp001_breakdowns <- plot_hyp001_breakdowns &
         strip.text.x = element_text(size = 13, face = "bold"))
 
 
-ggsave(filename = here("released_outputs", "figures", "plot_hyp001_breakdowns.png"),
+ggsave(filename = here("released_outputs", "figures", "figure_hyp001_breakdowns.png"),
        plot = plot_hyp001_breakdowns,
        width = 12.8, 
        height = 15)
@@ -201,7 +209,9 @@ ggsave(filename = here("released_outputs", "figures", "plot_hyp001_breakdowns.pn
 ```
 
 
-## HYP003
+## HYP003 & HYP007
+
+### HYP003 Individual plots
 
 ```{r}
 
@@ -306,39 +316,7 @@ plot_hyp003_learning_disability <- df_plot_measures_bp_hyp |>
 # plot_hyp003_learning_disability
 ```
 
-```{r}
-
-plot_hyp003_breakdowns <- (plot_hyp003_deciles_practice + plot_hyp003_sex) /
-  (plot_hyp003_age_band + plot_hyp003_region) /
-  (plot_hyp003_eth + plot_hyp003_imd ) /
-  (plot_hyp003_learning_disability + plot_hyp003_care_home) 
-
-plot_hyp003_breakdowns <- plot_hyp003_breakdowns & ylab(NULL) & theme(legend.position = "top")
-
-plot_hyp003_breakdowns <- plot_hyp003_breakdowns + plot_annotation(tag_levels = 'A')
-
-plot_hyp003_breakdowns <- plot_hyp003_breakdowns & 
-  theme_classic() &
-  theme(legend.position = "bottom",
-        text = element_text(size = 15),
-        strip.background = element_rect(size = 0),
-        strip.text.x = element_text(size = 13, face = "bold"))
-
-plot_hyp003_breakdowns & scale_y_continuous(
-          labels = scales::percent,
-          limits = c(.3, .82)
-        )
-
-ggsave(filename = here("released_outputs", "figures", "plot_hyp003_breakdowns.png"),
-       plot = plot_hyp003_breakdowns,
-       width = 12.5, 
-       height = 15)
-
-```
-
-
-
-## HYP007
+### HYP007 Individual plots
 
 ```{r}
 
@@ -443,36 +421,48 @@ plot_hyp007_learning_disability <- df_plot_measures_bp_hyp |>
 # plot_hyp007_learning_disability
 ```
 
+### Combine plots
+
 ```{r}
 
-plot_hyp007_breakdowns <- (plot_hyp007_deciles_practice + plot_hyp007_sex) /
-  (plot_hyp007_age_band + plot_hyp007_region) /
-  (plot_hyp007_eth + plot_hyp007_imd ) /
-  (plot_hyp007_learning_disability + plot_hyp007_care_home) 
-
-plot_hyp007_breakdowns <- plot_hyp007_breakdowns & ylab(NULL) & theme(legend.position = "top")
-
-plot_hyp007_breakdowns <- plot_hyp007_breakdowns + plot_annotation(tag_levels = 'A')
-
-plot_hyp007_breakdowns <- plot_hyp007_breakdowns & 
-  theme_classic() &
+ggtheme_qof <- theme_classic() &
   theme(legend.position = "bottom",
         text = element_text(size = 15),
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
 
-plot_hyp007_breakdowns & scale_y_continuous(
-          labels = scales::percent,
-          limits = c(.4, .92))
+breakdown1_hyp003_hyp007 <- (plot_hyp003_deciles_practice + plot_hyp007_deciles_practice + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.29, .95))) /
+  (plot_hyp003_sex + plot_hyp007_sex + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_age_band + plot_hyp007_age_band + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_eth + plot_hyp007_eth + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90)))
 
-ggsave(filename = here("released_outputs", "figures", "plot_hyp007_breakdowns.png"),
-       plot = plot_hyp007_breakdowns,
+breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 & ylab(NULL)
+breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
+
+ggsave(filename = here("released_outputs", "figures", "figure_hyp003_hyp007_breakdowns_1.png"),
+       plot = breakdown1_hyp003_hyp007,
+       width = 12.5, 
+       height = 15)
+
+breakdown2_hyp003_hyp007 <- (plot_hyp003_region + plot_hyp007_region + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_imd + plot_hyp007_imd + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.44, .88))) /
+  (plot_hyp003_learning_disability + plot_hyp007_learning_disability + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
+  (plot_hyp003_care_home + plot_hyp007_care_home + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.45, .90)))
+
+breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 & ylab(NULL)
+breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
+
+
+ggsave(filename = here("released_outputs", "figures", "figure_hyp003_hyp007_breakdowns_2.png"),
+       plot = breakdown2_hyp003_hyp007,
        width = 12.5, 
        height = 15)
 
 ```
 
 ## BP002
+
+### Individual plots 
 
 ```{r}
 
@@ -580,7 +570,7 @@ plot_bp002_learning_disability <- df_plot_measures_bp_hyp |>
 # plot_bp002_learning_disability
 ```
 
-
+### Combine plots
 
 ```{r}
 
@@ -600,9 +590,9 @@ plot_bp002_breakdowns <- plot_bp002_breakdowns &
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
 
-plot_bp002_breakdowns
+# plot_bp002_breakdowns
 
-ggsave(filename = here("released_outputs", "figures", "plot_bp002_breakdowns.png"),
+ggsave(filename = here("released_outputs", "figures", "figure_bp002_breakdowns.png"),
        plot = plot_bp002_breakdowns,
        width = 12.5, 
        height = 15)
@@ -671,63 +661,12 @@ plot_reg_ind_population <- (plot_bp002_population + plot_hyp001_population) / (p
 
 plot_reg_ind_population
 
-ggsave(filename = here("released_outputs", "figures", "plot_reg_ind_population.png"),
+ggsave(filename = here("released_outputs", "figures", "figure_bp_hyp_population.png"),
        plot = plot_reg_ind_population, width = 11, height = 7)
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r}
-
-ggtheme_qof <- theme_classic() &
-  theme(legend.position = "bottom",
-        text = element_text(size = 15),
-        strip.background = element_rect(size = 0),
-        strip.text.x = element_text(size = 13, face = "bold"))
-
-breakdown1_hyp003_hyp007 <- (plot_hyp003_deciles_practice + plot_hyp007_deciles_practice + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.29, .95))) /
-  (plot_hyp003_sex + plot_hyp007_sex + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
-  (plot_hyp003_age_band + plot_hyp007_age_band + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
-  (plot_hyp003_eth + plot_hyp007_eth + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90)))
-
-breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 & ylab(NULL)
-breakdown1_hyp003_hyp007 <- breakdown1_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
-
-ggsave(filename = here("released_outputs", "figures", "plot_breakdown1_hyp003_hyp007.png"),
-       plot = breakdown1_hyp003_hyp007,
-       width = 12.5, 
-       height = 15)
-
-breakdown2_hyp003_hyp007 <- (plot_hyp003_region + plot_hyp007_region + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
-  (plot_hyp003_imd + plot_hyp007_imd + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.44, .88))) /
-  (plot_hyp003_learning_disability + plot_hyp007_learning_disability + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.4, .90))) /
-  (plot_hyp003_care_home + plot_hyp007_care_home + plot_layout(guides = 'collect') & ggtheme_qof & scale_y_continuous(labels = scales::percent, limits = c(.45, .90)))
-
-breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 & ylab(NULL)
-breakdown2_hyp003_hyp007 <- breakdown2_hyp003_hyp007 + plot_annotation(tag_levels = 'A')
-
-
-ggsave(filename = here("released_outputs", "figures", "breakdown2_hyp003_hyp007.png"),
-       plot = breakdown2_hyp003_hyp007,
-       width = 12.5, 
-       height = 15)
-
-```
-
+# Counts for Appendix
 
 ```{r}
 
@@ -748,9 +687,9 @@ plot_hyp_management_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Patients receiving\nindicated care (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Numerator / Denominator") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),
@@ -774,9 +713,9 @@ plot_bp_management_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Patients receiving\nindicated care (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Numerator / Denominator") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),
@@ -799,20 +738,15 @@ plot_hyp_records_counts <- df_plot_measures_bp_hyp |>
   scale_colour_viridis_c(name = "Hypertension register (%)", 
                          option = "mako", 
                          direction = -1, end = .8) +
-  geom_point(aes(x = date, y = numerator), size = 2) +
-  geom_point(aes(x = date, y = denominator), size = 2) +
-  labs(x = NULL, y = "Register / Population") +
+  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
+  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
+  labs(x = NULL, y = "Count of patients") +
   scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
       theme(text = element_text(size = 14), 
             axis.text.x = element_text(size = 10),
             legend.position = "right") +
   facet_wrap(~indicator, scale = "free_y", ncol = 1) +
   ggplot2::scale_y_continuous(labels = scales::comma)
-
-
-
-
-library(patchwork)
 
 plot_hyp_counts <- (plot_hyp_records_counts / plot_hyp_management_counts) &
   theme_classic() &
@@ -822,7 +756,7 @@ plot_hyp_counts <- (plot_hyp_records_counts / plot_hyp_management_counts) &
         strip.text.x = element_text(size = 13, face = "bold")) &
   plot_layout(height = c(1, 2))
 
-ggsave(filename = here("released_outputs", "figures", "plot_hyp_counts.png"),
+ggsave(filename = here("released_outputs", "figures", "figure_hyp_counts.png"),
        plot = plot_hyp_counts, width = 11, height = 7)
 
 plot_bp_counts <- plot_bp_management_counts & 
@@ -832,16 +766,15 @@ plot_bp_counts <- plot_bp_management_counts &
         strip.background = element_rect(size = 0),
         strip.text.x = element_text(size = 13, face = "bold"))
 
-ggsave(filename = here("released_outputs", "figures", "plot_bp_counts.png"),
+ggsave(filename = here("released_outputs", "figures", "figure_bp_counts.png"),
        plot = plot_bp_counts, width = 11, height = 7/3)
 
-
-(plot_bp_management_counts / (plot_hyp_records_counts / plot_hyp_management_counts) &
-  plot_layout(height = c(1, 2))) &
-  # theme_classic() &
-  theme(legend.position = "right",
-        text = element_text(size = 14),
-        # strip.background = element_rect(size = 0),
-        strip.text.x = element_text(size = 13, face = "bold")) #&
+# (plot_bp_management_counts / (plot_hyp_records_counts / plot_hyp_management_counts) &
+#   plot_layout(height = c(1, 2))) &
+#   # theme_classic() &
+#   theme(legend.position = "right",
+#         text = element_text(size = 14),
+#         # strip.background = element_rect(size = 0),
+#         strip.text.x = element_text(size = 13, face = "bold")) #&
   # plot_layout(height = c(1, 1))
 ```
