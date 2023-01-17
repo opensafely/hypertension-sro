@@ -53,9 +53,10 @@ df_hyp_001_measures <- df_hyp_001_measures_groups %>%
 ## First create subdirectory (if it doesn't exist)
 fs::dir_create(here::here("output", "indicators", "joined", "measures"))
 
-# Round counts to the nearest 10
+# Round counts to the nearest 10 and recalculate value
 df_hyp_001_measures <- df_hyp_001_measures %>%
-   dplyr::mutate(dplyr::across(c("hyp_reg", "population"), round, -1))
+   dplyr::mutate(dplyr::across(c("hyp_reg", "population"), round, -1)) %>%
+   dplyr::mutate(value = hyp_reg / population)
 
 ## Next, write csv file
 readr::write_csv(df_hyp_001_measures,
@@ -99,9 +100,10 @@ df_hyp_003_measures <- df_hyp_003_measures_groups %>%
 ## First create subdirectory (if it doesn't exist)
 fs::dir_create(here::here("output", "indicators", "joined", "measures"))
 
-# Round counts to the nearest 10
+# Round counts to the nearest 10 and recalculate value
 df_hyp_003_measures <- df_hyp_003_measures %>%
-   dplyr::mutate(dplyr::across(c("hyp003_numerator", "hyp003_denominator", "population"), round, -1))
+   dplyr::mutate(dplyr::across(c("hyp003_numerator", "hyp003_denominator", "population"), round, -1)) %>%
+   dplyr::mutate(value = hyp003_numerator / hyp003_denominator)
 
 ## Next, write csv file
 readr::write_csv(df_hyp_003_measures,
@@ -145,9 +147,10 @@ df_hyp_007_measures <- df_hyp_007_measures_groups %>%
 ## First create subdirectory (if it doesn't exist)
 fs::dir_create(here::here("output", "indicators", "joined", "measures"))
 
-# Round counts to the nearest 10
+# Round counts to the nearest 10 and recalculate value
 df_hyp_007_measures <- df_hyp_007_measures %>%
-   dplyr::mutate(dplyr::across(c("hyp007_numerator", "hyp007_denominator", "population"), round, -1))
+   dplyr::mutate(dplyr::across(c("hyp007_numerator", "hyp007_denominator", "population"), round, -1)) %>%
+   dplyr::mutate(value = hyp007_numerator / hyp007_denominator)
 
 ## Next, write csv file
 readr::write_csv(df_hyp_007_measures,
