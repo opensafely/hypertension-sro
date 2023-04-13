@@ -21,7 +21,10 @@ df_hyp003_deciles <- read_csv("output/indicators/joined/deciles_table_hyp003_ach
 df_hyp007_deciles <- read_csv("output/indicators/joined/deciles_table_hyp007_achievem_practice_breakdown_rate.csv") %>%
   mutate(indicator = "hyp007")
 
-df_hyp_deciles_practice <- bind_rows(df_hyp001_deciles, df_hyp003_deciles, df_hyp007_deciles) %>%
+df_bp002_1y_hypreg_deciles <- read_csv("output/indicators/joined/deciles_table_bp002_1y_achievem_hypreg_practice_breakdown_rate.csv") %>%
+  mutate(indicator = "bp002_1y_hypreg")
+
+df_hyp_deciles_practice <- bind_rows(df_hyp001_deciles, df_hyp003_deciles, df_hyp007_deciles, df_bp002_1y_hypreg_deciles) %>%
   relocate(indicator)
 
 fs::dir_create(here::here("output", "indicators", "joined", "deciles"))

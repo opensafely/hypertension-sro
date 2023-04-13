@@ -53,16 +53,27 @@ actions:
       highly_sensitive:
         cohort: output/indicators/input_hyp007_*.feather
 
+  generate_study_population_bp002_1y_lookback:
+    run: > 
+      cohortextractor:latest generate_cohort 
+      --study-definition study_definition_bp002_1y_lookback
+      --index-date-range "2019-04-01 to 2023-03-31 by month" 
+      --output-dir=output/indicators
+      --output-format=feather
+    outputs:
+      highly_sensitive:
+        cohort: output/indicators/input_bp002_1y*.feather
+  
   join_ethnicity:
     run: >
       cohort-joiner:v0.0.27
-        --lhs output/indicators/input_hyp*.feather
+        --lhs output/indicators/input_*.feather
         --rhs output/indicators/input_ethnicity.feather
         --output-dir output/indicators/joined
-    needs: [generate_study_population_ethnicity, generate_study_population_hyp001, generate_study_population_hyp003, generate_study_population_hyp007]
+    needs: [generate_study_population_ethnicity, generate_study_population_hyp001, generate_study_population_hyp003, generate_study_population_hyp007, generate_study_population_bp002_1y_lookback]
     outputs:
       highly_sensitive:
-        cohort: output/indicators/joined/input_hyp*.feather
+        cohort: output/indicators/joined/input_*.feather
 
   # Measures
   # Generate measures for indicator HYP001 by month
@@ -98,6 +109,16 @@ actions:
        moderately_sensitive:
          measure_csv: output/indicators/joined/measure_hyp007_*_rate.csv
 
+  generate_measures_bp002_1y_lookback:
+     run: >
+       cohortextractor:latest generate_measures 
+       --study-definition study_definition_bp002_1y_lookback 
+       --output-dir=output/indicators/joined
+     needs: [join_ethnicity]
+     outputs:
+       moderately_sensitive:
+         measure_csv: output/indicators/joined/measure_bp002_1y*_rate.csv
+
   generate_deciles:
     run: >
       deciles-charts:v0.0.21
@@ -109,7 +130,7 @@ actions:
         output: true
       charts:
         output: true
-    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
+    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007, generate_measures_bp002_1y_lookback]
     outputs:
       moderately_sensitive:
         deciles_charts: output/indicators/joined/deciles_chart_*_*_practice_breakdown_rate.png
@@ -128,10 +149,10 @@ actions:
   # # Join all measure files for each indicator
   join_measures:
     run: r:latest analysis/join_measures.R
-    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007]
+    needs: [generate_measures_hyp001, generate_measures_hyp003, generate_measures_hyp007, generate_measures_bp002_1y_lookback]
     outputs:
       moderately_sensitive:
-        measure_csv: output/indicators/joined/measures/measures_hyp*.csv
+        measure_csv: output/indicators/joined/measures/measures_*.csv
 
   # # Join all deciles (by practice) files for each indicator
   join_deciles:

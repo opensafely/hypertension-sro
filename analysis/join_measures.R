@@ -155,3 +155,50 @@ df_hyp_007_measures <- df_hyp_007_measures %>%
 ## Next, write csv file
 readr::write_csv(df_hyp_007_measures,
                  here::here("output", "indicators", "joined", "measures", "measures_hyp007.csv"))
+
+# INDICATOR BP002 with 1y lookback period applied to HYP001 population ---
+# Get file names and path
+dir_bp_002_hypreg_measures <- fs::dir_ls(path = "output/indicators/joined",
+                                   glob = "*measure_bp002_1y_achievem_*.csv$")
+
+# Split dir paths because file structure differes
+## Grouped measures (excluding practice)
+dir_bp_002_hypreg_measures_groups <- dir_bp_002_hypreg_measures[!stringr::str_detect(dir_bp_002_hypreg_measures, "population")]
+dir_bp_002_hypreg_measures_groups <- dir_bp_002_hypreg_measures_groups[!stringr::str_detect(dir_bp_002_hypreg_measures_groups, "practice")]
+
+## Population measure
+dir_bp_002_hypreg_measures_pop <- dir_bp_002_hypreg_measures[stringr::str_detect(dir_bp_002_hypreg_measures, "population")]
+
+# Load files
+## Load grouped measures
+## Pivot longer so variable names are identical across measure files
+df_bp_002_hypreg_measures_groups <- dir_bp_002_hypreg_measures_groups %>%
+  purrr::map(readr::read_csv) %>%
+  purrr::map_dfr(tidyr::pivot_longer,
+                 cols = 1,
+                 names_to = "group",
+                 values_to = "category",
+                 values_transform = list(category = as.character))
+
+# Load population measure
+# Add variables that are missing compared to grouped measures
+df_bp_002_hypreg_measures_pop <- readr::read_csv(here::here(dir_bp_002_hypreg_measures_pop)) %>%
+  dplyr::mutate(group = "population",
+                category = "population")
+
+# Join all measures into one object
+df_bp_002_hypreg_measures <- df_bp_002_hypreg_measures_groups %>%
+  dplyr::bind_rows(df_bp_002_hypreg_measures_pop)
+
+# Write hyp007 csv file
+## First create subdirectory (if it doesn't exist)
+fs::dir_create(here::here("output", "indicators", "joined", "measures"))
+
+# Round counts to the nearest 10 and recalculate value
+df_bp_002_hypreg_measures <- df_bp_002_hypreg_measures %>%
+   dplyr::mutate(dplyr::across(c("bp002_numerator", "population"), round, -1)) %>%
+   dplyr::mutate(value = bp002_numerator / population)
+
+## Next, write csv file
+readr::write_csv(df_bp_002_hypreg_measures,
+                 here::here("output", "indicators", "joined", "measures", "measures_bp002_1y_hypreg.csv"))
