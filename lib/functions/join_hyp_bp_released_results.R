@@ -9,13 +9,18 @@ source(here::here("lib", "functions", "funs_tidy_data.R"))
 ## Read csv
 df_deciles_hyp <- read_csv(here("released_outputs/deciles/deciles_hyp_practice.csv"))
 
-df_deciles_bp <- read_csv(here("released_outputs/deciles/deciles_table_bp002_achievem_practice_breakdown_rate.csv")) |>
-  mutate(indicator = "bp002") |>
+df_deciles_bp_1y <- read_csv(here("released_outputs/deciles/deciles_table_bp002_1y_achievem_practice_breakdown_rate.csv")) |>
+  mutate(indicator = "bp002_1y") |>
+  relocate(indicator)
+
+df_deciles_bp_5y <- read_csv(here("released_outputs/deciles/deciles_table_bp002_5y_achievem_practice_breakdown_rate.csv")) |>
+  mutate(indicator = "bp002_5y") |>
   relocate(indicator)
 
 # Join csv
 df_deciles_bp_hyp <- df_deciles_hyp |>
-  bind_rows(df_deciles_bp)
+  bind_rows(df_deciles_bp_1y) |>
+  bind_rows(df_deciles_bp_5y)
 
 # Write csv
 write_csv(df_deciles_bp_hyp, here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
@@ -26,13 +31,14 @@ df_measures_bp002 <- read_csv(here("released_outputs/measures/measures_bp002_ach
 df_measures_hyp001 <- read_csv(here("released_outputs/measures/measures_hyp001.csv"))
 df_measures_hyp003 <- read_csv(here("released_outputs/measures/measures_hyp003.csv"))
 df_measures_hyp007 <- read_csv(here("released_outputs/measures/measures_hyp007.csv"))
-
+df_measures_bp002_hypreg <- read_csv(here("released_outputs/measures/measures_bp002_1y_hypreg.csv"))
 
 df_measures_bp002 <- df_measures_bp002 |>
   mutate(category = case_when(
     group == "learning_disability" | group == "care_home" ~ as.character(as.logical(as.integer(category))),
     TRUE ~ category
   ))
+
 # Read all measures files and pivot into indicatorentical structure
 df_measures_bp002_long <- df_measures_bp002 |>
   rename(pct = value) |>
@@ -41,7 +47,20 @@ df_measures_bp002_long <- df_measures_bp002 |>
     values_to = "value", names_to = "variable"
   ) |>
   mutate(
-    indicator = "bp002",
+    indicator = paste0("bp002_", lookback),
+    variable = str_remove(variable, "bp002_")
+  ) |>
+  relocate(indicator, date, variable, group, category, value) |>
+  select(-lookback)
+
+df_measures_bp002_hypreg_long <- df_measures_bp002_hypreg |>
+  rename(pct = value) |>
+  pivot_longer(
+    cols = c(bp002_numerator, population, pct),
+    values_to = "value", names_to = "variable"
+  ) |>
+  mutate(
+    indicator = "bp002_1y_hypreg",
     variable = str_remove(variable, "bp002_")
   ) |>
   relocate(indicator, date, variable, group, category, value)
@@ -90,7 +109,8 @@ df_measures_bp_hyp <- df_measures_bp002_long |>
   bind_rows(
     df_measures_hyp001_long,
     df_measures_hyp003_long,
-    df_measures_hyp007_long
+    df_measures_hyp007_long,
+    df_measures_bp002_hypreg_long,
   )
 
 df_measures_bp_hyp <- df_measures_bp_hyp |>
@@ -114,7 +134,6 @@ df_measures_bp_hyp <- df_measures_bp_hyp |>
 df_measures_bp_hyp <- df_measures_bp_hyp |>
   mutate(subgroup = case_when(is.na(subgroup) & group == "region" ~ "(Missing)",
   TRUE ~ subgroup))
-
 
 # Write measures files
 write_csv(df_measures_bp_hyp, here("released_outputs/measures/df_measures_bp_hyp.csv"))
