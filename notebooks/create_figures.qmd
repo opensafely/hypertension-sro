@@ -796,29 +796,52 @@ ggsave(
 # Counts for Appendix
 
 ```{r}
-
-
-plot_hyp_management_counts <- df_plot_measures_bp_hyp |>
+df_plot_measures_bp_hyp_count <- df_plot_measures_bp_hyp |>
   mutate(variable = case_when(
-    indicator == "HYP001 (Total population)" & variable == "register" ~ "numerator",
-    indicator == "HYP001 (Total population)" & variable == "population" ~ "denominator",
+    indicator == "hyp001" & variable == "register" ~ "numerator",
+    indicator == "hyp001" & variable == "population" ~ "denominator",
+    indicator == "bp002_1y_hypreg" & variable == "population" ~ "denominator",
     TRUE ~ variable
-  )) |>
+  ))  |>
+   mutate(indicator_label = factor(indicator_label, levels = c("BP monitoring in the preceeding 5 years\n(BP002, Age >= 45)",
+                                                  "BP monitoring in the preceeding 12 months\n(Hypertension register)",
+                                                  "Hypertension register\n(HYP001, Total population)",
+                                                  "Hypertension management\n(HYP003, Age <= 79)",
+                                                  "Hypertension management\n(HYP007, Age >= 80)"),
+                                       labels = c("BP monitoring in the preceeding 5 years\n(BP002, Age >= 45)",
+                                                  "BP monitoring in the preceeding 12 months\n(Hypertension register)",
+                                                  "Hypertension register\n(HYP001, Total population)",
+                                                  "Hypertension management\n(HYP003, Age <= 79)",
+                                                  "Hypertension management\n(HYP007, Age >= 80)")))
+
+figure_bp_hyp_counts <- df_plot_measures_bp_hyp_count |>
   filter(group == "Population") |>
-  filter(indicator != "HYP001 (Total population)") |>
-  filter(indicator != "BP002 (Age >= 45)") |>
+  filter(indicator %in% c("bp002_1y_hypreg", "bp002_5y", "hyp001", "hyp003", "hyp007")) |>
+
   pivot_wider(names_from = "variable", values_from = "value") |>
-  ggplot(aes(colour = numerator / denominator * 100)) +
+  ggplot(aes(colour = numerator / denominator)) +
   geom_segment(aes(
     x = date,
     xend = date,
     y = numerator,
     yend = denominator
   )) +
+  ggplot2::scale_y_continuous(labels = scales::comma) +
+    geom_vline(
+      xintercept = lubridate::as_date(c(
+        "2019-03-01", "2020-03-01",
+        "2021-03-01", "2022-03-01",
+        "2023-03-01"
+      )),
+      linetype = "dotted",
+      colour = "orange",
+      size = .7
+    ) +
   scale_colour_viridis_c(
-    name = "Patients receiving\nindicated care (%)",
+    name = NULL,
     option = "mako",
-    direction = -1, end = .8
+    direction = -1, end = .8, 
+    labels = scales::percent
   ) +
   geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
   geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
@@ -829,89 +852,16 @@ plot_hyp_management_counts <- df_plot_measures_bp_hyp |>
     axis.text.x = element_text(size = 10),
     legend.position = "right"
   ) +
-  facet_wrap(~indicator, scale = "free_y", ncol = 1) +
-  ggplot2::scale_y_continuous(labels = scales::comma)
-
-plot_bp_management_counts <- df_plot_measures_bp_hyp |>
-  mutate(variable = case_when(
-    indicator == "HYP001 (Total population)" & variable == "register" ~ "numerator",
-    indicator == "HYP001 (Total population)" & variable == "population" ~ "denominator",
-    TRUE ~ variable
-  )) |>
-  filter(group == "Population") |>
-  # filter(indicator != "HYP001 (Total population)") |>
-  filter(indicator == "BP002 (Age >= 45)") |>
-  pivot_wider(names_from = "variable", values_from = "value") |>
-  ggplot(aes(colour = numerator / denominator * 100)) +
-  geom_segment(aes(
-    x = date,
-    xend = date,
-    y = numerator,
-    yend = denominator
-  )) +
-  scale_colour_viridis_c(
-    name = "Patients receiving\nindicated care (%)",
-    option = "mako",
-    direction = -1, end = .8
-  ) +
-  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
-  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
-  labs(x = NULL, y = "Count of patients") +
-  scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
-  theme(
-    text = element_text(size = 14),
-    axis.text.x = element_text(size = 10),
-    legend.position = "right"
-  ) +
-  facet_wrap(~indicator, scale = "free_y", ncol = 1) +
-  ggplot2::scale_y_continuous(labels = scales::comma)
-
-plot_hyp_records_counts <- df_plot_measures_bp_hyp |>
-  mutate(variable = case_when(
-    indicator == "HYP001 (Total population)" & variable == "register" ~ "numerator",
-    indicator == "HYP001 (Total population)" & variable == "population" ~ "denominator",
-    TRUE ~ variable
-  )) |>
-  filter(group == "Population") |>
-  filter(indicator == "HYP001 (Total population)") |>
-  pivot_wider(names_from = "variable", values_from = "value") |>
-  ggplot(aes(colour = numerator / denominator * 100)) +
-  geom_segment(aes(
-    x = date,
-    xend = date,
-    y = numerator,
-    yend = denominator
-  )) +
-  scale_colour_viridis_c(
-    name = "Hypertension register (%)",
-    option = "mako",
-    direction = -1, end = .8
-  ) +
-  geom_point(aes(x = date, y = numerator), size = 2, shape = 15) +
-  geom_point(aes(x = date, y = denominator), size = 2, shape = 16) +
-  labs(x = NULL, y = "Count of patients") +
-  scale_x_date(date_breaks = "4 month", labels = scales::label_date_short()) +
-  theme(
-    text = element_text(size = 14),
-    axis.text.x = element_text(size = 10),
-    legend.position = "right"
-  ) +
-  facet_wrap(~indicator, scale = "free_y", ncol = 1) +
-  ggplot2::scale_y_continuous(labels = scales::comma)
-
-plot_hyp_counts <- (plot_hyp_records_counts / plot_hyp_management_counts) &
-  theme_classic() &
-  theme(
-    legend.position = "right",
-    text = element_text(size = 14),
-    strip.background = element_rect(size = 0),
-    strip.text.x = element_text(size = 13, face = "bold")
-  ) &
-  plot_layout(height = c(1, 2))
+  facet_wrap(~indicator_label, scale = "free_y", ncol = 1) +
+    scale_x_date(
+      breaks = x_scale_date_breaks,
+      labels = scales::label_date_short()
+    ) +
+   guides(colour = guide_colourbar(draw.ulim = TRUE, draw.llim = TRUE))
 
 ggsave(
-  filename = here("released_outputs", "figures", "figure_hyp_counts.png"),
-  plot = plot_hyp_counts, width = 11, height = 7
+  filename = here("released_outputs", "figures", "figure_bp_hyp_counts.png"),
+  plot = figure_bp_hyp_counts, width = 11, height = 10
 )
 
 plot_bp_counts <- plot_bp_management_counts &
@@ -927,13 +877,4 @@ ggsave(
   filename = here("released_outputs", "figures", "figure_bp_counts.png"),
   plot = plot_bp_counts, width = 11, height = 7 / 3
 )
-
-# (plot_bp_management_counts / (plot_hyp_records_counts / plot_hyp_management_counts) &
-#   plot_layout(height = c(1, 2))) &
-#   # theme_classic() &
-#   theme(legend.position = "right",
-#         text = element_text(size = 14),
-#         # strip.background = element_rect(size = 0),
-#         strip.text.x = element_text(size = 13, face = "bold")) #&
-# plot_layout(height = c(1, 1))
 ```
