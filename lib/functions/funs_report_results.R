@@ -8,9 +8,6 @@
 #' @param convert_percent Logical, whether to convert percent (0.1) to 10.00%
 #'
 #' @return
-#' @export
-#'
-#' @examples
 report_measures <- function(df,
                             var_value,
                             filter_date, filter_group, filter_subgroup,

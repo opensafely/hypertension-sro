@@ -1,20 +1,17 @@
 #' Tidy categories in joint measures file
 #'
-#' @param df
-#' @param group
-#' @param category
-#' @param care_home
-#' @param learning_disability
-#' @param imd
-#' @param imd_explicit_na
-#' @param sex
-#' @param population
-#' @param long_labels
+#' @param df Dataframe in wich category names need to be cleaned
+#' @param group String, specifying variable name of group variable
+#' @param category String, specifying variable name of category (or subgroup) variable
+#' @param care_home String, specifying the variable name with care home information  
+#' @param learning_disability String, specifying the variable name with learning disability information
+#' @param imd String, specifying the variable name with imd information
+#' @param imd_explicit_na String, specifying the value to explicitly code missing imd values
+#' @param sex String, specifying the variable name with sex information
+#' @param population String, specifying the variable name with population information
+#' @param long_labels Logical, specyfying whether to code 'long' names/labels
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return Dataframe with consistent labels/names for groups/subgroups
 tidy_category_names <- function(df,
                                 group = NULL,
                                 category = NULL,
@@ -105,7 +102,6 @@ tidy_category_names <- function(df,
         ))
     }
   }
-
 
   if (!is.null(imd)) {
     imd_levels <- c(1:5, "Unknown")
