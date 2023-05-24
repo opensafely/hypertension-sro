@@ -1,4 +1,12 @@
-This notebook creates the figures and tables for the manuscript.
+---
+title: "Results for: 'Impact of COVID-19 on recorded blood pressure monitoring and hypertension management in England: A monthly analysis of changes in Quality and Outcomes Framework indicators in OpenSAFELY'"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+This calculates the results reported in the manuscript.
 
 # Load packages and function
 
@@ -10,7 +18,6 @@ library(scales)
 library(janitor)
 ```
 
-
 ```{r}
 # Load reporting function
 source(here::here("lib", "functions", "funs_report_results.R"))
@@ -19,7 +26,6 @@ source(here::here("lib", "functions", "funs_report_results.R"))
 # Load data
 
 ```{r}
-
 df_deciles_bp_hyp_practice <- read_csv(here("released_outputs/deciles/deciles_bp_hyp_practice.csv"))
 df_measures_bp_hyp <- read_csv(here("released_outputs/measures/df_measures_bp_hyp.csv"))
 
@@ -36,17 +42,21 @@ df_measures_bp_hyp <- df_measures_bp_hyp |>
   bind_rows(df_deciles_bp_hyp_practice) |>
   arrange(indicator, date, variable, group, subgroup)
 
+df_measures_bp_hyp <- df_measures_bp_hyp |>
+  filter(indicator != "bp002_1y")
+
 head(df_measures_bp_hyp)
 tail(df_measures_bp_hyp)
-
-df_measures_bp_hyp <- df_measures_bp_hyp |>
-  filter(date < "2022-11-01")
 
 df_deciles_bp_hyp_practice |>
   group_by(indicator) |>
   count()
-```
 
+df_deciles_bp_hyp_practice <- df_deciles_bp_hyp_practice |>
+  filter(indicator != "bp002_1y")
+
+unique(df_deciles_bp_hyp_practice$indicator)
+```
 
 # Manuscript
 
@@ -54,10 +64,23 @@ df_deciles_bp_hyp_practice |>
 
 ### Changes in blood pressure monitoring and hypertension management in the total population 
 
+#### March to March
+
+```{r}
+df_measures_bp_hyp |>
+  filter(
+    month(date) == 3,
+    group == "population",
+    variable == "pct"
+  ) |>
+  group_by(date) |>
+  select(-c(variable, group, subgroup)) |>
+  pivot_wider(names_from = indicator, values_from = value)
+```
+
 #### Minimum & maximum value
 
 ```{r}
-
 df_diff_min_max_pct <- summary_report_min_max(
   df = df_measures_bp_hyp,
   filter_group = "population",
@@ -70,18 +93,20 @@ df_diff_min_max_pct
 #### First & last date
 
 ```{r}
-
-df_measures_bp_hyp |>
+df_first <- df_measures_bp_hyp |>
   filter(group == "population") |>
   group_by(indicator, variable) |>
   slice_min(date, n = 1) |>
   filter(variable == "pct")
 
-df_measures_bp_hyp |>
+df_last <- df_measures_bp_hyp |>
   filter(group == "population") |>
   group_by(indicator, variable) |>
   slice_max(date, n = 1) |>
   filter(variable == "pct")
+
+df_first |>
+  rbind(df_last)
 ```
 
 #### Report national median
@@ -114,9 +139,7 @@ df_measures_bp_hyp |>
 unique(df_measures_bp_hyp$variable)
 unique(df_measures_bp_hyp$group)
 unique(df_measures_bp_hyp$subgroup)
-
 ```
-
 
 # Compare groups with each other and national median
 
@@ -142,7 +165,7 @@ df_measures_bp_hyp |>
 
 ```{r}
 df_measures_bp_hyp |>
-  filter(indicator == "bp002") |>
+  filter(indicator == "bp002_5y") |>
   compare_groups(
     variable = "pct",
     group_var_name = "group",
@@ -153,6 +176,19 @@ df_measures_bp_hyp |>
     subgroup_b = "Record of care home status",
     slice_min_max_date = TRUE
   )
+
+df_measures_bp_hyp |>
+  filter(indicator == "bp002_1y_hypreg") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "care_home",
+    subgroup_a = "No record of care home status",
+    group_b = "care_home",
+    subgroup_b = "Record of care home status",
+    slice_min_max_date = TRUE
+  ) 
 ```
 
 ```{r}
@@ -171,21 +207,32 @@ df_measures_bp_hyp |>
 ```
 
 ```{r}
-
 df_measures_bp_hyp |>
   filter(indicator %in% c("hyp003", "hyp007")) |>
   filter(date %in% c(date("2020-03-01"), date("2021-03-01"))) |>
   filter(group == "care_home") |>
   filter(subgroup == "Record of care home status") |>
   filter(variable == "pct")
-
 ```
 
 ## Learning disability
 
 ```{r}
 df_measures_bp_hyp |>
-  filter(indicator == "bp002") |>
+  filter(indicator == "bp002_5y") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "learning_disability",
+    subgroup_a = "No record of learning disability",
+    group_b = "learning_disability",
+    subgroup_b = "Record of learning disability",
+    slice_min_max_date = TRUE
+  )
+
+df_measures_bp_hyp |>
+  filter(indicator == "bp002_1y_hypreg") |>
   compare_groups(
     variable = "pct",
     group_var_name = "group",
@@ -217,7 +264,20 @@ df_measures_bp_hyp |>
 
 ```{r}
 df_measures_bp_hyp |>
-  filter(indicator == "bp002") |>
+  filter(indicator == "bp002_5y") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "imd_q5",
+    subgroup_a = "1 - Most deprived",
+    group_b = "imd_q5",
+    subgroup_b = "5 - Least deprived",
+    slice_min_max_date = TRUE
+  )
+
+df_measures_bp_hyp |>
+  filter(indicator == "bp002_1y_hypreg") |>
   compare_groups(
     variable = "pct",
     group_var_name = "group",
@@ -248,7 +308,6 @@ df_measures_bp_hyp |>
 ## Region
 
 ```{r}
-
 report_group_pct(df_measures_bp_hyp,
   filter_group = "region",
   filter_subgroup = NULL,
@@ -260,11 +319,9 @@ report_group_pct(df_measures_bp_hyp,
   filter_subgroup = NULL,
   filter_date = "2021-03-01"
 )
-
 ```
 
 ```{r}
-
 df_measures_bp_hyp |>
   filter(indicator == "hyp001") |>
   compare_groups(
@@ -278,8 +335,6 @@ df_measures_bp_hyp |>
     slice_min_max_date = TRUE
   )
 ```
-
-
 
 ## Ethnicity
 
@@ -306,8 +361,6 @@ df_measures_bp_hyp |>
   )
 ```
 
-
-
 # Compare highest and lowest value at 2 dates across subgroups
 
 ```{r}
@@ -332,9 +385,7 @@ df_measures_bp_hyp |>
 #   filter(date == "2019-03-01" | date == "2022-03-01")
 ```
 
-
 ## Discussion
-
 
 ```{r}
 df_measures_bp_hyp |>
@@ -343,5 +394,3 @@ df_measures_bp_hyp |>
   filter(date %in% as_date(c("2020-03-01", "2021-03-01"))) |>
   filter(group == "population")
 ```
-
-
