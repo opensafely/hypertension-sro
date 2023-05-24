@@ -1,4 +1,11 @@
-This notebook creates the figures and tables for the manuscript.
+---
+title: "Figures for: 'Impact of COVID-19 on recorded blood pressure monitoring and hypertension management in England: A monthly analysis of changes in Quality and Outcomes Framework indicators in OpenSAFELY'"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+This notebook creates the figures reported in the manuscript.
 
 # Load packages and function
 
