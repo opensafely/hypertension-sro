@@ -1,4 +1,4 @@
-
+# TODO DOCUMENT THIS FUNCTION
 plot_qof_values <- function(df,
                             point_size = .7,
                             line_size = .5,
@@ -106,7 +106,10 @@ plot_qof_deciles <- function(df,
       breaks = date_breaks,
       labels = scales::label_date_short()
     ) +
-    labs(x = NULL, y = ylab, colour = legend_label, linetype = legend_label, size = legend_label) +
+    labs(x = NULL, y = ylab, 
+      colour = legend_label, 
+      linetype = legend_label, 
+      size = legend_label) +
     theme(legend.position = legend_position) +
     scale_colour_manual(values = c(
       "#9ecae1", "#6baed6", "#4292c6", "#2171b5",

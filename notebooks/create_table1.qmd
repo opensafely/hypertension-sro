@@ -1,8 +1,12 @@
 ---
+title: "Table 1 for: 'Impact of COVID-19 on recorded blood pressure monitoring and hypertension management in England: A monthly analysis of changes in Quality and Outcomes Framework indicators in OpenSAFELY'"
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
+This notebook creates the *'Table 1'* (it's actually table 2 here) reported in the manuscript.
+
 # Load packages and function
 
 ```{r}
