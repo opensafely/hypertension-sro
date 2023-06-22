@@ -147,13 +147,27 @@ unique(df_measures_bp_hyp$subgroup)
 
 ```{r}
 df_measures_bp_hyp |>
-  # filter(indicator == "bp002") |>
+  filter(indicator == "bp002_5y") |>
   compare_groups(
     variable = "pct",
     group_var_name = "group",
     subgroup_var_name = "subgroup",
     group_a = "age_band",
     subgroup_a = "45-49",
+    group_b = "age_band",
+    subgroup_b = "80+",
+    slice_min_max_date = TRUE
+  )
+
+# Note subgroup a is actually 45-49 but wasnt recoded
+df_measures_bp_hyp |>
+  filter(indicator == "bp002_1y_hypreg") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "age_band",
+    subgroup_a = "40-49",
     group_b = "age_band",
     subgroup_b = "80+",
     slice_min_max_date = TRUE
@@ -332,7 +346,34 @@ df_measures_bp_hyp |>
     subgroup_a = "London",
     group_b = "region",
     subgroup_b = "South East",
-    slice_min_max_date = TRUE
+    slice_min_max_date = FALSE
+  )
+
+df_measures_bp_hyp |>
+  filter(indicator == "hyp003") |>
+  filter(date == "2021-03-01") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "region",
+    subgroup_a = "West Midlands",
+    group_b = "region",
+    subgroup_b = "South East",
+    slice_min_max_date = FALSE
+  )
+
+df_measures_bp_hyp |>
+  filter(indicator == "hyp007") |>
+  compare_groups(
+    variable = "pct",
+    group_var_name = "group",
+    subgroup_var_name = "subgroup",
+    group_a = "region",
+    subgroup_a = "London",
+    group_b = "region",
+    subgroup_b = "South East",
+    slice_min_max_date = FALSE
   )
 ```
 
@@ -343,6 +384,30 @@ report_group_pct(df_measures_bp_hyp,
   filter_group = "ethnicity6",
   filter_subgroup = NULL,
   filter_date = "2019-03-01"
+)
+
+report_group_pct(df_measures_bp_hyp,
+  filter_group = "ethnicity6",
+  filter_subgroup = NULL,
+  filter_date = "2020-03-01"
+)
+
+report_group_pct(df_measures_bp_hyp,
+  filter_group = "ethnicity6",
+  filter_subgroup = NULL,
+  filter_date = "2021-03-01"
+)
+
+report_group_pct(df_measures_bp_hyp,
+  filter_group = "ethnicity6",
+  filter_subgroup = NULL,
+  filter_date = "2022-03-01"
+)
+
+report_group_pct(df_measures_bp_hyp,
+  filter_group = "ethnicity6",
+  filter_subgroup = NULL,
+  filter_date = "2023-03-01"
 )
 ```
 
