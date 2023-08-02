@@ -106,7 +106,9 @@ df_last <- df_measures_bp_hyp |>
   filter(variable == "pct")
 
 df_first |>
-  rbind(df_last)
+  rbind(df_last) |>
+  arrange(indicator, date) |>
+  mutate(diff = value - lag(value))
 ```
 
 #### Report national median
