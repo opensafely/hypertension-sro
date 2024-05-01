@@ -1076,7 +1076,7 @@ plot_hyp003_hyp007_population <- df_measures_bp_hyp |>
   mutate(facet_wrap_var = "Hypertension management in the preceeding 12 months\n(HYP003, HYP007)") |>
   plot_qof_values(
     date_breaks = x_scale_date_breaks,
-    shape_subgroup = TRUE,
+    # shape_subgroup = TRUE,
     point_size = 1.4,
     legend_position = "right",
     facet_wrap_ncol = 1,
@@ -1116,7 +1116,7 @@ plot_reg_ind_population <- (plot_bp002_5y_population + plot_hyp001_population) /
     panel.background = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    plot.background = element_blank(),
+    # plot.background = element_blank(),
     axis.line = element_line(colour = "black", linewidth = rel(1)),
     legend.text = element_text(size = 10),
     legend.background = element_blank(),
