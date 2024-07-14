@@ -106,9 +106,9 @@ plot_qof_deciles <- function(df,
       breaks = date_breaks,
       labels = scales::label_date_short()
     ) +
-    labs(x = NULL, y = ylab, 
-      colour = legend_label, 
-      linetype = legend_label, 
+    labs(x = NULL, y = ylab,
+      colour = legend_label,
+      linetype = legend_label,
       size = legend_label) +
     theme(legend.position = legend_position) +
     scale_colour_manual(values = c(

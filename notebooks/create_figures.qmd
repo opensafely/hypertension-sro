@@ -295,7 +295,8 @@ ggsave(
   filename = here("released_outputs", "figures", "figure_hyp001_breakdowns.png"),
   plot = plot_hyp001_breakdowns,
   width = 12.8,
-  height = 15
+  height = 15,
+  create.dir = TRUE
 )
 ```
 
@@ -1195,3 +1196,4 @@ figure_bp_hyp_counts <- df_plot_measures_bp_hyp_count |>
       labels = scales::label_date_short()
     ) +
    guides(colour = guide_colourbar(draw.ulim = TRUE, draw.llim = TRUE))
+```
